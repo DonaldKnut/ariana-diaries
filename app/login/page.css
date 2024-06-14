@@ -1,0 +1,13 @@
+.mother-wrapper {
+  margin: 233px auto 0;
+  height: 375px;
+  width: 375px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #5a3a06d0;
+  border-radius: 19px;
+  padding: 22px;
+  background: linear-gradient(130deg, #c5a883, #94918bd0);
+  box-shadow: 2px 3px 12px 3px #3b3511af;
+}

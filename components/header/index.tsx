@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import { menuItems } from "@/utils";
+import { menuItems } from "../../utils";
 import Button from "../button";
 import ThemeToggler from "../theme";
 import { signOut, useSession } from "next-auth/react";
@@ -20,7 +20,8 @@ import CartIconBeta from "../CartIconBeta";
 export default function Header() {
   const [sticky, setSticky] = useState<boolean>(false);
   const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const session = true;
   const { setSearchQuery, setSearchResults } = useContext(GlobalContext);
   const router = useRouter();
   const pathName = usePathname();

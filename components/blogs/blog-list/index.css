@@ -1,0 +1,9 @@
+.blog_wrapper {
+  display: grid;
+}
+
+@media (min-width: 618px) {
+  .blog_wrapper {
+    grid-template-columns: 1fr 2fr;
+  }
+}
