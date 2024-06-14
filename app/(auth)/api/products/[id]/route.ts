@@ -1,5 +1,5 @@
-import { getAuthSession } from "@/utils/auth";
-import { prisma } from "@/utils/connect";
+import { getAuthSession } from "../../auth/[...nextauth]/route";
+import prisma from "../../../../../database";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET SINGLE PRODUCT
