@@ -14,7 +14,7 @@ import {
 } from "firebase/storage";
 import { GoPlusCircle } from "react-icons/go";
 import Button from "../../components/button";
-import Spinner from "../../components/spinner";
+import Spinner from "../../components/ui";
 import { GlobalContext } from "../../context";
 import Tiptap from "../../components/Tiptap";
 import { firebaseConfig, formControls } from "../../utils";

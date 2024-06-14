@@ -1,5 +1,5 @@
-import prisma from "../../../../../database";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "../../../../../database";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Adjusted create method with correct fields
+    // Create a new blog post using Prisma
     const newlyCreatedPost = await prisma.post.create({
       data: {
         title,
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         category,
         content,
         userId,
-        userImage: extractPostData.userImage || "", // Adjust this according to your actual data structure
+        userImage: extractPostData.userImage || "",
       },
     });
 
@@ -34,12 +34,13 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "New blog post added successfully",
     });
-  } catch (error) {
-    console.error("Error creating blog post:", error);
+  } catch (error: any) {
+    console.error("Error creating blog post:", error); // Log detailed error message
 
     return NextResponse.json({
       success: false,
       message: "Something went wrong! Please try again",
+      error: error.message, // Include the error message in the response
     });
   }
 }

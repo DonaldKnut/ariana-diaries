@@ -1,5 +1,5 @@
 "use client";
-import { Blog } from "@/utils/types";
+import { Blog } from "../../../utils/types";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,7 +1,7 @@
 import NextAuth, { AuthOptions, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "../../../../../utils/connect";
+import { prisma } from "../../../../../database/index";
 import { getServerSession } from "next-auth";
 
 // Declare additional properties for the session and JWT
