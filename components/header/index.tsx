@@ -20,8 +20,7 @@ import CartIconBeta from "../CartIconBeta";
 export default function Header() {
   const [sticky, setSticky] = useState<boolean>(false);
   const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
-  // const { data: session } = useSession();
-  const session = true;
+  const { data: session } = useSession();
   const { setSearchQuery, setSearchResults } = useContext(GlobalContext);
   const router = useRouter();
   const pathName = usePathname();
@@ -52,12 +51,12 @@ export default function Header() {
     <div className="text-[#f5d876]">
       <header
         className={`top-0 left-0 z-40 flex w-full items-center
-  ${
-    sticky
-      ? "!fixed !z-[9999] bg-[#5c4f34] !bg-opacity-80 shadow-sticky backdrop:blur-sm !transition dark:!bg-opacity-50"
-      : "absolute"
-  }
-  `}
+          ${
+            sticky
+              ? "!fixed !z-[9999] bg-[#5c4f34] !bg-opacity-80 shadow-sticky backdrop:blur-sm !transition dark:!bg-opacity-50"
+              : "absolute"
+          }
+        `}
       >
         <div className="container">
           <div className="relative -mx-4 flex items-center justify-between">
@@ -65,8 +64,8 @@ export default function Header() {
               <Link
                 href={"/"}
                 className={`text-[30px] font-extrabold cursor-pointer block w-full
-                    ${sticky ? "py-5 lg:py-2" : "py-8"}
-                    `}
+                  ${sticky ? "py-5 lg:py-2" : "py-8"}
+                `}
               >
                 <Image
                   src={
@@ -79,7 +78,7 @@ export default function Header() {
                   height="170"
                 />
               </Link>
-              <CartIconBeta />
+              {session && <CartIconBeta />}
             </div>
             <div className="flex w-full items-center justify-between px-4">
               <div>
@@ -91,29 +90,29 @@ export default function Header() {
                 >
                   <span
                     className={`relative my-1.5 block h-0.5 w-[30px] bg-[#f7d066] transition-all duration-300 dark:bg-white
-                        ${navbarOpen ? "top-[7px] rotate-45" : ""}
-                        `}
+                      ${navbarOpen ? "top-[7px] rotate-45" : ""}
+                    `}
                   />
                   <span
                     className={`relative my-1.5 block h-0.5 w-[30px] bg-[#f7d066] transition-all duration-300 dark:bg-white
-                        ${navbarOpen ? "opacity-0" : ""}
-                        `}
+                      ${navbarOpen ? "opacity-0" : ""}
+                    `}
                   />
                   <span
                     className={`relative my-1.5 block h-0.5 w-[30px] bg-[#f7d066] transition-all duration-300 dark:bg-white
-                        ${navbarOpen ? "top-[-8px] -rotate-45" : ""}
-                        `}
+                      ${navbarOpen ? "top-[-8px] -rotate-45" : ""}
+                    `}
                   />
                 </button>
                 <nav
                   id="navbarCollapse"
                   className={`absolute right-0 z-30 w-[250px] rounded-md border-[.5px] bg-[#6F6738] placeholder:border-body-color/50 py-4 
-                px-6 duration-300 dark:border-body-color/20 dark:bg-dark lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100
-                ${
-                  navbarOpen
-                    ? "visible top-full opacity-100"
-                    : "invisible top-[120%] opacity-0"
-                }
+                  px-6 duration-300 dark:border-body-color/20 dark:bg-dark lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100
+                  ${
+                    navbarOpen
+                      ? "visible top-full opacity-100"
+                      : "invisible top-[120%] opacity-0"
+                  }
                 `}
                 >
                   <ul className="block lg:flex lg:space-x-12">
@@ -133,13 +132,13 @@ export default function Header() {
                     ))}
                     {session ? (
                       <>
-                        <li className="mt-5 mb-5 font-bold text-xl mobile-session_links md:">
+                        <li className="mt-5 mb-5 font-bold text-xl mobile-session_links">
                           <Link
                             href="/create"
                             className="flex items-center space-x-2 hover:text-[#b3aa6d]"
                           >
-                            <FaPlusCircle className="text-[30px]" />
-                            <span>Create</span>
+                            <FaPlusCircle className="text-[30px] hidden lg:block" />
+                            <span className="lg:hidden">Create</span>
                           </Link>
                         </li>
                         <li className="mt-5 mb-5 font-bold text-xl mobile-session_links">
@@ -147,8 +146,8 @@ export default function Header() {
                             onClick={() => signOut()}
                             className="flex items-center space-x-2 hover:text-[#decf71]"
                           >
-                            <IoLogOutSharp className="text-[30px]" />
-                            <span>Logout</span>
+                            <IoLogOutSharp className="text-[30px] hidden lg:block" />
+                            <span className="lg:hidden">Logout</span>
                           </button>
                         </li>
                       </>
@@ -172,14 +171,14 @@ export default function Header() {
                     <Button
                       onClick={() => router.push("/create")}
                       text="Create"
-                      className="navbar-button mr-3"
+                      className="navbar-button mr-3 hidden lg:flex"
                       icon={<FaPlusCircle />}
                     />
                     <Button
                       onClick={() => signOut()}
                       text="Logout"
                       icon={<IoLogOutSharp />}
-                      className="navbar-button mr-10"
+                      className="navbar-button mr-10 hidden lg:flex"
                     />
                   </div>
                 ) : (

@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useSession } from "next-auth/react";
-import CartIconBeta from "./CartIconBeta";
+// import CartIconBeta from "./CartIconBeta";
 
 const Navbar = () => {
   const { resolvedTheme } = useTheme();
@@ -61,7 +61,7 @@ const Navbar = () => {
             Orders
           </Link>
         )}
-        <CartIconBeta />
+        {/* <CartIconBeta /> */}
       </div>
     </div>
   );

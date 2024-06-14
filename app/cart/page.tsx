@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([
@@ -18,8 +18,8 @@ const CartPage = () => {
   const deliveryCost = 0; // Assuming free delivery in your example
   const totalAmount = subtotal + deliveryCost;
 
-  // const router = useRouter();
   const { data: session } = useSession();
+  const router = useRouter();
 
   const customerName = session?.user?.name || "Customer"; // Default to "Customer" if name is undefined
 
@@ -44,6 +44,12 @@ const CartPage = () => {
   const handleFlutterPayment = useFlutterwave(config);
 
   const handlePayment = () => {
+    if (!session) {
+      // Redirect to login page if not authenticated
+      router.push("/login");
+      return;
+    }
+
     handleFlutterPayment({
       callback: (response) => {
         console.log("Payment successful:", response);

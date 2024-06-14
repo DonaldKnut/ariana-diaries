@@ -6,6 +6,10 @@
   .login_home-button {
     display: none;
   }
+
+  .mobile-session_links {
+    display: none;
+  }
 }
 
 @media (min-width: 1026px) {

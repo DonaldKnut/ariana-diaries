@@ -2,7 +2,7 @@
 
 import React from "react";
 import "./page.css";
-import Button from "../../src/components/login-button";
+import Button from "../../components/login-button";
 import { signIn } from "next-auth/react";
 
 const Page = () => {
