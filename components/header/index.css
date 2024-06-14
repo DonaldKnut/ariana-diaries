@@ -1,0 +1,24 @@
+@media (min-width: 368px) {
+  .navbar-button {
+    display: none;
+  }
+
+  .login_home-button {
+    display: none;
+  }
+}
+
+@media (min-width: 1026px) {
+  .login_home-button {
+    display: flex;
+  }
+}
+
+@media (min-width: 783px) {
+  .navbar-button {
+    display: flex;
+  }
+  .mobile-session_links {
+    display: none;
+  }
+}
