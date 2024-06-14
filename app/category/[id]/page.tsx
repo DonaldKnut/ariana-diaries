@@ -1,4 +1,4 @@
-import CategoryList from "../../../src/components/category";
+import CategoryList from "../../../components/category";
 
 async function getAllListsByCategory(getId: string) {
   try {

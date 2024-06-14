@@ -1,5 +1,5 @@
 "use client";
-import { designerGlasses } from "../../data";
+import { designerGlasses } from "../data";
 import Image from "next/image";
 import React from "react";
 import { useTheme } from "next-themes";

@@ -13,12 +13,12 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { GoPlusCircle } from "react-icons/go";
-import Button from "../../src/components/button";
-import Spinner from "../../src/components/spinner";
-import { GlobalContext } from "@/context";
-import Tiptap from "../../src/components/Tiptap";
-import { firebaseConfig, formControls } from "../../src/utils";
-import { BlogFormData } from "@/utils/types";
+import Button from "../../components/button";
+import Spinner from "../../components/spinner";
+import { GlobalContext } from "../../context";
+import Tiptap from "../../components/Tiptap";
+import { firebaseConfig, formControls } from "../../utils";
+import { BlogFormData } from "../../utils/types";
 
 const initialBlogFormData: BlogFormData = {
   title: "",
