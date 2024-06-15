@@ -81,20 +81,25 @@ export default function Create() {
   };
 
   const handleSaveBlogPost = async () => {
+    const formDataToSend = {
+      ...formData,
+      userid: session?.user?.name,
+      userimage: session?.user?.image,
+      comments: [],
+    };
+
+    console.log("Sending form data:", formDataToSend);
+
     const res = await fetch("/api/blog-post/add-post", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        ...formData,
-        userid: session?.user?.name,
-        userimage: session?.user?.image,
-        comments: [],
-      }),
+      body: JSON.stringify(formDataToSend),
     });
 
     const data = await res.json();
+    console.log("Response from server:", data);
     if (data && data.success) {
       setFormData(initialBlogFormData);
       router.push("/blogs");
@@ -168,7 +173,7 @@ export default function Create() {
                               });
                             }}
                             value={formData[control.id as keyof BlogFormData]}
-                            className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#6a5746] dark:shadow-signUp"
+                            className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#88764b] dark:shadow-signUp"
                           >
                             <option value={""}>Select</option>
                             {control.options.map((optionItem) => (

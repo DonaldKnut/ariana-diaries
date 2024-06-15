@@ -51,10 +51,10 @@ export default function Home() {
                   <h1 className="mb-5 text-3xl font-bold leading-tight">
                     {displayText}
                   </h1>
-                  {/* <p className="mb-12 text-base font-medium leading-relaxed">
+                  <p className="mb-12 text-base font-medium leading-relaxed">
                     Embarking on a journey of inspiration, empowerment, and
                     discovery in the vast waves of possibilities and horizons.
-                  </p> */}
+                  </p>
                   <div className="flex gap-3 items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                     <Link href="/menu" passHref className="z-15">
                       <div className="flex link_btn gap-3 py-4 px-8 rounded-md text-base font-semibold text-white">

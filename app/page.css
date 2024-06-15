@@ -30,7 +30,6 @@
   flex-direction: column;
   justify-content: center; /* Center the text vertically */
   align-items: center;
-  padding: 6rem;
   min-height: 100vh;
 }
 
