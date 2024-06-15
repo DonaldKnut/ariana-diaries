@@ -36,4 +36,5 @@ export interface Blog {
   comments: string[];
   image: string;
   content: string;
+  author: string;
 }

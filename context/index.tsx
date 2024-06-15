@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dispatch,
   ReactNode,
@@ -24,10 +22,16 @@ type ContextType = {
   setSearchResults: Dispatch<SetStateAction<Blog[]>>;
 };
 
-const initialState = {
+const initialState: ContextType = {
   loading: false,
   setLoading: () => {},
-  formData: initialBlogFormData,
+  formData: {
+    title: "",
+    description: "",
+    image: "",
+    category: "",
+    content: "", // Make sure to include 'content' here
+  },
   setFormData: () => {},
   searchQuery: "",
   setSearchQuery: () => {},
@@ -39,7 +43,7 @@ export const GlobalContext = createContext<ContextType>(initialState);
 
 export default function GlobalState({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState(initialBlogFormData);
+  const [formData, setFormData] = useState<BlogFormData>(initialState.formData);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Blog[]>([]);
   const { data: session } = useSession();

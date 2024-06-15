@@ -1,4 +1,5 @@
 import BlogList from "../../components/blogs/blog-list";
+import BlogSlider from "../../components/BlogSlider";
 
 async function extractAllBlogs() {
   const res = await fetch(
@@ -17,5 +18,12 @@ async function extractAllBlogs() {
 export default async function Blogs() {
   const blogPostsList = await extractAllBlogs();
 
-  return <BlogList lists={blogPostsList} />;
+  return (
+    <>
+      <div>
+        <BlogSlider />
+        <BlogList lists={blogPostsList} />
+      </div>
+    </>
+  );
 }

@@ -12,16 +12,9 @@ export default function SingleBlog({
   blogItem: Blog;
   handleDelete: (id: number) => void;
 }) {
-  const { image, category, title, content, userimage, userid, id } = blogItem;
+  const { image, category, title, content, userimage, userid, id, author } =
+    blogItem; // Including author in destructuring
   const { data: session } = useSession();
-
-  // Function to get first name from session user's name
-  const getFirstName = () => {
-    if (session?.user?.name) {
-      return session.user.name.split(" ")[0];
-    }
-    return "";
-  };
 
   // Function to strip HTML tags from content
   const stripHtmlTags = (html: string) => {
@@ -30,11 +23,17 @@ export default function SingleBlog({
     return tmp.textContent || tmp.innerText || "";
   };
 
+  // Function to truncate text and add ellipsis if necessary
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
   // Safe access to session user email
   const userEmail = session?.user?.email ?? "";
 
   return (
-    <div className="bg-white dark:bg-[#5e511b] shadow-lg rounded-lg overflow-hidden">
+    <div className="bg-white dark:bg-[#5e511b] shadow-lg rounded-lg overflow-hidden h-[460px] w-[300px] flex flex-col justify-between">
       <div className="relative">
         <Link href={`/blogs/${id}`}>
           <Image
@@ -54,14 +53,15 @@ export default function SingleBlog({
           </span>
         </Link>
       </div>
-      <div className="p-4">
+      <div className="p-4 flex-grow">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           <Link href={`/blogs/${id}`} className="hover:underline">
-            {title}
+            {truncateText(title, 50)} {/* Adjust the maxLength as needed */}
           </Link>
         </h3>
         <p className="mt-2 text-gray-600 dark:text-gray-300 line-clamp-3">
-          {stripHtmlTags(content)}
+          {truncateText(stripHtmlTags(content), 100)}{" "}
+          {/* Adjust the maxLength as needed */}
         </p>
       </div>
       <div className="flex items-center p-4">
@@ -82,7 +82,7 @@ export default function SingleBlog({
           <div className="ml-3 flex gap-2 items-center justify-center">
             <p className="text-sm text-gray-700 dark:text-gray-300">By</p>
             <p className="text-sm font-medium text-gray-900 dark:text-white">
-              {getFirstName()}
+              {author}
             </p>
           </div>
         </div>
