@@ -74,7 +74,7 @@ const CartPage = () => {
             </div>
             <h2 className="font-bold">${item.price.toFixed(2)}</h2>
             <span className="cursor-pointer">
-              <IoIosCloseCircle />
+              <IoIosCloseCircle className="text-4xl hover:text-[#efd882] transition-all duration-300 ease-out" />
             </span>
           </div>
         ))}

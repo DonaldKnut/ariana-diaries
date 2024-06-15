@@ -3,6 +3,7 @@ import "./page.css";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MdArrowOutward } from "react-icons/md";
+import { Reveal } from "./reveal";
 
 export default function Home() {
   const [displayText, setDisplayText] = useState("");
@@ -48,19 +49,25 @@ export default function Home() {
             <div className="w-full px-4">
               <div className="mx-auto max-w-[800px] text-center">
                 <div className="text-container">
-                  <h1 className="mb-5 text-3xl font-bold leading-tight">
-                    {displayText}
-                  </h1>
-                  <p className="mb-12 text-base font-medium leading-relaxed">
-                    Embarking on a journey of inspiration, empowerment, and
-                    discovery in the vast waves of possibilities and horizons.
-                  </p>
+                  <Reveal>
+                    <h1 className="mb-5 text-3xl font-bold leading-tight">
+                      {displayText}
+                    </h1>
+                  </Reveal>
+                  <Reveal>
+                    <p className="mb-12 text-base font-medium leading-relaxed">
+                      Embarking on a journey of inspiration, empowerment, and
+                      discovery in the vast waves of possibilities and horizons.
+                    </p>
+                  </Reveal>
                   <div className="flex gap-3 items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                     <Link href="/menu" passHref className="z-15">
-                      <div className="flex link_btn gap-3 py-4 px-8 rounded-md text-base font-semibold text-white">
-                        <span>Explore</span>
-                        <MdArrowOutward />
-                      </div>
+                      <Reveal>
+                        <div className="flex link_btn gap-3 py-4 px-8 rounded-md text-base font-semibold text-white">
+                          <span>Explore</span>
+                          <MdArrowOutward />
+                        </div>
+                      </Reveal>
                     </Link>
                   </div>
                 </div>
