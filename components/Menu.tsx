@@ -1,22 +1,20 @@
 "use client";
-
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import CartIcon from "./CartIcon";
+import { useSession } from "next-auth/react";
+import { IoIosCloseCircle } from "react-icons/io";
 
 const links = [
-  { id: 1, title: "Homepage", url: "/shop" },
   { id: 2, title: "Menu", url: "/menu" },
-  { id: 3, title: "Working Hours", url: "/" },
   { id: 4, title: "Contact", url: "/" },
 ];
 
 const Menu = () => {
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
-  // TEMPORARY
-  const user = false;
   return (
     <div>
       {/* LONG WAY */}
@@ -48,33 +46,18 @@ const Menu = () => {
         className="cursor-pointer"
       />
       {open && (
-        <div
-          className="bg-[#999068] text-white absolute left-0 top-24 w-full h-[calc(100vh-6rem)] flex flex-col gap-8 items-center justify-center text-3xl z-10"
-          onClick={() => setOpen(false)}
-        >
+        <div className="bg-[#7b6e34] text-white absolute left-0 top-24 w-full h-[100vh] flex flex-col gap-8 items-center justify-center text-3xl z-10">
           {links.map((item) => (
             <Link href={item.url} key={item.id} onClick={() => setOpen(false)}>
               {item.title}
             </Link>
           ))}
-
-          {/* LONG WAY */}
-          {/* {!user ? (
-            <Link href="/login" onClick={() => setOpen(false)}>
-              Login
-            </Link>
-          ) : (
-            <Link href="/orders" onClick={() => setOpen(false)}>
-              Orders
-            </Link>
-          )} */}
-
           {/* SHORTCUT */}
           <Link
-            href={user ? "/orders" : "login"}
+            href={session ? "/orders" : "/login"}
             onClick={() => setOpen(false)}
           >
-            {user ? "Orders" : "Login"}
+            {session ? "Orders" : "Login"}
           </Link>
           <Link href="/cart" onClick={() => setOpen(false)}>
             <CartIcon />

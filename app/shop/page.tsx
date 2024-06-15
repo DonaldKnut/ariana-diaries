@@ -15,7 +15,7 @@ const page = (props: Props) => {
       <FeaturedBooks />
       <FeaturedGlasses />
       <FeaturedBags />
-      <Featured />
+      {/* <Featured /> */}
       <Offer />
     </div>
   );

@@ -160,7 +160,7 @@ export default function BlogDetailsHome({ blogData }: { blogData: Blog }) {
                     <div className="p-6 text-base rounded-lg bg-[#6f6a45] mb-3">
                       <div className="flex justify-between items-center mb-2">
                         <div className="flex items-center">
-                          <p className="inline-flex items-center mr-3 text-sm text-[#664a19] dark:text-white font-semibold">
+                          <p className="inline-flex items-center mr-3 text-sm text-[#be9b5d] dark:text-white font-semibold">
                             {comment.split("|")[1] === blogData?.userid
                               ? `${
                                   comment.split("|")[1].split("_")[0]

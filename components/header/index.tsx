@@ -1,22 +1,22 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import Link from "next/link";
-import { menuItems } from "../../utils";
-import Button from "../button";
-import ThemeToggler from "../theme";
-import { signOut, useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import { GlobalContext } from "../../context";
+import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { GlobalContext } from "../../context";
 import { MdArrowOutward } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import { FaPlusCircle } from "react-icons/fa";
-import "./index.css";
 import { IoSearchCircleSharp } from "react-icons/io5";
-import CartIconBeta from "../CartIconBeta";
 import { HiArrowTopRightOnSquare } from "react-icons/hi2";
+import Button from "../button";
+import ThemeToggler from "../theme";
+import { menuItems } from "../../utils";
+import CartIconBeta from "../CartIconBeta";
+import "./index.css";
 
 export default function Header() {
   const [sticky, setSticky] = useState<boolean>(false);
@@ -153,13 +153,13 @@ export default function Header() {
                         </li>
                       </>
                     ) : (
-                      <li className="mt-5 mb-5 font-bold text-xl">
+                      <li className="mt-5 mb-5 font-bold text-xl lg:hidden">
                         <Link
                           href="/login"
                           className="flex items-center space-x-2 hover:text-[#decf71] mobile-session_links"
                         >
-                          <MdArrowOutward className="text-[30px]" />
                           <span>Login</span>
+                          <HiArrowTopRightOnSquare className="text-[30px]" />
                         </Link>
                       </li>
                     )}
@@ -186,8 +186,8 @@ export default function Header() {
                   <Button
                     onClick={() => router.push("/login")}
                     text="Login"
-                    icon={<MdArrowOutward />}
-                    className="login_home-button"
+                    icon={<HiArrowTopRightOnSquare />}
+                    className="login_home-button hidden lg:flex"
                   />
                 )}
 

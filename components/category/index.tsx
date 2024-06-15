@@ -86,8 +86,8 @@ export default function CategoryList({ list }: { list: Blog[] | null }) {
             )}
           </div>
           <div className="w-full px-4 lg:w-4/12 text-[#ffe356]">
-            <div className="mb-10 rounded-md bg-[#b3a557ca] bg-opacity-5 dark:bg-opacity-10">
-              <h3 className="border-b border-body-color border-opacity-10 py-4 px-8 text-lg font-semibold text-black dark:border-white dark:border-opacity-10 dark:text-white">
+            <div className="mb-10 rounded-md bg-[#8f7811ca] bg-opacity-5 dark:bg-opacity-10">
+              <h3 className="border-b border-body-color border-opacity-10 py-4 px-8 text-lg font-semibold text-[#eccf71] dark:border-white dark:border-opacity-10 dark:text-white">
                 Filter by Category
               </h3>
               <div className="flex flex-wrap py-6 px-8">

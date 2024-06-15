@@ -2,9 +2,9 @@ import { FormControlItem, MenuItem, Option } from "./types";
 
 export const menuItems: MenuItem[] = [
   {
-    id: "Menu",
-    label: "Menu",
-    path: "/menu",
+    id: "about",
+    label: "About",
+    path: "/about",
   },
   {
     id: "category",
