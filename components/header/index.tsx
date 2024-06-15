@@ -16,6 +16,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import "./index.css";
 import { IoSearchCircleSharp } from "react-icons/io5";
 import CartIconBeta from "../CartIconBeta";
+import { HiArrowTopRightOnSquare } from "react-icons/hi2";
 
 export default function Header() {
   const [sticky, setSticky] = useState<boolean>(false);
@@ -137,7 +138,7 @@ export default function Header() {
                             href="/create"
                             className="flex items-center space-x-2 hover:text-[#b3aa6d]"
                           >
-                            <FaPlusCircle className="text-[30px] hidden lg:block" />
+                            <HiArrowTopRightOnSquare className="text-[30px]" />
                             <span className="lg:hidden">Create</span>
                           </Link>
                         </li>
@@ -146,7 +147,7 @@ export default function Header() {
                             onClick={() => signOut()}
                             className="flex items-center space-x-2 hover:text-[#decf71]"
                           >
-                            <IoLogOutSharp className="text-[30px] hidden lg:block" />
+                            <HiArrowTopRightOnSquare className="text-[30px]" />
                             <span className="lg:hidden">Logout</span>
                           </button>
                         </li>

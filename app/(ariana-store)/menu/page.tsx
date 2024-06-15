@@ -2,6 +2,7 @@
 import { menu } from "../../../data";
 import Link from "next/link";
 import React from "react";
+import Button from "../../../components/button";
 
 const MenuPage = () => {
   return (
@@ -16,13 +17,13 @@ const MenuPage = () => {
           <div className={`text-${category.color} w-1/2`}>
             <h1 className="uppercase font-bold text-3xl">{category.title}</h1>
             <p className="text-sm my-8">{category.desc}</p>
-            <button
+            <Button
               className={`hidden 2xl:block bg-[#9e801e] text-${
                 category.color === "black" ? "white" : "red-500"
               } py-2 px-4 rounded-md`}
             >
               Explore
-            </button>
+            </Button>
           </div>
         </Link>
       ))}

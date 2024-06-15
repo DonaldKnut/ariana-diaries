@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import React, { useContext, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

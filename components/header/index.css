@@ -7,9 +7,9 @@
     display: none;
   }
 
-  .mobile-session_links {
+  /* .mobile-session_links {
     display: none;
-  }
+  } */
 }
 
 @media (min-width: 1026px) {
@@ -22,6 +22,12 @@
   .navbar-button {
     display: flex;
   }
+  .mobile-session_links {
+    display: flex;
+  }
+}
+
+@media (min-width: 1028px) {
   .mobile-session_links {
     display: none;
   }
