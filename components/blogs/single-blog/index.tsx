@@ -15,18 +15,41 @@ export default function SingleBlog({
   const { image, category, title, content, userimage, userid, id } = blogItem;
   const { data: session } = useSession();
 
+  // Function to get first name from session user's name
+  const getFirstName = () => {
+    if (session?.user?.name) {
+      return session.user.name.split(" ")[0];
+    }
+    return "";
+  };
+
+  // Function to strip HTML tags from content
+  const stripHtmlTags = (html: string) => {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
+  // Safe access to session user email
+  const userEmail = session?.user?.email ?? "";
+
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+    <div className="bg-white dark:bg-[#5e511b] shadow-lg rounded-lg overflow-hidden">
       <div className="relative">
         <Link href={`/blogs/${id}`}>
           <Image
-            src={image}
+            src={
+              image ||
+              `https://eu.ui-avatars.com/api/?name=${userEmail
+                .charAt(0)
+                .toUpperCase()}`
+            }
             alt="Blog Post"
             className="w-full h-48 object-cover"
             width={400}
             height={200}
           />
-          <span className="absolute top-4 right-4 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+          <span className="absolute top-4 right-4 bg-[#857936] text-white text-xs px-2 py-1 rounded">
             {category}
           </span>
         </Link>
@@ -38,26 +61,32 @@ export default function SingleBlog({
           </Link>
         </h3>
         <p className="mt-2 text-gray-600 dark:text-gray-300 line-clamp-3">
-          {content}
+          {stripHtmlTags(content)}
         </p>
       </div>
       <div className="flex items-center p-4">
         <div className="flex items-center">
-          <Image
-            src={userimage}
-            alt="Author"
-            className="w-10 h-10 rounded-full"
-            width={40}
-            height={40}
-          />
-          <div className="ml-3">
+          {userimage ? (
+            <Image
+              src={userimage}
+              alt="Author"
+              className="w-10 h-10 rounded-full"
+              width={40}
+              height={40}
+            />
+          ) : (
+            <div className="w-10 h-10 flex items-center justify-center bg-gray-300 dark:bg-[#b3a786] rounded-full text-white font-bold">
+              {userEmail.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div className="ml-3 flex gap-2 items-center justify-center">
             <p className="text-sm text-gray-700 dark:text-gray-300">By</p>
             <p className="text-sm font-medium text-gray-900 dark:text-white">
-              {userid.split("_")[0].toUpperCase()}
+              {getFirstName()}
             </p>
           </div>
         </div>
-        {session && session?.user?.name === userid && (
+        {session && session.user.name === userid && (
           <button
             onClick={() => handleDelete(id)}
             className="ml-auto text-red-600 hover:text-red-800"

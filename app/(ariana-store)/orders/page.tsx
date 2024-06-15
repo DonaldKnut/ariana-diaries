@@ -3,7 +3,7 @@ import { PiPackageBold } from "react-icons/pi";
 import { SlCalender } from "react-icons/sl";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { LiaGiftSolid } from "react-icons/lia";
-import { TbAdFilled } from "react-icons/tb";
+import { TbTruckDelivery } from "react-icons/tb";
 
 const OrdersPage = () => {
   return (
@@ -12,19 +12,19 @@ const OrdersPage = () => {
         <thead>
           <tr className="text-left">
             <th className="hidden md:block">
-              Order ID <PiPackageBold />
+              Order ID <PiPackageBold className="text-2xl" />
             </th>
             <th>
-              Date <SlCalender />
+              Date <SlCalender className="text-2xl" />
             </th>
             <th>
-              Price <RiMoneyDollarCircleFill />
+              Price <RiMoneyDollarCircleFill className="text-2xl" />
             </th>
             <th className="hidden md:block">
-              Products <LiaGiftSolid />
+              Products <LiaGiftSolid className="text-2xl" />
             </th>
             <th>
-              Status <TbAdFilled />
+              Status <TbTruckDelivery className="text-2xl" />
             </th>
           </tr>
         </thead>

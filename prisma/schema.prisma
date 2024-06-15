@@ -10,7 +10,7 @@ datasource db {
 model Post {
   id          Int      @id @default(autoincrement())
   title       String
-  description String
+  description String?
   image       String
   category    String
   content     String   

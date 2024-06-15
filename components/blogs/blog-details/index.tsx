@@ -1,7 +1,6 @@
 "use client";
-
 import Button from "../../button";
-import { Blog } from "@/utils/types";
+import { Blog } from "../../../utils/types";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +16,8 @@ export default function BlogDetailsHome({ blogData }: { blogData: Blog }) {
   const router = useRouter();
 
   async function handleCommentSave() {
+    if (!blogData || !blogData.id) return; // Ensure blogData is defined
+
     let extractComments = [...blogData.comments];
 
     extractComments.push(`${comment}|${session?.user?.name}`);
@@ -27,7 +28,7 @@ export default function BlogDetailsHome({ blogData }: { blogData: Blog }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: blogData?.id,
+        id: blogData.id,
         comments: extractComments,
       }),
     });
@@ -54,6 +55,16 @@ export default function BlogDetailsHome({ blogData }: { blogData: Blog }) {
 
   if (!blogData) return null;
 
+  // Function to get first name or last name from full name
+  const getUserName = () => {
+    if (!session?.user?.name) return "Unknown Author";
+
+    const fullName = session.user.name;
+    const names = fullName.split(" ");
+    return names.length > 0 ? names[0] : "Unknown Author"; // Display first name
+    // return names.length > 1 ? names[names.length - 1] : "Unknown Author"; // Display last name
+  };
+
   return (
     <>
       <section className="pt-[150px] pb-[120px]">
@@ -69,22 +80,28 @@ export default function BlogDetailsHome({ blogData }: { blogData: Blog }) {
                     <div className="mr-10 mb-5 flex items-center">
                       <div className="mr-4">
                         <div className="relative h-10 w-10 overflow-hidden rounded-full">
-                          <Image src={blogData?.userimage} alt="User" fill />
+                          {session && blogData?.userimage ? (
+                            <Image src={blogData.userimage} alt="User" fill />
+                          ) : (
+                            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-[#ab9b6a] text-white text-lg">
+                              {session?.user?.email
+                                ? session.user.email.charAt(0).toUpperCase()
+                                : ""}
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="w-full">
                         <h4 className="mb-1 text-base font-medium text-body-color">
                           By
-                          <span className="pl-2">
-                            {blogData?.userid.split("_")[0]}
-                          </span>
+                          <span className="pl-2">{getUserName()}</span>
                         </h4>
                       </div>
                     </div>
                   </div>
                   <div className="mb-5">
                     <Link
-                      className="inline-flex items-center justify-center rounded-full bg-primary py-2 px-4 text-sm font-semibold text-white"
+                      className="inline-flex items-center justify-center rounded-full bg-[#ab9b6a] py-2 px-4 text-sm font-semibold text-white"
                       href={`/category/${blogData?.category}`}
                     >
                       {blogData?.category}
@@ -122,7 +139,7 @@ export default function BlogDetailsHome({ blogData }: { blogData: Blog }) {
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                       setComment(event.target.value)
                     }
-                    className="w-full pl-[12px] pr-[12px] rounded-md border border-transparent py-3 px-6 text-base bg-[#939089d0] placeholder-[#534817] shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                    className="w-full pl-[12px] pr-[12px] rounded-md border border-transparent py-3 px-6 text-[#605020] bg-[#939089d0] placeholder-[#534817] shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#d7cb83] dark:shadow-signUp"
                   />
                   <Button
                     text="Add"

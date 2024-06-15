@@ -11,7 +11,7 @@ import { GlobalContext } from "../../context";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { MdArrowOutward } from "react-icons/md";
-import { IoLogOutSharp } from "react-icons/io5";
+import { BiLogOut } from "react-icons/bi";
 import { FaPlusCircle } from "react-icons/fa";
 import "./index.css";
 import { IoSearchCircleSharp } from "react-icons/io5";
@@ -178,7 +178,7 @@ export default function Header() {
                     <Button
                       onClick={() => signOut()}
                       text="Logout"
-                      icon={<IoLogOutSharp />}
+                      icon={<BiLogOut />}
                       className="navbar-button mr-10 hidden lg:flex"
                     />
                   </div>

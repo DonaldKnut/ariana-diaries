@@ -1,4 +1,4 @@
-import BlogDetailsHome from "../../../src/components/blogs/blog-details";
+import BlogDetailsHome from "../../../components/blogs/blog-details";
 
 interface Param {
   id: string;

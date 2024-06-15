@@ -81,6 +81,16 @@ export default function Create() {
   };
 
   const handleSaveBlogPost = async () => {
+    if (
+      !formData.title ||
+      !formData.image ||
+      !formData.category ||
+      !formData.content
+    ) {
+      alert("Title, Image, Category, and Content fields are required");
+      return;
+    }
+
     const formDataToSend = {
       ...formData,
       userid: session?.user?.name,
@@ -103,6 +113,8 @@ export default function Create() {
     if (data && data.success) {
       setFormData(initialBlogFormData);
       router.push("/blogs");
+    } else {
+      console.error(data.message);
     }
   };
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../../../database";
+import prisma from "../../../../../database"; // Adjust the import path as necessary
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,9 +7,15 @@ export async function POST(request: NextRequest) {
     console.log("Received data:", extractPostData);
 
     // Validate extractPostData to ensure all required fields are present
-    const { title, description, image, category, content, userid } =
-      extractPostData;
-    if (!title || !description || !image || !category || !content || !userid) {
+    const { title, image, category, content, userid } = extractPostData;
+    if (!title || !image || !category || !content || !userid) {
+      console.error("Required fields are missing:", {
+        title,
+        image,
+        category,
+        content,
+        userid,
+      });
       return NextResponse.json({
         success: false,
         message: "Required fields are missing in the request",
@@ -17,22 +23,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Create a new blog post using Prisma
-    const newlyCreatedPost = await prisma.post
-      .create({
-        data: {
-          title,
-          description,
-          image,
-          category,
-          content,
-          userId: userid,
-          userImage: extractPostData.userimage || "",
-        },
-      })
-      .catch((error) => {
-        console.error("Prisma create error:", error);
-        throw error;
-      });
+    const newlyCreatedPost = await prisma.post.create({
+      data: {
+        title,
+        description: extractPostData.description || "", // Use empty string if description is not provided
+        image,
+        category,
+        content,
+        userId: userid,
+        userImage: extractPostData.userimage || "",
+        comments: extractPostData.comments || [],
+      },
+    });
 
     console.log("New blog post added:", newlyCreatedPost);
 
