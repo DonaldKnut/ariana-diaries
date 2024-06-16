@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { initializeApp } from "firebase/app";
+import Spinner from "../../components/Spinner";
 import {
   getStorage,
   ref,
@@ -12,7 +13,6 @@ import {
 } from "firebase/storage";
 import { GoPlusCircle } from "react-icons/go";
 import Button from "../../components/button";
-import Spinner from "../../components/ui";
 import { GlobalContext } from "../../context";
 import Tiptap from "../../components/Tiptap";
 import { firebaseConfig, formControls } from "../../utils";
