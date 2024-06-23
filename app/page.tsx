@@ -2,12 +2,12 @@
 import "./page.css";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MdArrowOutward } from "react-icons/md";
+import { BsFillArrowUpRightSquareFill } from "react-icons/bs";
 import { Reveal } from "./reveal";
 
 export default function Home() {
   const [displayText, setDisplayText] = useState("");
-  const originalText = "Welcome 2 Ariana Diaries";
+  const originalText = "Welcome to Ariana Diaries";
   const typingSpeed = 100; // Adjust typing speed here
   const [cloudinaryData, setCloudinaryData] = useState(null);
   const cloudinaryUrl =
@@ -63,9 +63,9 @@ export default function Home() {
                   <div className="flex gap-3 items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                     <Link href="/menu" passHref className="z-15">
                       <Reveal>
-                        <div className="flex link_btn gap-3 py-4 px-8 rounded-md text-base font-semibold text-white">
+                        <div className="flex link_btn justify-center items-center gap-3 py-4 px-8 rounded-md text-base font-semibold text-white">
                           <span>Explore</span>
-                          <MdArrowOutward />
+                          <BsFillArrowUpRightSquareFill />
                         </div>
                       </Reveal>
                     </Link>

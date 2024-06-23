@@ -1,6 +1,5 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Lexend } from "next/font/google";
 import NextAuthProvider from "../providers/next-auth-provider";
 import NextThemeProvider from "../providers/theme-provider";
 import GlobalState from "../context/index";
@@ -8,8 +7,12 @@ import Header from "../components/header/index";
 import QueryProvider from "../components/QueryProvider";
 import AuthProvider from "../components/AuthProvider";
 import { ToastContainer } from "react-toastify";
+import { DM_Sans } from "next/font/google";
 
-const lexend = Lexend({ subsets: ["latin"] });
+const dmSans = DM_Sans({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Ariana Diaries",
@@ -23,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${lexend.className}`}>
+      <body className={`${dmSans.className}`}>
         <NextThemeProvider>
           <NextAuthProvider>
             <GlobalState>

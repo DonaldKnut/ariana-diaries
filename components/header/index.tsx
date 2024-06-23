@@ -7,7 +7,6 @@ import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { GlobalContext } from "../../context";
-import { MdArrowOutward } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import { FaPlusCircle } from "react-icons/fa";
 import { IoSearchCircleSharp } from "react-icons/io5";
@@ -155,7 +154,7 @@ export default function Header() {
                     ) : (
                       <li className="mt-5 mb-5 font-bold text-xl lg:hidden">
                         <Link
-                          href="/login"
+                          href="/auth/login"
                           className="flex items-center space-x-2 hover:text-[#decf71] mobile-session_links"
                         >
                           <span>Login</span>
@@ -184,7 +183,7 @@ export default function Header() {
                   </div>
                 ) : (
                   <Button
-                    onClick={() => router.push("/login")}
+                    onClick={() => router.push("/auth/login")}
                     text="Login"
                     icon={<HiArrowTopRightOnSquare />}
                     className="login_home-button hidden lg:flex"

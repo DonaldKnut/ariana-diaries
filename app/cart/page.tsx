@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { BsBoxArrowUpRight } from "react-icons/bs";
-import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import { useFlutterwave } from "flutterwave-react-v3";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,7 @@ const CartPage = () => {
     payment_options: "card,mobilemoney,ussd",
     customer: {
       email: session?.user?.email || "openiyiibrahim@gmail.com", // Use session user's email or default
-      phone_number: "070********",
+      phonenumber: "070********", // Corrected to 'phonenumber'
       name: customerName,
     },
     customizations: {
@@ -53,7 +53,6 @@ const CartPage = () => {
     handleFlutterPayment({
       callback: (response) => {
         console.log("Payment successful:", response);
-        closePaymentModal(); // Close modal programmatically
       },
       onClose: () => {
         console.log("Payment closed without completion");
@@ -61,23 +60,47 @@ const CartPage = () => {
     });
   };
 
+  // Check if cartItems array is empty
+  const isEmptyCart = cartItems.length === 0;
+
   return (
     <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col text-[#c5a247] lg:flex-row mt-[130px]">
       {/* PRODUCTS CONTAINER */}
       <div className="h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40">
-        {cartItems.map((item) => (
-          <div key={item.id} className="flex items-center justify-between mb-4">
-            <Image src="/temporary/p1.png" alt="" width={100} height={100} />
-            <div>
-              <h1 className="uppercase text-xl font-bold">{item.name}</h1>
-              <span>{item.size}</span>
+        {isEmptyCart ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <Image
+                src="/desc-images/no-cat.png"
+                alt="Empty Cart Image"
+                width={200}
+                height={200}
+              />
+              <p className="text-xl mt-4">No items in cart</p>
+              <a href="/shop" className="text-blue-500 hover:underline">
+                Start shopping
+              </a>
             </div>
-            <h2 className="font-bold">${item.price.toFixed(2)}</h2>
-            <span className="cursor-pointer">
-              <IoIosCloseCircle className="text-4xl hover:text-[#efd882] transition-all duration-300 ease-out" />
-            </span>
           </div>
-        ))}
+        ) : (
+          // Render cart items if not empty
+          cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center justify-between mb-4"
+            >
+              <Image src="/temporary/p1.png" alt="" width={100} height={100} />
+              <div>
+                <h1 className="uppercase text-xl font-bold">{item.name}</h1>
+                <span>{item.size}</span>
+              </div>
+              <h2 className="font-bold">${item.price.toFixed(2)}</h2>
+              <span className="cursor-pointer">
+                <IoIosCloseCircle className="text-4xl hover:text-[#efd882] transition-all duration-300 ease-out" />
+              </span>
+            </div>
+          ))
+        )}
       </div>
       {/* PAYMENT CONTAINER */}
       <div className="h-full p-4 rounded-[33px]  bg-[#ffffff] text-[#4a3b0e] flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6">

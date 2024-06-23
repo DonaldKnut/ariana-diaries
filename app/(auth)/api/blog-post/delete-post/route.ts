@@ -1,34 +1,49 @@
-import prisma from "../../../../../database";
-import { NextRequest, NextResponse } from "next/server";
+// pages/api/blog/[id].ts
 
-export async function DELETE(req: NextRequest) {
-  try {
-    const url = new URL(req.url);
-    const extractIdOfBlogItemToBeDeleted = url.searchParams.get("id");
+import { NextApiRequest, NextApiResponse } from "next";
+import mongoose from "mongoose";
+import Post from "../../../../../backend/models/postSchema";
 
-    const deletedBlogPost = await prisma.post.delete({
-      where: {
-        id: Number(extractIdOfBlogItemToBeDeleted),
-      },
-    });
+export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
 
-    if (deletedBlogPost) {
-      return NextResponse.json({
-        success: true,
-        message: "Blog deleted successfully",
-      });
-    } else {
-      return NextResponse.json({
-        success: false,
-        message: "Failed to delete the blog ! Please try again",
-      });
+  if (req.method === "DELETE") {
+    try {
+      if (!id) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid or missing blog ID" });
+      }
+
+      // Validate if ID is a valid ObjectId
+      if (!mongoose.isValidObjectId(id as string)) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid blog ID format" });
+      }
+
+      const deletedBlogPost = await Post.findByIdAndDelete(id);
+
+      if (deletedBlogPost) {
+        return res.json({
+          success: true,
+          message: "Blog deleted successfully",
+        });
+      } else {
+        return res
+          .status(404)
+          .json({ success: false, message: "Blog not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Something went wrong" });
     }
-  } catch (e) {
-    console.log(e);
-
-    return NextResponse.json({
-      success: false,
-      message: "Something went wrong ! Please try again",
-    });
+  } else {
+    res.setHeader("Allow", ["DELETE"]);
+    return res
+      .status(405)
+      .json({ success: false, message: `Method ${req.method} not allowed` });
   }
 }

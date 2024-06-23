@@ -20,6 +20,12 @@ export default function CategoryList({ list }: { list: Blog[] | null }) {
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4 lg:w-8/12">
+              <Image
+                src="/desc-images/no-cat.png"
+                alt=""
+                width="244"
+                height="244"
+              />
               <div className="flex flex-col gap-4">
                 <h2 className="mb-8 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl">
                   No blog available for this category! Please create one.

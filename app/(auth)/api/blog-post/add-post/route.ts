@@ -1,13 +1,18 @@
+// api/posts/create.ts
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../../../database"; // Adjust the import path as necessary
+import Post, { IPost } from "../../../../../models/Post";
+import { connect } from "../../../../../database";
 
 export async function POST(request: NextRequest) {
   try {
+    await connect(); // Ensure the database is connected
+
     const extractPostData = await request.json();
     console.log("Received data:", extractPostData);
 
     // Validate extractPostData to ensure all required fields are present
-    const { title, image, category, content, userid } = extractPostData;
+    const { title, image, category, content, userid, userimage, description } =
+      extractPostData;
     if (!title || !image || !category || !content || !userid) {
       console.error("Required fields are missing:", {
         title,
@@ -22,25 +27,25 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create a new blog post using Prisma
-    const newlyCreatedPost = await prisma.post.create({
-      data: {
-        title,
-        description: extractPostData.description || "", // Use empty string if description is not provided
-        image,
-        category,
-        content,
-        userId: userid,
-        userImage: extractPostData.userimage || "",
-        comments: extractPostData.comments || [],
-      },
+    // Create a new blog post using Mongoose
+    const newlyCreatedPost = new Post({
+      title,
+      description: description || "",
+      image,
+      category,
+      content,
+      userid,
+      userimage: userimage || "", // Use empty string if userimage is not provided
     });
+
+    await newlyCreatedPost.save();
 
     console.log("New blog post added:", newlyCreatedPost);
 
     return NextResponse.json({
       success: true,
       message: "New blog post added successfully",
+      post: newlyCreatedPost, // Include the created post in the response
     });
   } catch (error: any) {
     console.error("Error creating blog post:", error); // Log detailed error message

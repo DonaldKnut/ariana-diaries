@@ -1,57 +1,106 @@
-import NextAuth, { AuthOptions, User } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "../../../../../database/index";
-import { getServerSession } from "next-auth";
+import NextAuth, { NextAuthOptions, User } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
+import UserModel, { UserDocument } from "../../../../../models/User";
+import { connect } from "../../../../../database/index";
+import { signJwtToken } from "../../../../../lib/jwt";
 
-// Declare additional properties for the session and JWT
+// Extend the default User interface
 declare module "next-auth" {
+  interface User {
+    _id: string;
+    accessToken?: string;
+  }
+
   interface Session {
-    user: User & {
-      isAdmin: boolean;
-    };
+    user: {
+      _id: string;
+      accessToken?: string;
+    } & User;
   }
 }
+
+// Extend the default JWT interface
 declare module "next-auth/jwt" {
   interface JWT {
-    isAdmin: boolean;
+    _id: string;
+    accessToken?: string;
   }
 }
 
-// Refactored auth options
-const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "jwt",
-  },
+// Authorization function to validate user credentials
+async function authorize(
+  credentials: Record<string, string> | undefined
+): Promise<User | null> {
+  await connect();
+
+  if (!credentials) {
+    throw new Error("No credentials provided");
+  }
+
+  const { email, password } = credentials;
+
+  try {
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      throw new Error("Invalid input");
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      throw new Error("Passwords do not match");
+    } else {
+      const currentUser = user.toObject() as UserDocument;
+      const accessToken = signJwtToken(currentUser, { expiresIn: "7d" });
+
+      return {
+        ...currentUser,
+        accessToken,
+      } as User;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export const authOptions: NextAuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    CredentialsProvider({
+      type: "credentials",
+      credentials: {},
+      authorize,
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({ session, token }: any) {
-      if (token) {
-        session.user.isAdmin = token.isAdmin;
+    async jwt({ token, user }) {
+      if (user) {
+        token.accessToken = user.accessToken;
+        token._id = user._id;
       }
-      return session;
-    },
-    async jwt({ token }: any) {
-      const userInDb = await prisma.user.findUnique({
-        where: {
-          email: token.email!,
-        },
-      });
-      token.isAdmin = userInDb?.isAdmin || false;
+
       return token;
     },
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          ...session.user,
+          _id: token._id,
+          accessToken: token.accessToken,
+        };
+      }
+
+      return session;
+    },
   },
-  secret: process.env.NEXTAUTH_SECRET as string,
 };
 
-const nextAuth = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
 
-export const getAuthSession = () => getServerSession(authOptions);
-
-export { nextAuth as GET, nextAuth as POST };
+export { handler as GET, handler as POST };

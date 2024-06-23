@@ -36,11 +36,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("bold")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <Bold className="w-5 h-5" />
+          <Bold className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -49,11 +49,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("italic")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <Italic className="w-5 h-5" />
+          <Italic className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -62,11 +62,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("underline")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <Underline className="w-5 h-5" />
+          <Underline className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -75,11 +75,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("strike")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <Strikethrough className="w-5 h-5" />
+          <Strikethrough className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -88,11 +88,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("heading", { level: 2 })
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <Heading2 className="w-5 h-5" />
+          <Heading2 className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -101,11 +101,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("bulletList")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <List className="w-5 h-5" />
+          <List className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -114,11 +114,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("orderedList")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <ListOrdered className="w-5 h-5" />
+          <ListOrdered className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -127,11 +127,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("blockquote")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <Quote className="w-5 h-5" />
+          <Quote className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -140,11 +140,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("code")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
+              ? "bg-[#c59c2a] text-white p-2 rounded-lg"
+              : "text-[#6b581e]"
           }
         >
-          <Code className="w-5 h-5" />
+          <Code className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -153,11 +153,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("undo")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400 hover:bg-sky-700 hover:text-white p-1 hover:rounded-lg"
+              ? "bg-[#d3a116cc] text-white p-2 rounded-lg"
+              : "text-[#cbb224] hover:bg-[#7e6a31cc] hover:text-white p-1 hover:rounded-lg"
           }
         >
-          <Undo className="w-5 h-5" />
+          <Undo className="w-5 h-5 text-[#8f751b]" />
         </button>
         <button
           onClick={(e) => {
@@ -166,11 +166,11 @@ const Toolbar = ({ editor, content }: Props) => {
           }}
           className={
             editor.isActive("redo")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400 hover:bg-sky-700 hover:text-white p-1 hover:rounded-lg"
+              ? "bg-[#d3a116cc] text-white p-2 rounded-lg"
+              : "text-[#cbb224] hover:bg-[#7e6a31cc] hover:text-white p-1 hover:rounded-lg"
           }
         >
-          <Redo className="w-5 h-5" />
+          <Redo className="w-5 h-5 text-[#8f751b]" />
         </button>
       </div>
     </div>

@@ -1,11 +1,33 @@
+"use client"
 import React from "react";
 import { PiPackageBold } from "react-icons/pi";
 import { SlCalender } from "react-icons/sl";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { LiaGiftSolid } from "react-icons/lia";
 import { TbTruckDelivery } from "react-icons/tb";
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import Spinner from "../../../components/Spinner";
+import { OrderType } from "../../../types/types";
 
 const OrdersPage = () => {
+  const { data: session, status } = useSession();
+
+  const router = useRouter();
+
+  if (status === "unauthenticated") {
+    router.push("/");
+  }
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["orders"],
+    queryFn: () =>
+      fetch("http://localhost:3000/api/orders").then((res) => res.json()),
+  });
+
+  if (isLoading || status === "loading") return <Spinner />;
+
   return (
     <div className="p-4 lg:px-20 xl:px-40 mt-40">
       <table className="w-full border-separate border-spacing-3">
@@ -29,33 +51,27 @@ const OrdersPage = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="text-sm md:text-base bg-[#b5a466]">
-            <td className="hidden md:block py-6 px-1">1237861238721</td>
-            <td className="py-6 px-1">19.07.2023</td>
-            <td className="py-6 px-1">89.90</td>
-            <td className="hidden md:block py-6 px-1">
-              Big Burger Menu (2), Veggie Pizza (2), Coca Cola 1L (2)
-            </td>
-            <td className="py-6 px-1">On the way (approx. 10min)...</td>
-          </tr>
-          <tr className="text-sm md:text-base bg-[#948e75]">
-            <td className="hidden md:block py-6 px-1">1237861238721</td>
-            <td className="py-6 px-1">19.07.2023</td>
-            <td className="py-6 px-1">89.90</td>
-            <td className="hidden md:block py-6 px-1">
-              Big Burger Menu (2), Veggie Pizza (2), Coca Cola 1L (2)
-            </td>
-            <td className="py-6 px-1">On the way (approx. 10min)...</td>
-          </tr>
-          <tr className="text-sm md:text-base bg-[#b5a466]">
-            <td className="hidden md:block py-6 px-1">1237861238721</td>
-            <td className="py-6 px-1">19.07.2023</td>
-            <td className="py-6 px-1">89.90</td>
-            <td className="hidden md:block py-6 px-1">
-              Big Burger Menu (2), Veggie Pizza (2), Coca Cola 1L (2)
-            </td>
-            <td className="py-6 px-1">On the way (approx. 10min)...</td>
-          </tr>
+          {data.map((item: OrderType) => (
+            <tr className="text-sm md:text-base bg-[#b5a466]" key={item.id}>
+              <td className="hidden md:block py-6 px-1">{item.id}</td>
+              <td className="py-6 px-1">
+                {item.createdAt.toString().slice(0, 10)}
+              </td>
+              <td className="py-6 px-1">{item.price}</td>
+              <td className="hidden md:block py-6 px-1">
+                {item.products[0].title}
+              </td>
+              {session?.user.isAdmin ? (
+                <input
+                  placeholder={item.status}
+                  className="p-2 ring-1 ring-red-100n rounded-md"
+                />
+              ) : (
+                <td className="py-6 px-1">{item.status}</td>
+              )}
+              <td className="py-6 px-1">On the way (approx. 10min)...</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

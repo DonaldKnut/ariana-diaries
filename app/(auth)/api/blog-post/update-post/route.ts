@@ -1,36 +1,47 @@
-import prisma from "../../../../../database";
+// api/posts/update.ts
 import { NextRequest, NextResponse } from "next/server";
+import { connect } from "../../../../../database";
+import Post from "../../../../../models/Post";
 
 export async function PUT(request: NextRequest) {
   try {
-    const extractData = await request.json();
+    await connect(); // Ensure the database is connected
 
-    const updatedBlogPost = await prisma.post.update({
-      where: {
-        id: Number(extractData.id),
-      },
-      data: {
-        comments: extractData.comments,
-      },
-    });
+    const extractData = await request.json();
+    const { id, comments } = extractData;
+
+    if (!id || !comments) {
+      return NextResponse.json({
+        success: false,
+        message: "Required fields are missing in the request",
+      });
+    }
+
+    // Update the blog post using Mongoose
+    const updatedBlogPost = await Post.findByIdAndUpdate(
+      id,
+      { comments },
+      { new: true }
+    );
 
     if (updatedBlogPost) {
       return NextResponse.json({
         success: true,
         message: "Blog post updated",
+        post: updatedBlogPost,
       });
     } else {
       return NextResponse.json({
         success: false,
-        message: "failed to update the post ! Please try again",
+        message: "Failed to update the post! Please try again",
       });
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
 
     return NextResponse.json({
       success: false,
-      message: "Something went wrong ! Please try again",
+      message: "Something went wrong! Please try again",
     });
   }
 }

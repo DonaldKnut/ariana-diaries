@@ -1,3 +1,4 @@
+// SingleBlog.tsx
 "use client";
 import { Blog } from "../../../utils/types";
 import { useSession } from "next-auth/react";

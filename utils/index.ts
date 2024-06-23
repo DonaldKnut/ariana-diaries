@@ -90,19 +90,10 @@ export const formControls: FormControlItem[] = [
   },
 ];
 
-export const firebaseConfig = {
-  apiKey: "AIzaSyCjwnA4BvzNoc0Sgq2yCZopbxENK-gzO8s",
-  authDomain: "ariana-blog.firebaseapp.com",
-  projectId: "ariana-blog",
-  storageBucket: "ariana-blog.appspot.com",
-  messagingSenderId: "991320699319",
-  appId: "1:991320699319:web:e7351bd2a8b353e42cb832",
-  measurementId: "G-S56GJFBY2G",
-};
-
 export const initialBlogFormData = {
   title: "",
   description: "",
   image: "",
   category: "",
+  content: "",
 };

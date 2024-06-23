@@ -1,34 +1,46 @@
-import prisma from "../../../../database";
-import { NextRequest, NextResponse } from "next/server";
+// pages/api/blog-posts/[categoryID].ts
 
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const extractCategoryID = searchParams.get("categoryID");
+import { NextApiRequest, NextApiResponse } from "next";
+import mongoose from "mongoose";
+import { connect } from "../../../../database";
+import Post, { IPost } from "../../../../models/Post"; // Adjust path as necessary
 
-    const getBlogPostListBasedOnCurrentCategoryID = await prisma.post.findMany({
-      where: {
-        category: extractCategoryID || "",
-      },
-    });
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<{ success: boolean; data?: IPost[]; message?: string }>
+) {
+  await connect(); // Ensure MongoDB connection
 
-    if (getBlogPostListBasedOnCurrentCategoryID) {
-      return NextResponse.json({
-        success: true,
-        data: getBlogPostListBasedOnCurrentCategoryID,
-      });
-    } else {
-      return NextResponse.json({
-        success: false,
-        message: "Failed to fetch data ! Please try again",
-      });
+  const { categoryID } = req.query;
+
+  if (req.method === "GET") {
+    try {
+      if (!categoryID) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Category ID is required" });
+      }
+
+      // Validate if categoryID is a valid ObjectId
+      if (!mongoose.isValidObjectId(categoryID as string)) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid category ID format" });
+      }
+
+      // Fetch blog posts based on categoryID
+      const blogPostList = await Post.find({ category: categoryID });
+
+      return res.status(200).json({ success: true, data: blogPostList });
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Something went wrong" });
     }
-  } catch (error) {
-    console.log(error);
-
-    return NextResponse.json({
-      success: false,
-      message: "Something went wrong ! Please try again",
-    });
+  } else {
+    return res
+      .status(405)
+      .json({ success: false, message: `Method ${req.method} not allowed` });
   }
 }

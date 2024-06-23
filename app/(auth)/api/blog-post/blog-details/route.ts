@@ -1,34 +1,44 @@
-import prisma from "../../../../../database";
-import { NextRequest, NextResponse } from "next/server";
+// pages/api/blog-post/get-blog-details.ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { connect } from "../../../../../database";
+import mongoose from "mongoose";
 
-export async function GET(req: NextRequest) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
-    const url = new URL(req.url);
-    const blogID = url.searchParams.get("blogID");
+    const { blogID } = req.query;
 
-    const blogDetails = await prisma.post.findUnique({
-      where: {
-        id: Number(blogID),
-      },
+    if (typeof blogID !== "string") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid blogID" });
+    }
+
+    const connection = await connect(); // Get the mongoose connection
+    const collection = connection.db.collection("posts");
+
+    const blogDetails = await collection.findOne({
+      _id: new mongoose.Types.ObjectId(blogID),
     });
 
     if (blogDetails) {
-      return NextResponse.json({
+      return res.status(200).json({
         success: true,
         data: blogDetails,
       });
     } else {
-      return NextResponse.json({
+      return res.status(404).json({
         success: false,
-        message: "Failed to fetch the blog details ! Please try again",
+        message: "Blog details not found",
       });
     }
   } catch (e) {
-    console.log(e);
-
-    return NextResponse.json({
+    console.error(e);
+    return res.status(500).json({
       success: false,
-      message: "Something went wrong ! Please try again",
+      message: "Something went wrong",
     });
   }
 }

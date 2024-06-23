@@ -3,19 +3,12 @@
 import React, { useContext, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { initializeApp } from "firebase/app";
 import Spinner from "../../components/Spinner";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
 import { GoPlusCircle } from "react-icons/go";
 import Button from "../../components/button";
 import { GlobalContext } from "../../context";
 import Tiptap from "../../components/Tiptap";
-import { firebaseConfig, formControls } from "../../utils";
+import { formControls } from "../../utils";
 import { BlogFormData } from "../../utils/types";
 
 const initialBlogFormData: BlogFormData = {
@@ -25,34 +18,6 @@ const initialBlogFormData: BlogFormData = {
   category: "",
   content: "",
 };
-
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app, "gs://ariana-blog.appspot.com");
-
-function createUniqueFileName(fileName: string) {
-  const timeStamp = Date.now();
-  const randomString = Math.random().toString(36).substring(2, 12);
-  return `${fileName}-${timeStamp}-${randomString}`;
-}
-
-async function handleImageSaveToFirebase(file: any) {
-  const uniqueFileName = createUniqueFileName(file?.name);
-  const storageRef = ref(storage, `blog/${uniqueFileName}`);
-  const uploadImg = uploadBytesResumable(storageRef, file);
-
-  return new Promise((resolve, reject) => {
-    uploadImg.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => reject(error),
-      () => {
-        getDownloadURL(uploadImg.snapshot.ref)
-          .then((url) => resolve(url))
-          .catch((error) => reject(error));
-      }
-    );
-  });
-}
 
 export default function Create() {
   const { formData, setFormData } = useContext(GlobalContext);
@@ -65,18 +30,30 @@ export default function Create() {
   ) => {
     if (!event.target.files) return;
     setImageLoading(true);
+    const file = event.target.files[0];
+
     try {
-      const imageUrl: any = await handleImageSaveToFirebase(
-        event.target.files[0]
-      );
-      setImageLoading(false);
-      setFormData({
-        ...formData,
-        image: imageUrl,
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          image: data.imageUrl,
+        }));
+      } else {
+        console.error("Error uploading image:", response.statusText);
+      }
     } catch (error) {
-      setImageLoading(false);
       console.error("Error uploading image:", error);
+    } finally {
+      setImageLoading(false);
     }
   };
 
