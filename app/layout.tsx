@@ -7,11 +7,11 @@ import Header from "../components/header/index";
 import QueryProvider from "../components/QueryProvider";
 import AuthProvider from "../components/AuthProvider";
 import { ToastContainer } from "react-toastify";
-import { DM_Sans } from "next/font/google";
+import { Poppins } from "next/font/google"; // Import Poppins font
 
-const dmSans = DM_Sans({
-  weight: "400",
-  subsets: ["latin"],
+const poppins = Poppins({
+  weight: "400", // Font weight
+  subsets: ["latin"], // Subsets (optional)
 });
 
 export const metadata: Metadata = {
@@ -26,7 +26,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${dmSans.className}`}>
+      <body className={`${poppins.className}`}>
+        {" "}
+        {/* Apply Poppins className */}
         <NextThemeProvider>
           <NextAuthProvider>
             <GlobalState>
