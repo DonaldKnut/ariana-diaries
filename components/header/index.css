@@ -1,3 +1,25 @@
+/* index.css */
+
+/* Ensure the submenu stays visible while hovering over it or its parent */
+.group:hover .sub-menu,
+.sub-menu:hover {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0.3s ease, opacity 0.3s ease;
+}
+
+/* Default state for submenu */
+.sub-menu {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s ease, opacity 0.3s ease;
+}
+
+/* Ensure the chevron rotates when hovered */
+.group:hover .chevron-down {
+  transform: rotate(180deg);
+}
+
 @media (min-width: 368px) {
   .navbar-button {
     display: none;

@@ -1,30 +1,60 @@
 import { FormControlItem, MenuItem, Option } from "./types";
+import { CgMenuBoxed } from "react-icons/cg";
+import { HiOutlineShoppingBag } from "react-icons/hi";
+import { IoSearchCircleSharp } from "react-icons/io5";
+
+// utils/menuItems.ts
 
 export const menuItems: MenuItem[] = [
   {
-    id: "about",
-    label: "About",
-    path: "/about",
+    id: "products",
+    label: "Products",
+    path: "/shop",
+    icon: HiOutlineShoppingBag,
+    subMenu: [
+      {
+        id: "menu",
+        label: "Menu",
+        path: "/menu",
+        icon: CgMenuBoxed,
+      },
+      {
+        id: "shop",
+        label: "Shop",
+        path: "/shop",
+        icon: HiOutlineShoppingBag,
+      },
+    ],
   },
   {
-    id: "category",
-    label: "Category",
-    path: "/category/application",
-  },
-  {
-    id: "blogs",
-    label: "Blogs",
-    path: "/blogs",
+    id: "blog",
+    label: "Blog",
+    path: "/blog",
+    subMenu: [
+      {
+        id: "blog1",
+        label: "Blog Post 1",
+        path: "/blog/post1",
+        icon: CgMenuBoxed,
+      },
+      {
+        id: "blog2",
+        label: "Blog Post 2",
+        path: "/blog/post2",
+        icon: CgMenuBoxed,
+      },
+    ],
   },
   {
     id: "search",
     label: "Search",
     path: "/search",
+    icon: IoSearchCircleSharp,
   },
   {
-    id: "shop",
-    label: "Shop",
-    path: "/shop",
+    id: "about",
+    label: "About",
+    path: "/about",
   },
 ];
 

@@ -1,5 +1,5 @@
+// components/Header.tsx
 "use client";
-
 import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,17 +9,20 @@ import { useTheme } from "next-themes";
 import { GlobalContext } from "../../context";
 import { BiLogOut } from "react-icons/bi";
 import { FaPlusCircle } from "react-icons/fa";
-import { IoSearchCircleSharp } from "react-icons/io5";
+import { SubMenuItem } from "../../utils/types";
 import { HiArrowTopRightOnSquare } from "react-icons/hi2";
+import { CgChevronDownO } from "react-icons/cg";
 import Button from "../button";
 import ThemeToggler from "../theme";
-import { menuItems } from "../../utils";
+import { menuItems } from "../../utils/index";
+import { MenuItem } from "../../utils/types"; // Adjusted import
 import CartIconBeta from "../CartIconBeta";
 import "./index.css";
 
 export default function Header() {
   const [sticky, setSticky] = useState<boolean>(false);
   const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const { data: session } = useSession();
   const { setSearchQuery, setSearchResults } = useContext(GlobalContext);
   const router = useRouter();
@@ -35,6 +38,17 @@ export default function Header() {
     setNavbarOpen(!navbarOpen);
   }
 
+  // Close navbar on route change
+  useEffect(() => {
+    setNavbarOpen(false);
+  }, [pathName]);
+
+  useEffect(() => {
+    setSearchResults([]);
+    setSearchQuery("");
+  }, [pathName]);
+
+  // Handle window scroll for sticky header
   useEffect(() => {
     window.addEventListener("scroll", handleStickyNavbar);
     return () => {
@@ -42,13 +56,31 @@ export default function Header() {
     };
   }, []);
 
+  // Toggle active submenu
+  const toggleActiveSubmenu = (itemId: string) => {
+    if (activeSubmenu === itemId) {
+      setActiveSubmenu(null);
+    } else {
+      setActiveSubmenu(itemId);
+    }
+  };
+
+  // Handle click outside to close submenu
   useEffect(() => {
-    setSearchResults([]);
-    setSearchQuery("");
-  }, [pathName]);
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      if (target.closest("#navbarCollapse") || target.closest(".group")) return;
+      setActiveSubmenu(null);
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="text-[#f5d876]">
+    <div className="text-[#a79044]">
       <header
         className={`top-0 left-0 z-40 flex w-full items-center
           ${
@@ -106,7 +138,7 @@ export default function Header() {
                 </button>
                 <nav
                   id="navbarCollapse"
-                  className={`absolute right-0 z-30 w-[250px] rounded-md border-[.5px] bg-[#6F6738] placeholder:border-body-color/50 py-4 
+                  className={`absolute right-0 z-30 w-[250px] rounded-md border-[.5px] bg-[#453415] placeholder:border-body-color/50 py-4 
                   px-6 duration-300 dark:border-body-color/20 dark:bg-dark lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100
                   ${
                     navbarOpen
@@ -116,18 +148,47 @@ export default function Header() {
                 `}
                 >
                   <ul className="block lg:flex lg:space-x-12">
-                    {menuItems.map((item) => (
-                      <li key={item.id} className="mt-5 mb-5 font-bold text-xl">
-                        <Link
-                          href={item.path}
-                          className="flex items-center space-x-2 hover:text-[#b3aa6d]"
+                    {menuItems.map((item: MenuItem) => (
+                      <li
+                        key={item.id}
+                        className={`mt-5 mb-5 font-bold text-xl ${
+                          item.subMenu ? "relative group" : ""
+                        }`}
+                      >
+                        <div
+                          className="flex items-center space-x-2 cursor-pointer"
+                          onClick={() => toggleActiveSubmenu(item.id)} // Handle submenu click
                         >
-                          {item.id === "search" ? (
-                            <IoSearchCircleSharp className="text-[30px]" />
-                          ) : (
-                            <span>{item.label}</span>
+                          {item.icon && <item.icon className="text-[30px]" />}
+                          <span>{item.label}</span>
+                          {item.subMenu && (
+                            <CgChevronDownO
+                              className={`text-[24px] transition-transform duration-300 ${
+                                activeSubmenu === item.id ? "rotate-180" : ""
+                              }`}
+                            />
                           )}
-                        </Link>
+                        </div>
+                        {item.subMenu && activeSubmenu === item.id && (
+                          <ul className="absolute left-0 mt-2 w-48 bg-[#463f1a] shadow-lg rounded-md p-2 transition-opacity duration-300">
+                            {item.subMenu.map((subItem: SubMenuItem) => (
+                              <li
+                                key={subItem.id}
+                                className="mt-2 flex items-center"
+                              >
+                                <Link
+                                  href={subItem.path}
+                                  className="flex items-center gap-2 w-full px-4 py-2 text-sm rounded-[9px] z-[1000] text-white hover:bg-[#b3aa6d] transition-transform duration-300"
+                                >
+                                  {subItem.icon && (
+                                    <subItem.icon className="mr-2 text-[24px]" />
+                                  )}
+                                  {subItem.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </li>
                     ))}
                     {session ? (

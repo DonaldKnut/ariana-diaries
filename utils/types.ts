@@ -1,8 +1,20 @@
-export interface MenuItem {
+// utils/types.ts
+import { IconType } from "react-icons";
+
+export interface SubMenuItem {
   id: string;
   label: string;
   path: string;
+  icon?: IconType;
 }
+
+export type MenuItem = {
+  id: string;
+  label: string;
+  path: string;
+  icon?: IconType;
+  subMenu?: SubMenuItem[];
+};
 
 export interface Option {
   label: string;
@@ -39,7 +51,6 @@ export interface Blog {
   author: string;
 }
 
-
 export type OrderType = {
   id: string;
   userEmail: string;
@@ -48,4 +59,4 @@ export type OrderType = {
   status: string;
   createdAt: Date;
   intent_id?: string;
-}
+};

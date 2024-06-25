@@ -70,7 +70,7 @@ const LoginForm = () => {
         router.push("/create");
       }
     } catch (error) {
-      setError("Failed to login");
+      setError("Failed to login. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -124,10 +124,18 @@ const LoginForm = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-[#4a4335] text-white focus:outline-none focus:border-yellow-400"
             />
+            <div className="mt-2">
+              <a
+                href="/auth/forgot-password"
+                className="text-[#dcc187] hover:text-[#f1dcae] hover:underline text-sm"
+              >
+                Forget Password?
+              </a>
+            </div>
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 px-4 py-2 text-[#e0ae1acc] focus:outline-none"
+              className="absolute inset-y-0 top-[-32px] right-0 pr-3 text-[#e0ae1acc] focus:outline-none"
             >
               {showPassword ? "Hide" : "Show"}
             </button>

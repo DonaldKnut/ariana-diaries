@@ -44,13 +44,13 @@ async function authorize(
     const user = await UserModel.findOne({ email });
 
     if (!user) {
-      throw new Error("Invalid input");
+      throw new Error("Invalid email or password");
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new Error("Passwords do not match");
+      throw new Error("Invalid email or password");
     } else {
       const currentUser = user.toObject() as UserDocument;
       const accessToken = signJwtToken(currentUser, { expiresIn: "7d" });
@@ -60,9 +60,9 @@ async function authorize(
         accessToken,
       } as User;
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    return null;
+    throw new Error(error.message || "Login failed. Please try again later.");
   }
 }
 
@@ -76,6 +76,7 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/login",
+    error: "/auth/error", // custom error page
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
@@ -84,7 +85,6 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = user.accessToken;
         token._id = user._id;
       }
-
       return token;
     },
     async session({ session, token }) {
@@ -95,7 +95,6 @@ export const authOptions: NextAuthOptions = {
           accessToken: token.accessToken,
         };
       }
-
       return session;
     },
   },

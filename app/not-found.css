@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap");
+
+/* Global styles */
+body {
+  font-family: "DM Sans", sans-serif;
+  color: white;
+  background-color: #6f6738;
+}
+
+/* Container styles */
+.mobile_advert-wrap {
+  width: 80%;
+  margin: 29px auto;
+  border-radius: 23px;
+  padding: 44px 38px;
+  background-color: #6f6738;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Image styles */
+.mobile-img {
+  width: 100%; /* Responsive width */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px;
+}
+
+/* Text styles */
+.mobile-h1-text {
+  font-size: 48px;
+  font-family: "Lobster", cursive;
+  margin-top: 20px;
+  color: #50eb50;
+}
+
+.mobile-h5-text {
+  font-size: 18px;
+  color: #50eb50;
+  margin: 12px 0;
+}
+
+.label_for_courses {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.courses_link_highlight {
+  color: #8cba8c;
+  background-color: #000;
+  padding: 12px 33px;
+  border-radius: 22px;
+  transition: all 0.6s ease-in;
+}
+
+.courses_link_highlight:hover {
+  background-color: #cabfbf;
+  text-decoration: underline;
+  color: #173817;
+}
+
+@media (min-width: 568px) {
+  .mobile-h5-text {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile_advert-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .label-text_wrapper-left {
+    flex: 1;
+    text-align: center;
+  }
+
+  .label-text_wrapper-section_right {
+    flex: 1;
+    width: auto; /* Adjust as needed */
+  }
+
+  .mobile-img {
+    width: 394px; /* Adjust as needed */
+    height: 394px; /* Maintain aspect ratio */
+  }
+
+  .mobile-h1-text {
+    font-size: 69px; /* Adjust as needed */
+  }
+
+  .label-text_wrapper {
+    padding: 44px 38px; /* Adjust padding as needed */
+  }
+}
