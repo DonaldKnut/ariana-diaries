@@ -7,9 +7,9 @@ import Header from "../components/header/index";
 import QueryProvider from "../components/QueryProvider";
 import AuthProvider from "../components/AuthProvider";
 import { ToastContainer } from "react-toastify";
-import { Poppins } from "next/font/google"; // Import Poppins font
+import { Cabin } from "next/font/google"; // Import Cabin font
 
-const poppins = Poppins({
+const cabin = Cabin({
   weight: "400", // Font weight
   subsets: ["latin"], // Subsets (optional)
 });
@@ -26,9 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className}`}>
-        {" "}
-        {/* Apply Poppins className */}
+      <body className={`${cabin.className}`}>
         <NextThemeProvider>
           <NextAuthProvider>
             <GlobalState>

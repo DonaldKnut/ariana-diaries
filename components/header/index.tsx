@@ -80,7 +80,7 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="text-[#a79044]">
+    <div className="text-[#e0c056] ">
       <header
         className={`top-0 left-0 z-40 flex w-full items-center
           ${
@@ -159,7 +159,9 @@ export default function Header() {
                           className="flex items-center space-x-2 cursor-pointer"
                           onClick={() => toggleActiveSubmenu(item.id)} // Handle submenu click
                         >
-                          {item.icon && <item.icon className="text-[30px]" />}
+                          {item.icon && (
+                            <item.icon className="text-[30px] hover:text-[#b4b256]" />
+                          )}
                           <span>{item.label}</span>
                           {item.subMenu && (
                             <CgChevronDownO
@@ -170,7 +172,7 @@ export default function Header() {
                           )}
                         </div>
                         {item.subMenu && activeSubmenu === item.id && (
-                          <ul className="absolute left-0 mt-2 w-48 bg-[#463f1a] shadow-lg rounded-md p-2 transition-opacity duration-300">
+                          <ul className="absolute left-0 mt-2 w-48 bg-[#463f1a] shadow-lg rounded-[12px] p-2 transition-opacity duration-300">
                             {item.subMenu.map((subItem: SubMenuItem) => (
                               <li
                                 key={subItem.id}

@@ -2,11 +2,11 @@
 import { menu } from "../../../data";
 import Link from "next/link";
 import React from "react";
-import Button from "../../../components/button";
+// import Button from "../../../components/button";
 
 const MenuPage = () => {
   return (
-    <div className="p-4 mt-[80px] lg:px-20 xl:px-40 h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col md:flex-row items-center">
+    <div className="p-4 mt-[80px] lg:px-20 xl:px-40 h-[240px] md:h-[calc(100vh-9rem)] flex flex-col md:flex-row items-center">
       {menu.map((category) => (
         <Link
           href={`/menu/${category.slug}`}
@@ -17,13 +17,13 @@ const MenuPage = () => {
           <div className={`text-${category.color} w-1/2`}>
             <h1 className="uppercase font-bold text-3xl">{category.title}</h1>
             <p className="text-sm my-8">{category.desc}</p>
-            <Button
+            <button
               className={`hidden 2xl:block bg-[#9e801e] text-${
                 category.color === "black" ? "white" : "red-500"
               } py-2 px-4 rounded-md`}
             >
               Explore
-            </Button>
+            </button>
           </div>
         </Link>
       ))}
