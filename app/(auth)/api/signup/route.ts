@@ -46,6 +46,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       viewEngine: {
         extname: ".hbs",
         partialsDir: path.resolve("./emailTemplates/"),
+        layoutsDir: path.resolve("./emailTemplates/"),
+        defaultLayout: "",
       },
       viewPath: path.resolve("./emailTemplates/"),
       extName: ".hbs",
@@ -60,7 +62,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       template: "welcome", // Name of the template file without extension
       context: {
         name: newUser.name,
-        logoUrl: `${process.env.NEXT_PUBLIC_URL}/ariana_image.png`, // Adjust the path based on your project structure
+        logoUrl:
+          "https://res.cloudinary.com/dtujpq8po/image/upload/v1720111312/serwo4nb3uieilurt2eh.png",
       },
     };
 

@@ -5,24 +5,14 @@ import Link from "next/link";
 import { IoCalendarClearSharp } from "react-icons/io5";
 import moment from "moment";
 
-interface Author {
-  avatar?: {
-    url: string;
-  };
-  name: string;
-  designation: string;
-}
-
 interface Blog {
   _id: string;
-  image?: {
-    url: string;
-  };
+  image?: string;
   category: string;
   createdAt: string;
   title: string;
   excerpt: string;
-  authorId?: Author;
+  authorId?: string;
 }
 
 interface FirstBlogProps {
@@ -74,8 +64,8 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
             <div className="flex items-center gap-3">
               <Image
                 src={
-                  firstBlog?.authorId?.avatar?.url
-                    ? firstBlog?.authorId?.avatar?.url
+                  firstBlog?.authorId
+                    ? firstBlog?.authorId
                     : "/ariana-login-image.png"
                 }
                 alt="picture of the author"
@@ -86,10 +76,8 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
               />
 
               <div className="text-xs">
-                <h6>{firstBlog?.authorId?.name}</h6>
-                <p className="text-paragraphColor">
-                  {firstBlog?.authorId?.designation}
-                </p>
+                <h6>{firstBlog?.authorId}</h6>
+                <p className="text-paragraphColor">{firstBlog?.authorId}</p>
               </div>
             </div>
           </div>

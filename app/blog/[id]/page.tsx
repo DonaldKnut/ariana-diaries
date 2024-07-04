@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import moment from "moment";
 import { MdArrowCircleLeft } from "react-icons/md";
+import { TiWarning } from "react-icons/ti";
 
 import {
   AiFillDelete,
@@ -37,6 +38,7 @@ interface Comment {
 }
 
 interface Blog {
+  content: string;
   _id: string;
   authorId: {
     _id: string;
@@ -75,6 +77,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
     image: "",
     description: "",
     quote: "",
+    content: "",
     likes: [],
     comments: [],
   });
@@ -173,6 +176,10 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
       if (response.status === 200) {
         setIsLiked((prev) => !prev);
         setBlogLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+        setError(null);
+      } else if (response.status === 400) {
+        const errorData = await response.json();
+        setError(errorData.message);
       } else {
         console.log("Request failed with status:", response.status);
       }
@@ -327,7 +334,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
 
         <div className="text-center space-y-3">
           <nav className="mb-4">
-            <Link href="/blog" className="text-[#b1a020] hover:underline">
+            <Link href="/blog" className="text-[#ffe83d] hover:underline">
               <MdArrowCircleLeft size={40} className="inline-block mr-2" />
               Back to Blog
             </Link>
@@ -336,7 +343,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
           <p>{blogDetails?.excerpt}...</p>
 
           <p className="flex items-center justify-center gap-3">
-            <span className="text-[#453604] bg-[#a5930a] rounded-[5px] p-2 ">
+            <span className="text-[#ffffff] bg-[#a5930a] rounded-[5px] p-2 ">
               {blogDetails?.category}
             </span>
 
@@ -380,6 +387,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
                     </div>
                   )
                 )}
+              <p>{blogDetails?.content}</p>
             </div>
           </div>
         </div>
@@ -408,6 +416,12 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
             <AiOutlineComment size={20} />
           </div>
         </div>
+        {error && (
+          <div className="flex justify-center items-center gap-2 mb-4 text-red-500 text-center">
+            <TiWarning />
+            <p>{error}</p>
+          </div>
+        )}
       </div>
 
       <div>

@@ -14,13 +14,7 @@ interface Blog {
   createdAt: string;
   title: string;
   excerpt: string;
-  authorId?: {
-    avatar?: {
-      url: string;
-    };
-    name: string;
-    designation: string;
-  };
+  authorId?: string;
 }
 
 async function fetchBlogs(): Promise<Blog[]> {

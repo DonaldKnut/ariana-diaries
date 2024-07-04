@@ -5,8 +5,9 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   designation?: string;
-  avatar?: object;
-  // avatar?: { image: string };
+  avatar?: {
+    url: string;
+  };
   age?: string;
   location?: string;
   about?: string;
@@ -33,8 +34,10 @@ const UserSchema = new mongoose.Schema(
       default: "",
     },
     avatar: {
-      type: Object,
-      default: {},
+      url: {
+        type: String,
+        default: "",
+      },
     },
     age: {
       type: String,

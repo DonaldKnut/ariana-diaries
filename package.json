@@ -66,6 +66,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/handlebars": "^4.1.0",
     "@types/nodemailer": "^6.4.15",
-    "@types/nodemailer-express-handlebars": "^4.0.5"
+    "@types/nodemailer-express-handlebars": "^4.0.5",
+    "handlebars-loader": "^1.7.3"
   }
 }

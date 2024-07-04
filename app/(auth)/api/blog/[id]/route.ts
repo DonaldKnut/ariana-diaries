@@ -12,22 +12,57 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  await connect();
+  try {
+    await connect();
+    console.log("Database connected successfully");
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return NextResponse.json(
+      {
+        message: "Database connection error",
+        error: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  }
 
-  const id = params.id;
+  const { id } = params;
+
+  if (!id) {
+    console.error("ID is undefined");
+    return NextResponse.json(
+      { error: "ID is missing in the query parameters" },
+      { status: 400 }
+    );
+  }
+
   const accessToken = req.headers.get("authorization");
+  console.log("Access token:", accessToken);
 
   if (!accessToken) {
+    console.error("Unauthorized access: No token provided");
     return NextResponse.json(
-      { error: "unauthorized (missing token)" },
+      { error: "unauthorized (no token)" },
       { status: 403 }
     );
   }
 
   const token = accessToken.split(" ")[1];
-  const decodedToken = verifyJwtToken(token) as JwtPayload;
+  let decodedToken;
+
+  try {
+    decodedToken = verifyJwtToken(token);
+    console.log("Decoded token:", decodedToken);
+  } catch (error) {
+    console.error("Token verification error:", error);
+    return NextResponse.json(
+      { error: "unauthorized (wrong or expired token)" },
+      { status: 403 }
+    );
+  }
 
   if (!decodedToken) {
+    console.error("Token verification failed");
     return NextResponse.json(
       { error: "unauthorized (wrong or expired token)" },
       { status: 403 }
@@ -35,32 +70,42 @@ export async function PUT(
   }
 
   try {
-    const body = await req.json();
-    const post = await Post.findById(id).populate("author");
-
-    if (post?.userId.toString() !== decodedToken._id.toString()) {
+    if (!mongoose.Types.ObjectId.isValid(id as string)) {
       return NextResponse.json(
-        { msg: "Only author can update his/her blog" },
-        { status: 403 }
+        { message: "Invalid blog post ID" },
+        { status: 400 }
       );
     }
 
-    const updatedPost = await Post.findByIdAndUpdate(
-      id,
-      { $set: { ...body } },
-      { new: true }
-    );
+    const blog = await Post.findById(id);
+    console.log("Blog post found:", blog);
 
-    return NextResponse.json(updatedPost, { status: 200 });
+    if (!blog) {
+      console.error("Blog post not found:", id);
+      return NextResponse.json(
+        { message: "Blog post not found" },
+        { status: 404 }
+      );
+    }
+
+    if (blog.likes.includes(decodedToken._id)) {
+      return NextResponse.json(
+        { message: "User has already liked this post" },
+        { status: 400 }
+      );
+    }
+
+    blog.likes.push(decodedToken._id);
+    console.log("Added like to blog post");
+
+    await blog.save();
+    console.log("Blog post saved successfully");
+
+    return NextResponse.json(blog, { status: 200 });
   } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { message: "PUT error", error: error.message },
-        { status: 500 }
-      );
-    }
+    console.error("PUT request error:", error);
     return NextResponse.json(
-      { message: "PUT error", error: "Unknown error occurred" },
+      { message: "PUT error", error: (error as Error).message },
       { status: 500 }
     );
   }
@@ -78,14 +123,14 @@ export async function GET(
     const post = await Post.findById(id)
       .populate({
         path: "userId",
-        select: "-password",
+        select: "name designation avatar", // Select only necessary fields
         model: User,
       })
       .populate({
         path: "comments",
         populate: {
           path: "user",
-          select: "-password",
+          select: "name designation avatar", // Select only necessary fields
           model: User,
         },
         model: Comment,
@@ -129,11 +174,11 @@ export async function DELETE(
   }
 
   try {
-    const post = await Post.findById(id).populate("author");
+    const post = await Post.findById(id).populate("userId");
 
     if (post?.userId.toString() !== decodedToken._id.toString()) {
       return NextResponse.json(
-        { msg: "Only author can delete his/her blog" },
+        { msg: "Only the author can delete their blog" },
         { status: 403 }
       );
     }
@@ -147,12 +192,12 @@ export async function DELETE(
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
-        { message: "Delete error", error: error.message },
+        { message: "DELETE error", error: error.message },
         { status: 500 }
       );
     }
     return NextResponse.json(
-      { message: "Delete error", error: "Unknown error occurred" },
+      { message: "DELETE error", error: "Unknown error occurred" },
       { status: 500 }
     );
   }
