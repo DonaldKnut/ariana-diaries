@@ -1,4 +1,3 @@
-// SingleBlog.tsx
 "use client";
 import { Blog } from "../../../utils/types";
 import { useSession } from "next-auth/react";
@@ -11,26 +10,23 @@ export default function SingleBlog({
   handleDelete,
 }: {
   blogItem: Blog;
-  handleDelete: (id: number) => void;
+  handleDelete: (id: string, userid: string) => void;
 }) {
   const { image, category, title, content, userimage, userid, id, author } =
-    blogItem; // Including author in destructuring
+    blogItem;
   const { data: session } = useSession();
 
-  // Function to strip HTML tags from content
   const stripHtmlTags = (html: string) => {
     const tmp = document.createElement("div");
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || "";
   };
 
-  // Function to truncate text and add ellipsis if necessary
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
 
-  // Safe access to session user email
   const userEmail = session?.user?.email ?? "";
 
   return (
@@ -57,12 +53,11 @@ export default function SingleBlog({
       <div className="p-4 flex-grow">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           <Link href={`/blogs/${id}`} className="hover:underline">
-            {truncateText(title, 50)} {/* Adjust the maxLength as needed */}
+            {truncateText(title, 50)}
           </Link>
         </h3>
         <p className="mt-2 text-gray-600 dark:text-gray-300 line-clamp-3">
-          {truncateText(stripHtmlTags(content), 100)}{" "}
-          {/* Adjust the maxLength as needed */}
+          {truncateText(stripHtmlTags(content), 100)}
         </p>
       </div>
       <div className="flex items-center p-4">
@@ -87,9 +82,9 @@ export default function SingleBlog({
             </p>
           </div>
         </div>
-        {session && session.user.name === userid && (
+        {session && session.user.email === userEmail && id !== undefined && (
           <button
-            onClick={() => handleDelete(id)}
+            onClick={() => handleDelete(id.toString(), userid)}
             className="ml-auto text-red-600 hover:text-red-800"
           >
             <FaTrash />

@@ -1,12 +1,8 @@
-// pages/api/blog-post/get-blog-details.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { connect } from "../../../../../database";
 import mongoose from "mongoose";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { blogID } = req.query;
 
@@ -16,8 +12,8 @@ export default async function handler(
         .json({ success: false, message: "Invalid blogID" });
     }
 
-    const connection = await connect(); // Get the mongoose connection
-    const collection = connection.db.collection("posts");
+    await connect();
+    const collection = mongoose.connection.db.collection("posts");
 
     const blogDetails = await collection.findOne({
       _id: new mongoose.Types.ObjectId(blogID),

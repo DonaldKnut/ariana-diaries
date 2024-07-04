@@ -4,11 +4,13 @@ export interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
-  designation: string;
-  avatar: object;
-  age: string;
-  location: string;
-  about: string;
+  designation?: string;
+  avatar?: object;
+  // avatar?: { image: string };
+  age?: string;
+  location?: string;
+  about?: string;
+  isAdmin: boolean;
 }
 
 const UserSchema = new mongoose.Schema(
@@ -45,6 +47,10 @@ const UserSchema = new mongoose.Schema(
     about: {
       type: String,
       default: "",
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

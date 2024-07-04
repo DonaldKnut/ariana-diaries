@@ -7,6 +7,18 @@ export type MenuType = {
   color: string;
 }[];
 
+export type BlogFormData = {
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  excerpt: string;
+  quote: string;
+  content: string;
+  userid: string;
+  userimage: string;
+};
+
 export type ProductType = {
   id: string;
   title: string;

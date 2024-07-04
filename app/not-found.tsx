@@ -1,29 +1,33 @@
+"use client";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { AiOutlineArrowRight } from "react-icons/ai";
 
 const ErrorPage: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#5c4312] text-white p-4">
-      <div className="flex items-center max-w-md w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen p-4 lg:p-24">
+      <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
         <Image
           src="/error-img.png"
           alt="404 Error"
           className="mb-6"
-          width="320"
-          height="320"
+          width="520"
+          height="520"
         />
-        <div>
-          <h1 className="text-4xl font-bold mb-4">404</h1>
-          <p className="text-center mb-6">
-            Some places are great to lose yourself in, but not on this occasion.
-            You can return to the homepage.
-          </p>
-          <Link href="/">
-            <button className="bg-white text-green-700 py-2 px-4 rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
-              Homepage
-            </button>
-          </Link>
-        </div>
+      </div>
+      <div className="w-full lg:w-1/2 text-center lg:text-left lg:ml-8">
+        <Image src="/404.png" alt="404 image" width={200} height={200} />
+        <p className="text-lg text-[#948e1c] mb-8 w-[70%] mt-7">
+          Some places are great to lose yourself in, but not on this occasion,
+          you can return to home page.
+        </p>
+        <Link href="/">
+          <button className="inline-flex items-center bg-[#b29c20] text-white py-2 px-4 rounded hover:bg-[#70631e] transition">
+            Homepage{" "}
+            <AiOutlineArrowRight className="ml-2 transition-transform duration-300 ease-in-out group-hover:translate-x-2" />
+          </button>
+        </Link>
       </div>
     </div>
   );

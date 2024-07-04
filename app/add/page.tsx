@@ -1,9 +1,9 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { BsCloudUploadFill } from "react-icons/bs";
 
 type Inputs = {
   title: string;
@@ -40,7 +40,7 @@ const AddPage = () => {
     return <p>Loading...</p>;
   }
 
-  if (status === "unauthenticated" || !session?.user.isAdmin) {
+  if (status === "unauthenticated" || !session?.user?.isAdmin) {
     router.push("/");
   }
 
@@ -51,6 +51,7 @@ const AddPage = () => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
+
   const changeOption = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOption((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
@@ -111,7 +112,7 @@ const AddPage = () => {
             className="text-sm cursor-pointer flex gap-4 items-center"
             htmlFor="file"
           >
-            <Image src="/upload.png" alt="" width={30} height={20} />
+            <BsCloudUploadFill />
             <span>Upload Image</span>
           </label>
           <input

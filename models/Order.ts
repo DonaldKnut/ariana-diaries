@@ -1,15 +1,28 @@
-// src/models/Order.ts
-import { Schema, model, Document, Types } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 export interface IOrder extends Document {
+  userEmail: string;
+  price: number;
+  products: Array<{ title: string; quantity: number }>;
   status: string;
-  // Add other fields as necessary
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const orderSchema = new Schema<IOrder>({
-  status: { type: String, required: true },
-  // Define more fields as necessary
-});
+const OrderSchema: Schema = new Schema(
+  {
+    userEmail: { type: String, required: true },
+    price: { type: Number, required: true },
+    products: [
+      {
+        title: { type: String, required: true },
+        quantity: { type: Number, required: true },
+      },
+    ],
+    status: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
-const Order = model<IOrder>("Order", orderSchema);
-export default Order;
+export default mongoose.models.Order ||
+  mongoose.model<IOrder>("Order", OrderSchema);

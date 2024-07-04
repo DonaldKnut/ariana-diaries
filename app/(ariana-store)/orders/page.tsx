@@ -1,11 +1,11 @@
-"use client"
+"use client";
 import React from "react";
 import { PiPackageBold } from "react-icons/pi";
 import { SlCalender } from "react-icons/sl";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { LiaGiftSolid } from "react-icons/lia";
 import { TbTruckDelivery } from "react-icons/tb";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Spinner from "../../../components/Spinner";
@@ -18,6 +18,7 @@ const OrdersPage = () => {
 
   if (status === "unauthenticated") {
     router.push("/");
+    return null; // Add this to avoid rendering anything before redirect
   }
 
   const { isLoading, error, data } = useQuery({
@@ -27,6 +28,8 @@ const OrdersPage = () => {
   });
 
   if (isLoading || status === "loading") return <Spinner />;
+
+  if (error) return <div>Error loading orders</div>;
 
   return (
     <div className="p-4 lg:px-20 xl:px-40 mt-40">
@@ -51,27 +54,30 @@ const OrdersPage = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item: OrderType) => (
-            <tr className="text-sm md:text-base bg-[#b5a466]" key={item.id}>
-              <td className="hidden md:block py-6 px-1">{item.id}</td>
-              <td className="py-6 px-1">
-                {item.createdAt.toString().slice(0, 10)}
-              </td>
-              <td className="py-6 px-1">{item.price}</td>
-              <td className="hidden md:block py-6 px-1">
-                {item.products[0].title}
-              </td>
-              {session?.user.isAdmin ? (
-                <input
-                  placeholder={item.status}
-                  className="p-2 ring-1 ring-red-100n rounded-md"
-                />
-              ) : (
-                <td className="py-6 px-1">{item.status}</td>
-              )}
-              <td className="py-6 px-1">On the way (approx. 10min)...</td>
-            </tr>
-          ))}
+          {data &&
+            data.map((item: OrderType) => (
+              <tr className="text-sm md:text-base bg-[#b5a466]" key={item.id}>
+                <td className="hidden md:block py-6 px-1">{item.id}</td>
+                <td className="py-6 px-1">
+                  {new Date(item.createdAt).toLocaleDateString()}
+                </td>
+                <td className="py-6 px-1">{item.price}</td>
+                <td className="hidden md:block py-6 px-1">
+                  {item.products[0]?.title || "N/A"}
+                </td>
+                {session?.user?.isAdmin ? (
+                  <td className="py-6 px-1">
+                    <input
+                      placeholder={item.status}
+                      className="p-2 ring-1 ring-red-100 rounded-md"
+                    />
+                  </td>
+                ) : (
+                  <td className="py-6 px-1">{item.status}</td>
+                )}
+                <td className="py-6 px-1">On the way (approx. 10min)...</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

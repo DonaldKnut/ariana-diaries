@@ -34,22 +34,22 @@
   } */
 }
 
-@media (min-width: 1026px) {
-  .login_home-button {
-    display: flex;
-  }
-}
-
 @media (min-width: 783px) {
-  .navbar-button {
-    display: flex;
-  }
   .mobile-session_links {
     display: flex;
   }
 }
 
+@media (min-width: 1026px) {
+}
+
 @media (min-width: 1028px) {
+  .navbar-button {
+    display: flex;
+  }
+  .login_home-button {
+    display: flex;
+  }
   .mobile-session_links {
     display: none;
   }

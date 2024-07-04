@@ -1,5 +1,3 @@
-// next.config.js
-
 /** @type {import('next').NextConfig} */
 const withVideos = require("next-videos");
 const { config } = require("dotenv");
@@ -11,15 +9,19 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "firebasestorage.googleapis.com",
-      },
-      {
-        protocol: "https",
         hostname: "avatars.githubusercontent.com",
       },
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com", // Allow Google user images
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com", // Allow Cloudinary images
+      },
+      {
+        protocol: "https",
+        hostname: "eu.ui-avatars.com", // Allow Cloudinary images
       },
     ],
   },

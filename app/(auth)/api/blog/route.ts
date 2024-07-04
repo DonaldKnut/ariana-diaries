@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import Post, { IPost } from "../../../../../models/Post";
-import { connect } from "../../../../../database";
+import Post, { IPost } from "../../../../models/Post";
+import User from "../../../../models/User";
+import { connect } from "../../../../database";
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,17 +51,32 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Find the user in the database
+    const user = await User.findOne({ name: userid }).exec();
+
+    if (!user) {
+      console.error("User not found:", userid);
+      return NextResponse.json(
+        { success: false, message: "User not found" },
+        { status: 400 }
+      );
+    }
+
+    // Use the user's avatar image if userimage is not provided
+    const userImage = user.avatar?.image || "";
+
     // Create a new blog post
     const newlyCreatedPost = new Post({
       title,
-      description, // Ensure description is passed correctly
+      description,
       image,
       category,
-      userid,
-      userimage: userimage || "", // Use empty string if userimage is not provided
+      userId: user._id,
+      userimage: userimage || userImage || "",
       content,
       excerpt,
       quote,
+      author: [user._id],
     });
 
     // Save the new post to the database
@@ -71,7 +87,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "New blog post added successfully",
-      post: newlyCreatedPost, // Include the created post in the response
+      post: newlyCreatedPost,
     });
   } catch (error: any) {
     console.error("Error creating blog post:", error); // Log detailed error message
@@ -80,6 +96,38 @@ export async function POST(request: NextRequest) {
       success: false,
       message: "Something went wrong! Please try again",
       error: error.message, // Include the error message in the response
+    });
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    await connect();
+    const getAllBlogPosts: IPost[] = await Post.find()
+      .populate({
+        path: "author",
+        select: "name avatar designation",
+      })
+      .sort({ createdAt: -1 })
+      .exec();
+
+    if (getAllBlogPosts.length > 0) {
+      return NextResponse.json({
+        success: true,
+        data: getAllBlogPosts,
+      });
+    } else {
+      return NextResponse.json({
+        success: false,
+        message: "No blog posts found",
+      });
+    }
+  } catch (error: any) {
+    console.error("Error fetching blog posts:", error);
+    return NextResponse.json({
+      success: false,
+      message: "Failed to fetch blog posts. Please try again",
+      error: error.message,
     });
   }
 }

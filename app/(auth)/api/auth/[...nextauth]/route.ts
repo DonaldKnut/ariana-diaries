@@ -5,29 +5,6 @@ import UserModel, { UserDocument } from "../../../../../models/User";
 import { connect } from "../../../../../database/index";
 import { signJwtToken } from "../../../../../lib/jwt";
 
-// Extend the default User interface
-declare module "next-auth" {
-  interface User {
-    _id: string;
-    accessToken?: string;
-  }
-
-  interface Session {
-    user: {
-      _id: string;
-      accessToken?: string;
-    } & User;
-  }
-}
-
-// Extend the default JWT interface
-declare module "next-auth/jwt" {
-  interface JWT {
-    _id: string;
-    accessToken?: string;
-  }
-}
-
 // Authorization function to validate user credentials
 async function authorize(
   credentials: Record<string, string> | undefined
@@ -44,13 +21,13 @@ async function authorize(
     const user = await UserModel.findOne({ email });
 
     if (!user) {
-      throw new Error("Invalid email or password");
+      throw new Error("Incorrect email or password");
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new Error("Invalid email or password");
+      throw new Error("Incorrect email or password");
     } else {
       const currentUser = user.toObject() as UserDocument;
       const accessToken = signJwtToken(currentUser, { expiresIn: "7d" });
@@ -58,6 +35,8 @@ async function authorize(
       return {
         ...currentUser,
         accessToken,
+        role: currentUser.isAdmin ? "admin" : "user", // Derive role from isAdmin
+        isAdmin: currentUser.isAdmin,
       } as User;
     }
   } catch (error: any) {
@@ -84,6 +63,8 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.accessToken = user.accessToken;
         token._id = user._id;
+        token.role = user.role;
+        token.isAdmin = user.isAdmin;
       }
       return token;
     },
@@ -93,6 +74,8 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           _id: token._id,
           accessToken: token.accessToken,
+          role: token.role,
+          isAdmin: token.isAdmin,
         };
       }
       return session;

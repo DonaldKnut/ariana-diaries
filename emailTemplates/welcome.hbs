@@ -1,0 +1,32 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome Email</title>
+    <style>
+      body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin:
+      0; padding: 0; color: #3f3210; } .container { width: 100%; max-width:
+      600px; margin: 0 auto; background-color: #fff; padding: 20px;
+      border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); } .header {
+      text-align: center; padding: 10px 0; } .header img { max-width: 150px; }
+      .content { padding: 20px; } .content h1 { color: #d4af37; /* Gold color */
+      } .content p { font-size: 16px; line-height: 1.5; } .footer { text-align:
+      center; padding: 10px 0; color: #6d602f; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img src="{{logoUrl}}" alt="Ariana Diaries Logo" />
+      </div>
+      <div class="content">
+        <h1>Hello {{name}},</h1>
+        <p>Welcome to Ariana Diaries! We're excited to have you on board.</p>
+        <p>Best Regards,<br />The Ariana Diaries Team</p>
+      </div>
+      <div class="footer">
+        <p>&copy; 2024 Ariana Diaries. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -27,7 +27,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/types/app/shop/page.tsx"
+    ".next/types/app/shop/page.tsx",
+    "actions/uploadActions.js",
+    "app/(auth)/api/blog/[id]/comment/route.ts",
+    "app/(auth)/api/blog/[id]/like/route.ts"
   ],
   "exclude": ["node_modules"]
 }

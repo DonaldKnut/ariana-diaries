@@ -2,6 +2,9 @@ import { FormControlItem, MenuItem, Option } from "./types";
 import { CgMenuBoxed } from "react-icons/cg";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { IoSearchCircleSharp } from "react-icons/io5";
+import { PiArticleMediumBold } from "react-icons/pi";
+import { FcPackage } from "react-icons/fc";
+import { TbSquareRoundedPlusFilled } from "react-icons/tb";
 
 // utils/menuItems.ts
 
@@ -24,6 +27,12 @@ export const menuItems: MenuItem[] = [
         path: "/shop",
         icon: HiOutlineShoppingBag,
       },
+      {
+        id: "add",
+        label: "Add Products",
+        path: "/add",
+        icon: TbSquareRoundedPlusFilled,
+      },
     ],
   },
   {
@@ -33,15 +42,15 @@ export const menuItems: MenuItem[] = [
     subMenu: [
       {
         id: "blog1",
-        label: "Blog Post 1",
-        path: "/blog/post1",
-        icon: CgMenuBoxed,
+        label: "Blog",
+        path: "/blog",
+        icon: PiArticleMediumBold,
       },
       {
         id: "blog2",
-        label: "Blog Post 2",
-        path: "/blog/post2",
-        icon: CgMenuBoxed,
+        label: "Orders",
+        path: "/orders",
+        icon: FcPackage,
       },
     ],
   },
@@ -58,39 +67,21 @@ export const menuItems: MenuItem[] = [
   },
 ];
 
-export const categories: Option[] = [
-  {
-    value: "beauty",
-    label: "Beauty",
-  },
-  {
-    value: "entrepreneurship",
-    label: "Entrepreneurship",
-  },
+export const categories = [
+  { value: "beauty", label: "Beauty" },
+  { value: "entrepreneurship", label: "Entrepreneurship" },
   {
     value: "personal-growth-and-development",
-    label: "Personal-Growth-and-Development",
+    label: "Personal Growth and Development",
   },
-  {
-    value: "application",
-    label: "Application",
-  },
-  {
-    value: "data",
-    label: "Data",
-  },
-  {
-    value: "software",
-    label: "Software",
-  },
-  {
-    value: "tech",
-    label: "Technology",
-  },
-  {
-    value: "science",
-    label: "Science",
-  },
+  { value: "application", label: "Application" },
+  { value: "data", label: "Data" },
+  { value: "software", label: "Software" },
+  { value: "tech", label: "Technology" },
+  { value: "science", label: "Science" },
+  { value: "lifestyle", label: "Lifestyle" },
+  { value: "health", label: "Health" },
+  { value: "travel", label: "Travel" },
 ];
 
 export const formControls: FormControlItem[] = [
@@ -101,6 +92,7 @@ export const formControls: FormControlItem[] = [
     type: "text",
     component: "input",
     options: [],
+    required: true,
   },
   {
     id: "description",
@@ -120,10 +112,25 @@ export const formControls: FormControlItem[] = [
   },
 ];
 
-export const initialBlogFormData = {
+export const initialBlogFormData: BlogFormData = {
   title: "",
   description: "",
   image: "",
   category: "",
-  content: "",
+  excerpt: "",
+  quote: "",
+  content: "", // Add initial value for content
+  userid: "",
+  userimage: "",
 };
+export interface BlogFormData {
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  excerpt: string;
+  quote: string;
+  content: string;
+  userid: string; // Define userid as a string property
+  userimage: string; // Define userimage as a string property
+}

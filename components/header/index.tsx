@@ -79,6 +79,9 @@ export default function Header() {
     };
   }, []);
 
+  // Check if the user is an admin
+  const isAdmin = session?.user?.role === "admin";
+
   return (
     <div className="text-[#e0c056] ">
       <header
@@ -157,7 +160,13 @@ export default function Header() {
                       >
                         <div
                           className="flex items-center space-x-2 cursor-pointer"
-                          onClick={() => toggleActiveSubmenu(item.id)} // Handle submenu click
+                          onClick={() => {
+                            if (item.subMenu) {
+                              toggleActiveSubmenu(item.id);
+                            } else {
+                              router.push(item.path);
+                            }
+                          }} // Handle submenu click
                         >
                           {item.icon && (
                             <item.icon className="text-[30px] hover:text-[#b4b256]" />
@@ -178,15 +187,17 @@ export default function Header() {
                                 key={subItem.id}
                                 className="mt-2 flex items-center"
                               >
-                                <Link
-                                  href={subItem.path}
-                                  className="flex items-center gap-2 w-full px-4 py-2 text-sm rounded-[9px] z-[1000] text-white hover:bg-[#b3aa6d] transition-transform duration-300"
-                                >
-                                  {subItem.icon && (
-                                    <subItem.icon className="mr-2 text-[24px]" />
-                                  )}
-                                  {subItem.label}
-                                </Link>
+                                {(subItem.id !== "add" || isAdmin) && ( // Conditionally render "Add Products" for admin only
+                                  <Link
+                                    href={subItem.path}
+                                    className="flex items-center gap-2 w-full px-4 py-2 text-sm rounded-[9px] z-[1000] text-white hover:bg-[#b3aa6d] transition-transform duration-300"
+                                  >
+                                    {subItem.icon && (
+                                      <subItem.icon className="mr-2 text-[24px]" />
+                                    )}
+                                    {subItem.label}
+                                  </Link>
+                                )}
                               </li>
                             ))}
                           </ul>
