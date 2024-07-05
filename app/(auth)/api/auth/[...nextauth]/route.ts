@@ -37,6 +37,7 @@ async function authorize(
         accessToken,
         role: currentUser.isAdmin ? "admin" : "user", // Derive role from isAdmin
         isAdmin: currentUser.isAdmin,
+        avatar: currentUser.avatar, // Include avatar property
       } as User;
     }
   } catch (error: any) {
@@ -65,6 +66,7 @@ export const authOptions: NextAuthOptions = {
         token._id = user._id;
         token.role = user.role;
         token.isAdmin = user.isAdmin;
+        token.avatar = user.avatar; // Include avatar in token
       }
       return token;
     },
@@ -76,6 +78,7 @@ export const authOptions: NextAuthOptions = {
           accessToken: token.accessToken,
           role: token.role,
           isAdmin: token.isAdmin,
+          avatar: token.avatar, // Include avatar in session
         };
       }
       return session;

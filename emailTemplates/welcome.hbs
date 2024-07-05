@@ -2,16 +2,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome Email</title>
+    <title>Welcome to Ariana Diaries</title>
     <style>
       body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin:
       0; padding: 0; color: #3f3210; } .container { width: 100%; max-width:
       600px; margin: 0 auto; background-color: #fff; padding: 20px;
       border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); } .header {
-      text-align: center; padding: 10px 0; } .header img { max-width: 150px; }
-      .content { padding: 20px; } .content h1 { color: #d4af37; /* Gold color */
-      } .content p { font-size: 16px; line-height: 1.5; } .footer { text-align:
-      center; padding: 10px 0; color: #6d602f; font-size: 14px; }
+      text-align: center; padding: 10px 0; border-bottom: 1px solid #eaeaea; }
+      .header img { max-width: 150px; } .content { padding: 20px; } .content h1
+      { color: #d4af37; /* Gold color */ } .content p { font-size: 16px;
+      line-height: 1.5; margin-bottom: 20px; } .button { display: inline-block;
+      padding: 10px 20px; font-size: 16px; color: #fff; background-color:
+      #d4af37; /* Gold color */ text-decoration: none; border-radius: 4px;
+      transition: background-color 0.3s; } .button:hover { background-color:
+      #b9952d; } .footer { text-align: center; padding: 10px 0; color: #6d602f;
+      font-size: 14px; border-top: 1px solid #eaeaea; margin-top: 20px; }
+      .footer p { margin: 0; }
     </style>
   </head>
   <body>
@@ -21,7 +27,28 @@
       </div>
       <div class="content">
         <h1>Hello {{name}},</h1>
-        <p>Welcome to Ariana Diaries! We're excited to have you on board.</p>
+        <p>Welcome to Ariana Diaries! We're thrilled to have you join our
+          community.</p>
+        <p>
+          Ariana Diaries is your go-to destination for a diverse range of
+          lifestyle products. Whether you're looking for exquisite jewelry,
+          trendy clothing, stylish bags, or even tickets to the latest events,
+          we've got you covered.
+        </p>
+        <p>
+          Get ready to embark on a life-changing journey filled with exclusive
+          deals, inspirational content, and a vibrant community of like-minded
+          individuals. We're here to make every moment special and every
+          purchase memorable.
+        </p>
+        <p>
+          Start exploring now and discover the endless possibilities that await
+          you at Ariana Diaries. Click the button below to dive right in!
+        </p>
+        <p style="text-align: center;">
+          <a href="https://www.arianadiaries.com" class="button">Explore Ariana
+            Diaries</a>
+        </p>
         <p>Best Regards,<br />The Ariana Diaries Team</p>
       </div>
       <div class="footer">

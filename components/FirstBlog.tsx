@@ -5,6 +5,14 @@ import Link from "next/link";
 import { IoCalendarClearSharp } from "react-icons/io5";
 import moment from "moment";
 
+interface Author {
+  avatar?: {
+    url: string;
+  };
+  name: string;
+  designation: string;
+}
+
 interface Blog {
   _id: string;
   image?: string;
@@ -12,7 +20,7 @@ interface Blog {
   createdAt: string;
   title: string;
   excerpt: string;
-  authorId?: string;
+  authorId?: Author;
 }
 
 interface FirstBlogProps {
@@ -20,7 +28,7 @@ interface FirstBlogProps {
 }
 
 const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
-  console.log("First Blog Image URL:", firstBlog?.image); // Log the image URL
+  console.log("First Blog Image URL:", firstBlog?.image);
   const timeStr = firstBlog?.createdAt;
   const time = moment(timeStr);
   const formattedTime = time.format("MMMM Do YYYY");
@@ -64,20 +72,22 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
             <div className="flex items-center gap-3">
               <Image
                 src={
-                  firstBlog?.authorId
-                    ? firstBlog?.authorId
+                  firstBlog?.authorId?.avatar?.url
+                    ? firstBlog.authorId.avatar.url
                     : "/ariana-login-image.png"
                 }
                 alt="picture of the author"
-                width={0}
-                height={0}
+                width={40}
+                height={40}
                 sizes="100vw"
                 className="w-10 h-10 rounded-full"
               />
 
               <div className="text-xs">
-                <h6>{firstBlog?.authorId}</h6>
-                <p className="text-paragraphColor">{firstBlog?.authorId}</p>
+                <h6>{firstBlog?.authorId?.name}</h6>
+                <p className="text-paragraphColor">
+                  {firstBlog?.authorId?.designation}
+                </p>
               </div>
             </div>
           </div>

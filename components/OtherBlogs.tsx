@@ -44,7 +44,11 @@ const OtherBlogs: React.FC<OtherBlogsProps> = ({ otherBlogs }) => {
               <Link href={`/blog/${item?._id}`}>
                 <div>
                   <Image
-                    src={item?.image ? item.image : "/ariana-login-image.png"}
+                    src={
+                      item?.image?.url
+                        ? item.image.url
+                        : "/ariana-login-image.png"
+                    }
                     alt="blog image"
                     width={0}
                     height={0}

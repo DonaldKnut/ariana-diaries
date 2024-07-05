@@ -5,6 +5,14 @@ import OtherBlogs from "../../components/OtherBlogs";
 import BlogSlider from "../../components/BlogSlider";
 import Offer from "../../components/Offer";
 
+interface Author {
+  avatar?: {
+    url: string;
+  };
+  name: string;
+  designation: string;
+}
+
 interface Blog {
   _id: string;
   image?: {
@@ -14,7 +22,7 @@ interface Blog {
   createdAt: string;
   title: string;
   excerpt: string;
-  authorId?: string;
+  authorId?: Author;
 }
 
 async function fetchBlogs(): Promise<Blog[]> {

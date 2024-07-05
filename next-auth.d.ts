@@ -6,7 +6,10 @@ declare module "next-auth" {
     _id: string;
     accessToken?: string;
     role: string;
-    isAdmin: boolean; // Add the isAdmin property here
+    isAdmin: boolean;
+    avatar?: {
+      url: string;
+    }; // Add the avatar property here
   }
 
   interface Session {
@@ -14,7 +17,10 @@ declare module "next-auth" {
       _id: string;
       accessToken?: string;
       role: string;
-      isAdmin: boolean; // Add the isAdmin property here
+      isAdmin: boolean;
+      avatar?: {
+        url: string;
+      }; // Add the avatar property here
     } & User;
   }
 }
@@ -24,6 +30,9 @@ declare module "next-auth/jwt" {
     _id: string;
     accessToken?: string;
     role: string;
-    isAdmin: boolean; // Add the isAdmin property here
+    isAdmin: boolean;
+    avatar?: {
+      url: string;
+    }; // Add the avatar property here
   }
 }
