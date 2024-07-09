@@ -1,5 +1,7 @@
-import React from "react";
-import ProfileDetails from "./ProfileDetails";
+"use client";
+
+import React, { useState, useEffect } from "react";
+import ProfileDetails from "../_components/ProfileDetails";
 
 interface Params {
   id: string;
@@ -21,27 +23,75 @@ interface Profile {
 }
 
 async function getUserData(params: Params): Promise<Profile> {
-  const res = await fetch(`http://localhost:3000/api/user/${params.id}`, {
-    cache: "no-store",
-  });
+  // console.log("getUserData called with params:", params);
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
+  try {
+    const res = await fetch(`http://localhost:3000/api/user/${params.id}`, {
+      method: "GET",
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error("Failed to fetch data: ", res.status, res.statusText);
+      if (res.status === 404) {
+        throw new Error("User not found");
+      }
+      throw new Error(`Failed to fetch data: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    console.log("Fetched user data: ", data);
+    return data;
+  } catch (error) {
+    console.error("Error in getUserData:", error);
+    throw error;
   }
-
-  return res.json();
 }
 
 interface UserProfileProps {
   params: Params;
 }
 
-const UserProfile: React.FC<UserProfileProps> = async ({ params }) => {
-  const profile = await getUserData(params);
+const UserProfile: React.FC<UserProfileProps> = ({ params }) => {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("useEffect fetchData called with params:", params);
+      try {
+        const data = await getUserData(params);
+        setProfile(data);
+      } catch (error: any) {
+        console.error("Error fetching user data in useEffect:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+        console.log("useEffect fetchData completed");
+      }
+    };
+    fetchData();
+  }, [params]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        {error}
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <ProfileDetails profile={profile} params={params} />
-    </div>
+    <div>{profile && <ProfileDetails profile={profile} params={params} />}</div>
   );
 };
 

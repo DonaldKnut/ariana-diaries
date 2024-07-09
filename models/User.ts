@@ -1,11 +1,13 @@
 import mongoose, { Document, Model } from "mongoose";
 
 export interface UserDocument extends Document {
+  _id: mongoose.Types.ObjectId;
   name: string;
   email: string;
   password: string;
   designation?: string;
   avatar?: {
+    id: string;
     url: string;
   };
   age?: string;
@@ -34,6 +36,10 @@ const UserSchema = new mongoose.Schema(
       default: "",
     },
     avatar: {
+      id: {
+        type: String,
+        default: "",
+      },
       url: {
         type: String,
         default: "",

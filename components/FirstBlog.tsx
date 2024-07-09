@@ -15,7 +15,9 @@ interface Author {
 
 interface Blog {
   _id: string;
-  image?: string;
+  image?: {
+    url: string;
+  };
   category: string;
   createdAt: string;
   title: string;
@@ -28,7 +30,7 @@ interface FirstBlogProps {
 }
 
 const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
-  console.log("First Blog Image URL:", firstBlog?.image);
+  console.log("First Blog Image URL:", firstBlog?.image?.url);
   const timeStr = firstBlog?.createdAt;
   const time = moment(timeStr);
   const formattedTime = time.format("MMMM Do YYYY");
@@ -40,7 +42,9 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
           <div className="w-full lg:w-2/5">
             <Image
               src={
-                firstBlog?.image ? firstBlog.image : "/ariana-login-image.png"
+                firstBlog?.image?.url
+                  ? firstBlog.image.url
+                  : "/ariana-login-image.png"
               }
               alt="first blog image"
               width={180}
@@ -71,6 +75,14 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
 
             <div className="flex items-center gap-3">
               <Image
+                src="/miss_oluwole.png"
+                alt="picture of the author"
+                width={70}
+                height={70}
+                sizes="100vw"
+                className="w-10 h-10 rounded-full"
+              />
+              {/* <Image
                 src={
                   firstBlog?.authorId?.avatar?.url
                     ? firstBlog.authorId.avatar.url
@@ -81,13 +93,17 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
                 height={40}
                 sizes="100vw"
                 className="w-10 h-10 rounded-full"
-              />
+              /> */}
 
-              <div className="text-xs">
+              {/* <div className="text-xs">
                 <h6>{firstBlog?.authorId?.name}</h6>
                 <p className="text-paragraphColor">
                   {firstBlog?.authorId?.designation}
                 </p>
+              </div> */}
+              <div className="text-xs">
+                <h4>Ariana Oluwole</h4>
+                <p className="text-paragraphColor">CEO of Ariana Diaries</p>
               </div>
             </div>
           </div>

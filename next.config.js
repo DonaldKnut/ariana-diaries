@@ -41,6 +41,13 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
     NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.hbs$/,
+      loader: "handlebars-loader",
+    });
+    return config;
+  },
 };
 
 module.exports = withVideos(nextConfig);

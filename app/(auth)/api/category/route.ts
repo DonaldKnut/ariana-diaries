@@ -1,46 +1,43 @@
-// pages/api/blog-posts/[categoryID].ts
+// pages/api/blog-posts/[categoryID]/route.ts
 
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connect } from "../../../../database";
-import Post, { IPost } from "../../../../models/Post"; // Adjust path as necessary
+import Post, { IPost } from "../../../../models/Post";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<{ success: boolean; data?: IPost[]; message?: string }>
-) {
+export async function GET(request: Request) {
   await connect(); // Ensure MongoDB connection
 
-  const { categoryID } = req.query;
+  const { searchParams } = new URL(request.url);
+  const categoryID = searchParams.get("categoryID");
 
-  if (req.method === "GET") {
-    try {
-      if (!categoryID) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Category ID is required" });
-      }
+  if (!categoryID) {
+    return NextResponse.json(
+      { success: false, message: "Category ID is required" },
+      { status: 400 }
+    );
+  }
 
-      // Validate if categoryID is a valid ObjectId
-      if (!mongoose.isValidObjectId(categoryID as string)) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Invalid category ID format" });
-      }
+  // Validate if categoryID is a valid ObjectId
+  if (!mongoose.isValidObjectId(categoryID)) {
+    return NextResponse.json(
+      { success: false, message: "Invalid category ID format" },
+      { status: 400 }
+    );
+  }
 
-      // Fetch blog posts based on categoryID
-      const blogPostList = await Post.find({ category: categoryID });
+  try {
+    // Fetch blog posts based on categoryID
+    const blogPostList = await Post.find({ category: categoryID });
 
-      return res.status(200).json({ success: true, data: blogPostList });
-    } catch (error) {
-      console.error("Error fetching blog posts:", error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Something went wrong" });
-    }
-  } else {
-    return res
-      .status(405)
-      .json({ success: false, message: `Method ${req.method} not allowed` });
+    return NextResponse.json({ success: true, data: blogPostList });
+  } catch (error) {
+    console.error("Error fetching blog posts:", error);
+    return NextResponse.json(
+      { success: false, message: "Something went wrong" },
+      { status: 500 }
+    );
   }
 }
+
+export const dynamic = "force-dynamic";

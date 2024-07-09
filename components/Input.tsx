@@ -26,7 +26,7 @@ const Input: React.FC<InputProps> = ({
         onChange={onChange}
         name={name}
         placeholder={placeholder}
-        className="w-full bg-primaryColorLight p-3 rounded-lg"
+        className="w-full bg-[#29250965] p-3 rounded-lg"
       />
     </div>
   );

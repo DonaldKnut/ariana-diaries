@@ -3,13 +3,23 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { MdCancel } from "react-icons/md";
 import Image from "next/image";
 import moment from "moment";
-import Modal from "@/components/Modal";
-import { deletePhoto } from "@/actions/uploadActions";
-import Input from "@/components/Input";
-import demoImage from "@/public/img/demo_image.jpg";
+import Modal from "../../../components/Modal";
+import { deletePhoto } from "../../../actions/uploadActions";
+import Input from "../../../components/Input";
 import { AiOutlineClose } from "react-icons/ai";
+import { BiSolidMessageSquareDetail } from "react-icons/bi";
+import { RiFileEditFill } from "react-icons/ri";
+import { IoIosCloudUpload } from "react-icons/io";
+import { SiGmail } from "react-icons/si";
+import { FaRegCircleUser } from "react-icons/fa6";
+import { MdOutlineAccessTimeFilled } from "react-icons/md";
+import { BsInfoCircleFill } from "react-icons/bs";
+import { FaBabyCarriage } from "react-icons/fa6";
+import { ImLocation2 } from "react-icons/im";
+import { LiaUserEditSolid } from "react-icons/lia";
 
 interface Profile {
   _id: string;
@@ -183,81 +193,101 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
   }
 
   return (
-    <div className="p-3 my-5 container">
-      <div className="text-center text-primaryColor pb-20">
-        <h2>Profile</h2>
+    <div className="p-6 my-8 mx-auto max-w-7xl">
+      <div className="text-center text-primaryColor pb-10">
+        <h2 className="text-4xl font-bold">Profile</h2>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-5">
-        <div className="flex-1 space-y-3">
-          <h4 className="text-xl">About Me</h4>
-          <p>{profile?.about}</p>
+      <div className="flex flex-col md:flex-row gap-10">
+        <div className="flex-1 space-y-5">
+          <h4 className="text-2xl font-semibold flex items-center gap-2">
+            <BsInfoCircleFill />
+            About Me
+          </h4>
+          <p className="text-lg">{profile?.about}</p>
         </div>
 
         <div className="flex-1 flex items-center justify-center">
           <Image
-            src={profile?.avatar?.url || demoImage}
+            src={profile?.avatar?.url || "/ariana_login-image.png"}
             alt="avatar"
-            width={0}
-            height={0}
-            sizes="100vw"
-            className="w-40 h-40 rounded-full border-2 border-black"
+            width={160}
+            height={160}
+            className="w-40 h-40 rounded-full border-4 border-gray-300"
           />
         </div>
 
-        <div className="flex-1 space-y-3">
-          <h4 className="text-xl">Details</h4>
+        <div className="flex-1 space-y-5">
+          <h4 className="text-2xl font-semibold flex items-center gap-2">
+            <BiSolidMessageSquareDetail /> Details
+          </h4>
 
           <div className="space-y-1">
-            <p>Email:</p>
+            <p className="font-medium flex items-center gap-2">
+              <SiGmail />
+              Email:
+            </p>
             <p>{profile?.email}</p>
           </div>
 
           <div className="space-y-1">
-            <p>Name:</p>
+            <p className="font-medium flex items-center gap-2">
+              <FaRegCircleUser />
+              Name:
+            </p>
             <p>{profile?.name}</p>
           </div>
 
           <div className="space-y-1">
-            <p>Age:</p>
+            <p className="font-medium flex items-center gap-2">
+              <FaBabyCarriage />
+              Age:
+            </p>
             <p>{profile?.age}</p>
           </div>
 
           <div className="space-y-1">
-            <p>Location:</p>
+            <p className="font-medium flex items-center gap-2">
+              <ImLocation2 />
+              Location:
+            </p>
             <p>{profile?.location}</p>
           </div>
 
           <div className="space-y-1">
-            <p>Joined:</p>
+            <p className="font-medium flex items-center gap-2">
+              <MdOutlineAccessTimeFilled />
+              Joined:
+            </p>
             <p>{timeFormat()}</p>
           </div>
         </div>
       </div>
 
-      <div className="pt-5">
+      <div className="pt-10 text-center">
         {profile?._id === session?.user?._id && (
           <button
-            className="text-primaryColor mr-3"
+            className="bg-yellow-700 text-yellow-200 flex items-center justify-center gap-2 py-2 px-5 rounded-md hover:bg-yellow-800"
             onClick={() => setOpenModalEdit(true)}
           >
-            Edit
+            Edit <RiFileEditFill className="text-lg" />
           </button>
         )}
 
         <Modal modalOpen={openModalEdit} setModalOpen={setOpenModalEdit}>
-          <form className="w-full space-y-3" onSubmit={handleEditSubmit}>
-            <h2 className="text-2xl text-primaryColor pb-3">Profile</h2>
+          <form className="w-full space-y-6" onSubmit={handleEditSubmit}>
+            <h2 className="text-3xl text-primaryColor font-semibold pb-5">
+              Edit Profile
+            </h2>
 
             {avatarToEdit ? (
-              <div className="flex justify-center items-start">
+              <div className="flex justify-center items-start space-x-2">
                 <Image
                   src={URL.createObjectURL(avatarToEdit)}
                   alt="avatar"
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-20 h-20 rounded-full border-2 border-black"
+                  width={80}
+                  height={80}
+                  className="w-20 h-20 rounded-full border-2 border-gray-300"
                 />
 
                 <button
@@ -271,19 +301,17 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
             ) : (
               <div className="flex justify-center">
                 {profile?.avatar && profile?.avatar["url"] && (
-                  <div>
-                    <Image
-                      src={profile?.avatar?.url}
-                      alt="avatar"
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      className="w-20 h-20 rounded-full border-2 border-black"
-                    />
-                  </div>
+                  <Image
+                    src={profile?.avatar?.url}
+                    alt="avatar"
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 rounded-full border-2 border-gray-300"
+                  />
                 )}
               </div>
             )}
+            <IoIosCloudUpload size={20} />
 
             <div>
               <input
@@ -291,14 +319,15 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
                 type="file"
                 name="newImage"
                 accept="image/*"
-                className="block w-full border border-gray-300 rounded-lg"
+                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
               />
             </div>
 
             <Input
               name="name"
               type="text"
-              placeholder="name"
+              placeholder="Name"
+              label="Name"
               value={profileToEdit?.name || ""}
               onChange={handleChange}
             />
@@ -306,7 +335,8 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
             <Input
               name="designation"
               type="text"
-              placeholder="designation"
+              placeholder="Designation"
+              label="Designation"
               value={profileToEdit?.designation || ""}
               onChange={handleChange}
             />
@@ -314,15 +344,17 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
             <Input
               name="about"
               type="text"
-              placeholder="about"
+              placeholder="About"
+              label="About"
               value={profileToEdit?.about || ""}
               onChange={handleChange}
             />
 
             <Input
               name="age"
-              type="text"
-              placeholder="age"
+              type="number"
+              placeholder="Age"
+              label="Age"
               value={profileToEdit?.age.toString() || ""}
               onChange={handleChange}
             />
@@ -330,7 +362,8 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
             <Input
               name="location"
               type="text"
-              placeholder="location"
+              placeholder="Location"
+              label="Location"
               value={profileToEdit?.location || ""}
               onChange={handleChange}
             />
@@ -339,17 +372,20 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
 
             {success && <div className="text-green-700">{success}</div>}
 
-            <div className="space-x-5">
-              <button type="submit" className="btn">
-                {isLoading ? "Loading..." : "Update"}
+            <div className="flex justify-end space-x-5">
+              <button
+                type="submit"
+                className="btn bg-[#393608] text-white py-2 px-5 rounded-md hover:bg-[#8b7b14] flex items-center gap-2"
+              >
+                {isLoading ? "Loading..." : "Update"} <LiaUserEditSolid />
               </button>
 
               <button
                 type="button"
-                className="btn bg-red-700"
+                className="btn bg-red-700 text-white py-2 px-5 rounded-md hover:bg-red-800 flex items-center gap-2"
                 onClick={() => setOpenModalEdit(false)}
               >
-                Cancel
+                Cancel <MdCancel />
               </button>
             </div>
           </form>

@@ -1,36 +1,45 @@
-import CategoryList from "../../../components/category";
+"use client";
+import { useSearchParams } from "next/navigation";
+import axios from "axios";
+import { IPost } from "../../../models/Post";
 
-async function getAllListsByCategory(getId: string) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/category?categoryID=${getId}`,
-      {
-        method: "GET",
-        cache: "no-store",
-      }
-    );
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-
-    const data = await res.json();
-
-    if (data.success) {
-      return data.data;
-    } else {
-      throw new Error(`API error! message: ${data.message}`);
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return null;
-  }
+interface CategoryPageProps {
+  posts: IPost[];
 }
 
-export default async function Category({ params }: { params: any }) {
-  const { id } = params;
+const CategoryPage: React.FC<CategoryPageProps> = ({ posts }) => {
+  const searchParams = useSearchParams();
+  const categoryID = searchParams.get("categoryID"); // Get the categoryID from the query params
 
-  const getAllList = await getAllListsByCategory(id);
+  if (!posts.length) {
+    return <p>No posts available for this category.</p>;
+  }
 
-  return <CategoryList list={getAllList} />;
+  return (
+    <div>
+      <h1>Posts for Category: {categoryID ?? "Unknown"}</h1>
+      {posts.map((post: IPost) => (
+        <div key={post._id}>
+          <h2>{post.title}</h2>
+          <p>{post.excerpt}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default async function Page() {
+  const searchParams = useSearchParams();
+  const categoryID = searchParams.get("categoryID");
+
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/blog-posts/${categoryID}`
+    );
+
+    return <CategoryPage posts={response.data.data} />;
+  } catch (error) {
+    console.error("Error fetching blog posts:", error);
+    return <CategoryPage posts={[]} />;
+  }
 }

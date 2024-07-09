@@ -22,7 +22,7 @@ interface Blog {
   createdAt: string;
   title: string;
   excerpt: string;
-  authorId?: Author;
+  author?: Author;
 }
 
 async function fetchBlogs(): Promise<Blog[]> {
@@ -37,7 +37,6 @@ async function fetchBlogs(): Promise<Blog[]> {
   const result = await res.json();
   console.log("API Response:", result);
 
-  // Adjust this based on your actual API response structure
   if (result.success) {
     return result.data;
   } else {
@@ -54,10 +53,10 @@ const Blog: React.FC = () => {
     const getBlogs = async () => {
       try {
         const data = await fetchBlogs();
-        console.log("Fetched blogs:", data); // Log the fetched blogs
+        console.log("Fetched blogs:", data);
         setBlogs(data);
       } catch (error: any) {
-        console.error("Error fetching blogs:", error); // Log the error
+        console.error("Error fetching blogs:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -83,7 +82,7 @@ const Blog: React.FC = () => {
     );
   }
 
-  console.log("Blogs state:", blogs); // Log the blogs state
+  console.log("Blogs state:", blogs);
 
   const firstBlog = blogs && blogs[0];
   const otherBlogs = blogs.length > 0 ? blogs.slice(1) : [];

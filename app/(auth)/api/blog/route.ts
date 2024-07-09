@@ -5,14 +5,11 @@ import { connect } from "../../../../database";
 
 export async function POST(request: NextRequest) {
   try {
-    // Ensure the database is connected
     await connect();
 
-    // Extract data from the request
     const extractPostData = await request.json();
     console.log("Received data:", extractPostData);
 
-    // Destructure and validate the extracted data
     const {
       title,
       image,
@@ -51,7 +48,6 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Find the user in the database
     const user = await User.findOne({ name: userid }).exec();
 
     if (!user) {
@@ -62,24 +58,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use the user's avatar image if userimage is not provided
-    const userImage = user.avatar?.image || "";
+    const userImage = user.avatar?.url || "";
 
-    // Create a new blog post
     const newlyCreatedPost = new Post({
       title,
       description,
       image,
       category,
       userId: user._id,
-      userimage: userimage || userImage || "",
+      userImage: userimage || userImage || "",
       content,
       excerpt,
       quote,
-      author: [user._id],
+      author: user._id,
     });
 
-    // Save the new post to the database
     await newlyCreatedPost.save();
 
     console.log("New blog post added:", newlyCreatedPost);
@@ -90,12 +83,11 @@ export async function POST(request: NextRequest) {
       post: newlyCreatedPost,
     });
   } catch (error: any) {
-    console.error("Error creating blog post:", error); // Log detailed error message
-
+    console.error("Error creating blog post:", error);
     return NextResponse.json({
       success: false,
       message: "Something went wrong! Please try again",
-      error: error.message, // Include the error message in the response
+      error: error.message,
     });
   }
 }
@@ -103,18 +95,24 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     await connect();
-    const getAllBlogPosts: IPost[] = await Post.find()
+    const getAllBlogPosts = await Post.find()
       .populate({
         path: "author",
         select: "name avatar designation",
+        strictPopulate: false, // Set this to false if strict mode is causing issues
       })
       .sort({ createdAt: -1 })
       .exec();
 
+    const formattedPosts = getAllBlogPosts.map((post) => ({
+      ...post.toObject(),
+      image: { url: post.image }, // Ensure image is an object with a url property
+    }));
+
     if (getAllBlogPosts.length > 0) {
       return NextResponse.json({
         success: true,
-        data: getAllBlogPosts,
+        data: formattedPosts,
       });
     } else {
       return NextResponse.json({

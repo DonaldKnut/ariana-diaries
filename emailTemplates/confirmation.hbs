@@ -1,0 +1,44 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subscription Confirmation</title>
+    <style>
+      body { font-family: Arial, sans-serif; background-color: #f4f4f4; color:
+      #333; margin: 0; padding: 0; } .container { width: 100%; max-width: 600px;
+      margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius:
+      5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); } .header { text-align:
+      center; padding: 20px 0; background-color: #846b31; color: #fff;
+      border-top-left-radius: 5px; border-top-right-radius: 5px; } .header img {
+      max-width: 150px; } .header h1 { margin: 0; color: #ffd700; /* Light Gold
+      */ } .content { padding: 20px 0; } .content p { margin: 0 0 10px; }
+      .footer { text-align: center; padding: 20px 0; font-size: 12px; color:
+      #756e04; background-color: #d4af37; /* Dark Gold */
+      border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img src="{{logoUrl}}" alt="Ariana Diaries Logo" />
+        <h2>Thank you for subscribing!</h2>
+      </div>
+      <div class="content">
+        <p>Hi {{email}},</p>
+        <p>
+          Thank you for subscribing to our newsletter. We're excited to have you
+          on board!
+        </p>
+        <p>
+          You'll receive the latest news, updates, and exclusive content
+          directly in your inbox.
+        </p>
+        <p>Best regards,</p>
+        <p>Ariana Diaries Team</p>
+      </div>
+      <div class="footer">
+        <p>&copy; 2024 Ariana Diaries. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

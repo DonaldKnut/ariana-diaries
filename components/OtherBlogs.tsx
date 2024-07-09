@@ -22,7 +22,7 @@ interface Blog {
   createdAt: string;
   title: string;
   excerpt: string;
-  authorId?: Author;
+  author?: Author;
 }
 
 interface OtherBlogsProps {
@@ -72,10 +72,10 @@ const OtherBlogs: React.FC<OtherBlogsProps> = ({ otherBlogs }) => {
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Image
+                      {/* <Image
                         src={
-                          item.authorId?.avatar?.url
-                            ? item.authorId.avatar.url
+                          item.author?.avatar?.url
+                            ? item.author.avatar.url
                             : "/ariana-login-image.png"
                         }
                         alt="picture of the author"
@@ -83,11 +83,25 @@ const OtherBlogs: React.FC<OtherBlogsProps> = ({ otherBlogs }) => {
                         height={0}
                         sizes="100vw"
                         className="w-10 h-10 rounded-full"
+                      /> */}
+                      <Image
+                        src="/miss_oluwole.png"
+                        alt="picture of the author"
+                        width={70}
+                        height={70}
+                        sizes="100vw"
+                        className="w-10 h-10 rounded-full"
                       />
-                      <div className="text-xs">
-                        <h6>{item.authorId?.name}</h6>
+                      {/* <div className="text-xs">
+                        <h6>{item.author?.name}</h6>
                         <p className="text-paragraphColor">
-                          {item.authorId?.designation}
+                          {item.author?.designation}
+                        </p>
+                      </div> */}
+                      <div className="text-xs">
+                        <h6>Ariana Oluwole</h6>
+                        <p className="text-paragraphColor">
+                          CEO of Ariana Diaries
                         </p>
                       </div>
                     </div>
