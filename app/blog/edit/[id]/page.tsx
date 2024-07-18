@@ -3,7 +3,7 @@ import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { useSession } from "next-auth/react";
 import Input from "../../../../components/Input";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import TextArea from "../../../../components/TextArea";
 import Image from "next/image";
 import { deletePhoto } from "../../../../actions/uploadActions";

@@ -24,7 +24,7 @@ export interface IPost extends Document {
   quote: string;
   content: string;
   userId: mongoose.Schema.Types.ObjectId;
-  userImage?: string;
+  userImage: string;
   author: mongoose.Schema.Types.ObjectId;
   likes: mongoose.Schema.Types.ObjectId[];
   comments: mongoose.Schema.Types.ObjectId[];

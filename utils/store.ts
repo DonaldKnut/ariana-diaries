@@ -54,21 +54,3 @@ export const useCartStore = create(
     { name: "cart", skipHydration: true }
   )
 );
-
-useCartStore.getState().addToCart({
-  id: "1",
-  title: "Sample Product 1",
-  quantity: 1,
-  price: 50,
-  // img: "https://via.placeholder.com/100",
-  optionTitle: "Sample Option",
-});
-
-useCartStore.getState().addToCart({
-  id: "2",
-  title: "Sample Product 2",
-  quantity: 2,
-  price: 30,
-  // img: "https://via.placeholder.com/100",
-  optionTitle: "Sample Option",
-});

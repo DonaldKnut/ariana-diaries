@@ -1,0 +1,9 @@
+.menu_desc-description {
+  display: none;
+}
+
+@media (min-width: 540px) {
+  .menu_desc-description {
+    display: block;
+  }
+}

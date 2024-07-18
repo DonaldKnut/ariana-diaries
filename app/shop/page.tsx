@@ -1,5 +1,5 @@
-import Featured from "../../components/Featured";
-import FeaturedGlasses from "../../components/FeaturedGlasses";
+// import Featured from "../../components/Featured";
+// import FeaturedGlasses from "../../components/FeaturedGlasses";
 import Slider from "../../components/Slider";
 import FeaturedBags from "../../components/FeaturedBags";
 import React from "react";
@@ -13,8 +13,8 @@ const page = (props: Props) => {
     <div>
       <Slider />
       <FeaturedBooks />
-      <FeaturedGlasses />
-      <FeaturedBags />
+      {/* <FeaturedGlasses /> */}
+      {/* <FeaturedBags /> */}
       {/* <Featured /> */}
       <Offer />
     </div>

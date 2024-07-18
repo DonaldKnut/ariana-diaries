@@ -1,32 +1,39 @@
-import mongoose, { Document, Schema, model } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
+import { IProductCategory } from "./ProductCategory";
 
 export interface IProduct extends Document {
+  _id: Types.ObjectId;
   title: string;
-  image: string;
-  description: string;
+  desc: string;
+  img: string;
   price: number;
-  isFeatured: boolean;
-  options?: Record<string, any>;
-  catSlug: mongoose.Schema.Types.ObjectId;
+  options: {
+    title: string;
+    additionalPrice: number;
+  }[];
+  category: Types.ObjectId | IProductCategory;
+  isFeatured?: boolean;
 }
 
-const productSchema: Schema = new Schema(
-  {
-    title: { type: String, required: true },
-    image: { type: String, required: true },
-    description: { type: String, required: true },
-    price: { type: Number, required: true },
-    isFeatured: { type: Boolean, required: true },
-    options: { type: Schema.Types.Mixed },
-    catSlug: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "ProductCategory",
-      required: true,
+const ProductSchema: Schema = new Schema({
+  _id: { type: Schema.Types.ObjectId, auto: true },
+  title: { type: String, required: true },
+  desc: { type: String, required: true },
+  img: { type: String, required: true },
+  price: { type: Number, required: true },
+  options: [
+    {
+      title: { type: String, required: true },
+      additionalPrice: { type: Number, required: true },
     },
+  ],
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "ProductCategory",
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
+  isFeatured: { type: Boolean, default: false },
+});
 
-const ProductModel = model<IProduct>("Product", productSchema);
+export default mongoose.models.Product ||
+  mongoose.model<IProduct>("Product", ProductSchema);

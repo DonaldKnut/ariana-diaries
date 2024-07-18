@@ -16,6 +16,15 @@ export type MenuItem = {
   subMenu?: SubMenuItem[];
 };
 
+export type ProductType = {
+  id: string;
+  slug: string;
+  title: string;
+  desc?: string;
+  img?: string;
+  color: string;
+};
+
 export interface Option {
   label: string;
   value: string;
@@ -93,16 +102,16 @@ export interface BlogFormData {
   userimage: string;
 }
 export interface Blog {
-  id: number;
+  id: string;
   title: string;
   description: string;
   category: string;
   userid: string;
-  userimage: string;
+  userImage: string;
   comments: string[];
   image: string;
   content: string;
-  author: string; // Add author field here
+  author: string;
 }
 
 export type OrderType = {

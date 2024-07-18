@@ -44,15 +44,19 @@ export default function CategoryList({ list }: { list: Blog[] | null }) {
     );
   }
 
-  const getMaxId = Math.max(...list.map((item) => item.id));
+  const getMaxId = Math.max(...list.map((item) => parseInt(item.id, 10))); // Convert id to number
 
   console.log(getMaxId);
 
   const getLatestBlogForCurrentCategory =
-    list && list.length ? list.find((item) => item.id === getMaxId) : null;
+    list && list.length
+      ? list.find((item) => parseInt(item.id, 10) === getMaxId)
+      : null; // Convert id to number
 
   const relatedBlogs =
-    list && list.length ? list.filter((item) => item.id !== getMaxId) : [];
+    list && list.length
+      ? list.filter((item) => parseInt(item.id, 10) !== getMaxId)
+      : []; // Convert id to number
 
   return (
     <section className="overflow-hidden pt-[180px] pb-[120px]">

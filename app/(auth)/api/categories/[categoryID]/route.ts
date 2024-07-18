@@ -2,8 +2,8 @@
 
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { connect } from "../../../../database";
-import Post, { IPost } from "../../../../models/Post";
+import { connect } from "../../../../../database";
+import Post, { IPost } from "../../../../../models/Post";
 
 export async function GET(request: Request) {
   await connect(); // Ensure MongoDB connection

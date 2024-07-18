@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import UserModel, { UserDocument } from "../../../../../models/User";
 import { connect } from "../../../../../database/index";
 import { signJwtToken } from "../../../../../lib/jwt";
+import { Types } from "mongoose";
 
 // Authorization function to validate user credentials
 async function authorize(
@@ -38,6 +39,7 @@ async function authorize(
         role: currentUser.isAdmin ? "admin" : "user", // Derive role from isAdmin
         isAdmin: currentUser.isAdmin,
         avatar: currentUser.avatar, // Include avatar property
+        _id: currentUser._id.toString(), // Convert ObjectId to string
       } as User;
     }
   } catch (error: any) {
@@ -63,7 +65,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken;
-        token._id = user._id;
+        token._id = user._id.toString(); // Convert ObjectId to string
         token.role = user.role;
         token.isAdmin = user.isAdmin;
         token.avatar = user.avatar; // Include avatar in token

@@ -2,14 +2,14 @@
 
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { connect } from "../../../../database";
-import Post, { IPost } from "../../../../models/Post";
+import { connect } from "../../../../../database";
+import Post, { IPost } from "../../../../../models/Post";
 
 export async function GET(request: Request) {
   await connect(); // Ensure MongoDB connection
 
-  const { pathname } = new URL(request.url);
-  const categoryID = pathname.split("/").pop(); // Extract categoryID from URL path
+  const { searchParams } = new URL(request.url);
+  const categoryID = searchParams.get("categoryID");
 
   if (!categoryID || typeof categoryID !== "string") {
     return NextResponse.json(

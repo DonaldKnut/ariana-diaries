@@ -194,7 +194,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
 
   return (
     <div className="p-6 my-8 mx-auto max-w-7xl">
-      <div className="text-center text-primaryColor pb-10">
+      <div className="text-center pb-10">
         <h2 className="text-4xl font-bold">Profile</h2>
       </div>
 
@@ -264,7 +264,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
         </div>
       </div>
 
-      <div className="pt-10 text-center">
+      <div className="pt-10 text-center text-[#fff]">
         {profile?._id === session?.user?._id && (
           <button
             className="bg-yellow-700 text-yellow-200 flex items-center justify-center gap-2 py-2 px-5 rounded-md hover:bg-yellow-800"
@@ -311,7 +311,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
                 )}
               </div>
             )}
-            <IoIosCloudUpload size={20} />
+            <IoIosCloudUpload size={50} />
 
             <div>
               <input
@@ -319,7 +319,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
                 type="file"
                 name="newImage"
                 accept="image/*"
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
+                className="block w-full text-sm text-[#fff] border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
               />
             </div>
 

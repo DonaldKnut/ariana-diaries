@@ -24,6 +24,7 @@ const BlogContent: React.FC<BlogContentProps> = ({
   formattedTime,
   splitParagraph,
 }) => {
+  console.log(blogDetails?.category);
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="text-center space-y-3">

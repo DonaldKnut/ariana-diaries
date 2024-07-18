@@ -1,3 +1,5 @@
+import { IProduct } from "../models/Product";
+
 export type MenuType = {
   id: string;
   slug: string;
@@ -20,13 +22,28 @@ export type BlogFormData = {
 };
 
 export type ProductType = {
+  price: string;
   id: string;
+  slug: string;
   title: string;
   desc?: string;
   img?: string;
-  price: number;
+  color: string;
   options?: { title: string; additionalPrice: number }[];
 };
+
+// export interface IProduct {
+//   _id: string;
+//   title: string;
+//   price: number;
+//   size?: string;
+//   img?: string;
+// }
+
+export interface ICartItem {
+  product: IProduct;
+  quantity: number;
+}
 
 export type OrderType = {
   id: string;

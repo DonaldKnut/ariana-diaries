@@ -150,14 +150,14 @@ export default function Home() {
                           className={`mt-4 flex items-center justify-center gap-2 border rounded-md ${
                             isSuccess
                               ? "border-green-500 bg-green-100 text-green-700"
-                              : "border-red-500 text-red-700"
+                              : "text-red-700"
                           }`}
                         >
-                          {/* {isSuccess ? (
+                          {isSuccess ? (
                             <IoCheckmarkCircleSharp size={24} />
                           ) : (
                             <IoCloseCircleSharp size={24} />
-                          )} */}
+                          )}
                           <p>{message}</p>
                         </div>
                       )}

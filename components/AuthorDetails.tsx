@@ -23,9 +23,7 @@ const AuthorDetails: React.FC<AuthorDetailsProps> = ({ author }) => {
     <Link href={`/user/${author._id.toString()}`}>
       <div className="flex flex-col justify-center items-center py-10">
         <Image
-          src={
-            author.avatar?.url ? author.avatar.url : "/ariana-login-image.png"
-          }
+          src="/miss_oluwole.png"
           alt="avatar image"
           width={80}
           height={80}

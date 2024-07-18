@@ -252,28 +252,25 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
 
   return (
     <section className="container max-w-3xl pt-28">
-      {session?.user &&
-        blogDetails?.authorId?._id &&
-        blogDetails.authorId._id.toString() ===
-          session?.user?._id?.toString() && (
-          <div className="flex items-center justify-end gap-5">
-            <Link
-              href={`/blog/edit/${params.id}`}
-              className="flex items-center gap-1 text-primaryColor"
-            >
-              <BsFillPencilFill />
-              Edit
-            </Link>
+      {session?.user.isAdmin && (
+        <div className="flex items-center justify-end gap-5">
+          <Link
+            href={`/blog/edit/${params.id}`}
+            className="flex items-center gap-1 text-primaryColor"
+          >
+            <BsFillPencilFill />
+            Edit
+          </Link>
 
-            <button
-              onClick={() => handleBlogDelete(blogDetails?.image || "")}
-              className="flex items-center gap-1 text-red-500"
-            >
-              <BsTrash />
-              {isDeleting ? "Deleting..." : "Delete"}
-            </button>
-          </div>
-        )}
+          <button
+            onClick={() => handleBlogDelete(blogDetails?.image || "")}
+            className="flex items-center gap-1 text-red-500"
+          >
+            <BsTrash />
+            {isDeleting ? "Deleting..." : "Delete"}
+          </button>
+        </div>
+      )}
 
       <AuthorDetails author={blogDetails.authorId} />
 

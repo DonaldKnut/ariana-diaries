@@ -1,38 +1,54 @@
 "use client";
-import React, { useState } from "react";
+
+import { useCartStore } from "../../utils/store";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { BsBoxArrowUpRight } from "react-icons/bs";
+import { Reveal } from "../reveal";
 import { useFlutterwave } from "flutterwave-react-v3";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Original Golden", size: "Large", price: 79.9 },
-    { id: 2, name: "Golden Premium Glass", size: "Small", price: 39.9 },
-    { id: 3, name: "Sicilian", size: "Large", price: 79.9 },
-  ]);
-
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
-  const deliveryCost = 0; // Assuming free delivery in your example
-  const totalAmount = subtotal + deliveryCost;
-
-  const { data: session } = useSession();
+  const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [usdTotalPrice, setUsdTotalPrice] = useState(0);
 
-  const customerName = session?.user?.name || "Customer"; // Default to "Customer" if name is undefined
+  useEffect(() => {
+    useCartStore.persist.rehydrate();
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const convertCurrency = async () => {
+      try {
+        const res = await fetch(
+          "https://v6.exchangerate-api.com/v6/c32b0e8f419dbb9f1ab38062/latest/USD"
+        );
+        const data = await res.json();
+        const conversionRate = data.conversion_rates.USD;
+        setUsdTotalPrice(totalPrice * conversionRate);
+      } catch (error) {
+        console.error("Error converting currency:", error);
+      }
+    };
+
+    convertCurrency();
+  }, [totalPrice]);
 
   const config = {
     public_key: process.env.FLUTTERWAVE_PUBLIC_KEY || "",
-    tx_ref: Date.now().toString(), // Convert tx_ref to string
-    amount: totalAmount,
-    currency: "NGN",
+    tx_ref: Date.now().toString(),
+    amount: usdTotalPrice,
+    currency: "USD",
     payment_options: "card,mobilemoney,ussd",
     customer: {
-      email: session?.user?.email || "openiyiibrahim@gmail.com", // Use session user's email or default
-      phonenumber: "070********", // Corrected to 'phonenumber'
-      name: customerName,
+      email: session?.user?.email || "openiyiibrahim@gmail.com",
+      phonenumber: "+2348157062795",
+      name: session?.user?.name || "Customer",
     },
     customizations: {
       title: "Ariana Store",
@@ -43,25 +59,43 @@ const CartPage = () => {
 
   const handleFlutterPayment = useFlutterwave(config);
 
-  const handlePayment = () => {
+  const handleCheckout = async () => {
     if (!session) {
-      // Redirect to login page if not authenticated
       router.push("/login");
       return;
     }
 
+    const res = await fetch("http://localhost:3000/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        price: totalPrice,
+        products,
+        status: "Not Paid!",
+        userEmail: session.user.email,
+      }),
+    });
+
+    const data = await res.json();
+
     handleFlutterPayment({
       callback: (response) => {
-        console.log("Payment successful:", response);
+        console.log(response);
+        // Close payment modal manually if needed
       },
-      onClose: () => {
-        console.log("Payment closed without completion");
-      },
+      onClose: () => {},
     });
   };
 
-  // Check if cartItems array is empty
-  const isEmptyCart = cartItems.length === 0;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
+  }
+
+  const isEmptyCart = products.length === 0;
 
   return (
     <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col text-[#c5a247] lg:flex-row mt-[130px]">
@@ -76,26 +110,46 @@ const CartPage = () => {
                 width={200}
                 height={200}
               />
+
               <p className="text-xl mt-4">No items in cart</p>
+
               <a href="/shop" className="text-blue-500 hover:underline">
                 Start shopping
               </a>
             </div>
           </div>
         ) : (
-          // Render cart items if not empty
-          cartItems.map((item) => (
+          products.map((item) => (
             <div
-              key={item.id}
               className="flex items-center justify-between mb-4"
+              key={item.id}
             >
-              <Image src="/temporary/p1.png" alt="" width={100} height={100} />
+              {item.img && (
+                <Reveal>
+                  <Image
+                    src={item.img}
+                    alt={item.title}
+                    width={100}
+                    height={100}
+                  />
+                </Reveal>
+              )}
               <div>
-                <h1 className="uppercase text-xl font-bold">{item.name}</h1>
-                <span>{item.size}</span>
+                <h1 className="uppercase text-xl font-bold">
+                  {item.title} x{item.quantity}
+                </h1>
+
+                <span>{item.optionTitle}</span>
               </div>
-              <h2 className="font-bold">${item.price.toFixed(2)}</h2>
-              <span className="cursor-pointer">
+
+              <h2 className="font-bold">
+                ${(item.price * item.quantity).toFixed(2)}
+              </h2>
+
+              <span
+                className="cursor-pointer"
+                onClick={() => removeFromCart(item)}
+              >
                 <IoIosCloseCircle className="text-4xl hover:text-[#efd882] transition-all duration-300 ease-out" />
               </span>
             </div>
@@ -103,30 +157,34 @@ const CartPage = () => {
         )}
       </div>
       {/* PAYMENT CONTAINER */}
-      <div className="h-full p-4 rounded-[33px]  bg-[#ffffff] text-[#4a3b0e] flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6">
+      <div className="h-full p-4 rounded-[33px] bg-[#ffffff] text-[#4a3b0e] flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6">
         <div className="flex justify-between">
-          <span className="">Subtotal ({cartItems.length} items)</span>
-          <span className="">${subtotal.toFixed(2)}</span>
+          <span>Subtotal ({totalItems} items)</span>
+
+          <span>${usdTotalPrice.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="">Service Cost</span>
-          <span className="">$0.00</span>
+          <span>Service Cost</span>
+
+          <span>$0.00</span>
         </div>
         <div className="flex justify-between">
-          <span className="">Delivery Cost</span>
+          <span>Delivery Cost</span>
+
           <span className="text-[#2c6e14]">FREE!</span>
         </div>
         <hr className="my-2" />
         <div className="flex justify-between">
-          <span className="">TOTAL(INCL. VAT)</span>
-          <span className="font-bold">${totalAmount.toFixed(2)}</span>
+          <span>TOTAL (INCL. VAT)</span>
+
+          <span className="font-bold">${usdTotalPrice.toFixed(2)}</span>
         </div>
         <button
-          className="bg-[#60470d] flex items-center justify-center gap-3 hover:bg-[#dfc984] hover:text-[#6e511f] text-white p-3 rounded-md w-[152px] self-end transition-all duration-300 ease-in-out"
-          onClick={handlePayment} // Call handlePayment function on button click
+          onClick={handleCheckout}
+          className="flex items-center justify-center bg-[#c5a247] text-white py-2 rounded-md hover:bg-[#efd882] transition-all duration-300 ease-out"
         >
-          CHECKOUT
-          <BsBoxArrowUpRight />
+          <span>Checkout</span>
+          <BsBoxArrowUpRight className="ml-2" />
         </button>
       </div>
     </div>

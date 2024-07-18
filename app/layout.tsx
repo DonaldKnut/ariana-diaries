@@ -8,6 +8,7 @@ import QueryProvider from "../components/QueryProvider";
 import AuthProvider from "../components/AuthProvider";
 import { ToastContainer } from "react-toastify";
 import { Cabin } from "next/font/google"; // Import Cabin font
+import { CartProvider } from "../context/CartContext";
 
 const cabin = Cabin({
   weight: "400", // Font weight
@@ -32,13 +33,15 @@ export default function RootLayout({
             <GlobalState>
               <AuthProvider>
                 <QueryProvider>
-                  <Header />
-                  {children}
-                  <ToastContainer
-                    position="bottom-right"
-                    theme="dark"
-                    autoClose={3000}
-                  />
+                  <CartProvider>
+                    <Header />
+                    {children}
+                    <ToastContainer
+                      position="bottom-right"
+                      theme="dark"
+                      autoClose={3000}
+                    />
+                  </CartProvider>
                 </QueryProvider>
               </AuthProvider>
             </GlobalState>
