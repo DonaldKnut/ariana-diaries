@@ -1,29 +1,24 @@
-import prisma from "@/database";
+// app/api/posts/search/route.js
+
+import { connect } from "../../../../database/index";
+import Post from "../../../../models/Post";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
-    const url = new URL(req.url);
-    const extractQuery = url.searchParams.get("query");
+    await connect();
 
-    const searchPostList = await prisma.post.findMany({
-      where: {
-        OR: [
-          {
-            title: {
-              contains: extractQuery || "",
-            },
-          },
-          {
-            description: {
-              contains: extractQuery || "",
-            },
-          },
-        ],
-      },
+    const url = new URL(req.url);
+    const extractQuery = url.searchParams.get("query") || "";
+
+    const searchPostList = await Post.find({
+      $or: [
+        { title: { $regex: extractQuery, $options: "i" } },
+        { description: { $regex: extractQuery, $options: "i" } },
+      ],
     });
 
-    if (searchPostList) {
+    if (searchPostList.length > 0) {
       return NextResponse.json({
         success: true,
         data: searchPostList,
@@ -31,15 +26,14 @@ export async function GET(req: NextRequest) {
     } else {
       return NextResponse.json({
         success: false,
-        message: "Failed to search results",
+        message: "No results found",
       });
     }
   } catch (e) {
-    console.log(e);
-
+    console.error(e);
     return NextResponse.json({
       success: false,
-      message: "Something went wrong ! Please try again",
+      message: "Something went wrong! Please try again",
     });
   }
 }
