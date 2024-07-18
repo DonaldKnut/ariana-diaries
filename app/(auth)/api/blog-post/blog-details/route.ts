@@ -1,8 +1,13 @@
+// pages/api/blog-post/blog-details.ts
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { connect } from "../../../../../database";
 import mongoose from "mongoose";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
     const { blogID } = req.query;
 
@@ -30,7 +35,7 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
         message: "Blog details not found",
       });
     }
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return res.status(500).json({
       success: false,
