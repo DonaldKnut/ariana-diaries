@@ -1,11 +1,11 @@
 // app/api/cart/route.ts
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next";
 import { getSession } from "next-auth/react";
 import { connect } from "../../../../../database";
 import Cart from "../../../../../models/Cart";
 import ProductModel, { IProduct } from "../../../../../models/Product";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
   await connect();
   const session = await getSession({ req });
 
