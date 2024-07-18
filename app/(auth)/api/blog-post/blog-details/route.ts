@@ -1,20 +1,19 @@
-// pages/api/blog-post/blog-details.ts
+// app/(auth)/api/blog-post/blog-details/route.ts
 
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { connect } from "../../../../../database";
 import mongoose from "mongoose";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export async function GET(request: NextRequest) {
   try {
-    const { blogID } = req.query;
+    const { searchParams } = request.nextUrl;
+    const blogID = searchParams.get("blogID");
 
-    if (typeof blogID !== "string") {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid blogID" });
+    if (!blogID || typeof blogID !== "string") {
+      return NextResponse.json(
+        { success: false, message: "Invalid blogID" },
+        { status: 400 }
+      );
     }
 
     await connect();
@@ -25,21 +24,30 @@ export default async function handler(
     });
 
     if (blogDetails) {
-      return res.status(200).json({
-        success: true,
-        data: blogDetails,
-      });
+      return NextResponse.json(
+        {
+          success: true,
+          data: blogDetails,
+        },
+        { status: 200 }
+      );
     } else {
-      return res.status(404).json({
-        success: false,
-        message: "Blog details not found",
-      });
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Blog details not found",
+        },
+        { status: 404 }
+      );
     }
   } catch (e: any) {
     console.error(e);
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Something went wrong",
+      },
+      { status: 500 }
+    );
   }
 }
