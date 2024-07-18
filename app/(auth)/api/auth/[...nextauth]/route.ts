@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import UserModel, { UserDocument } from "../../../../../models/User";
 import { connect } from "../../../../../database/index";
 import { signJwtToken } from "../../../../../lib/jwt";
+import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
 import { Types } from "mongoose";
 
 // Authorization function to validate user credentials
@@ -48,7 +50,7 @@ async function authorize(
   }
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       type: "credentials",
@@ -62,7 +64,7 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.accessToken = user.accessToken;
         token._id = user._id.toString(); // Convert ObjectId to string
@@ -72,7 +74,7 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user = {
           ...session.user,

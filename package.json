@@ -69,6 +69,7 @@
     "@types/handlebars": "^4.1.0",
     "@types/nodemailer": "^6.4.15",
     "@types/nodemailer-express-handlebars": "^4.0.5",
+    "eslint": "^9.7.0",
     "handlebars-loader": "^1.7.3",
     "raw-loader": "^4.0.2"
   }
