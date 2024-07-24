@@ -1,5 +1,4 @@
 "use client";
-
 import { useCartStore } from "../../utils/store";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -29,7 +28,7 @@ const CartPage = () => {
           "https://v6.exchangerate-api.com/v6/c32b0e8f419dbb9f1ab38062/latest/USD"
         );
         const data = await res.json();
-        const conversionRate = data.conversion_rates.USD;
+        const conversionRate = data.conversion_rates.USD; // Assuming you want to convert to USD
         setUsdTotalPrice(totalPrice * conversionRate);
       } catch (error) {
         console.error("Error converting currency:", error);
@@ -181,10 +180,10 @@ const CartPage = () => {
         </div>
         <button
           onClick={handleCheckout}
-          className="flex items-center justify-center bg-[#c5a247] text-white py-2 rounded-md hover:bg-[#efd882] transition-all duration-300 ease-out"
+          className="flex items-center justify-center bg-[#c5a247] text-[#4a3b0e] p-2 mt-4 rounded-lg hover:bg-[#4a3b0e] hover:text-[#c5a247] transition-all duration-300 ease-out"
         >
-          <span>Checkout</span>
-          <BsBoxArrowUpRight className="ml-2" />
+          <span className="mr-2">Checkout</span>
+          <BsBoxArrowUpRight />
         </button>
       </div>
     </div>

@@ -16,39 +16,42 @@ export const useCartStore = create(
       totalPrice: INITIAL_STATE.totalPrice,
       addToCart(item) {
         const products = get().products;
-        const productInState = products.find(
-          (product) => product.id === item.id
+        const updatedProducts = [...products, item];
+
+        const totalItems = updatedProducts.reduce(
+          (sum, product) => sum + product.quantity,
+          0
+        );
+        const totalPrice = updatedProducts.reduce(
+          (sum, product) => sum + product.price * product.quantity,
+          0
         );
 
-        if (productInState) {
-          const updatedProducts = products.map((product) =>
-            product.id === productInState.id
-              ? {
-                  ...item,
-                  quantity: item.quantity + product.quantity,
-                  price: item.price + product.price,
-                }
-              : item
-          );
-          set((state) => ({
-            products: updatedProducts,
-            totalItems: state.totalItems + item.quantity,
-            totalPrice: state.totalPrice + item.price,
-          }));
-        } else {
-          set((state) => ({
-            products: [...state.products, item],
-            totalItems: state.totalItems + item.quantity,
-            totalPrice: state.totalPrice + item.price,
-          }));
-        }
+        set({
+          products: updatedProducts,
+          totalItems,
+          totalPrice,
+        });
       },
       removeFromCart(item) {
-        set((state) => ({
-          products: state.products.filter((product) => product.id !== item.id),
-          totalItems: state.totalItems - item.quantity,
-          totalPrice: state.totalPrice - item.price,
-        }));
+        const products = get().products.filter(
+          (product) => product.id !== item.id
+        );
+
+        const totalItems = products.reduce(
+          (sum, product) => sum + product.quantity,
+          0
+        );
+        const totalPrice = products.reduce(
+          (sum, product) => sum + product.price * product.quantity,
+          0
+        );
+
+        set({
+          products,
+          totalItems,
+          totalPrice,
+        });
       },
     }),
     { name: "cart", skipHydration: true }
