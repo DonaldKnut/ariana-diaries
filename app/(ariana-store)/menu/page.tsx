@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import React from "react";
 import { RiArrowRightUpLine } from "react-icons/ri";
 import { ProductType } from "../../../types/types";
 import "./page.css";
 
 const getData = async () => {
-  const res = await fetch("http://localhost:3000/api/categories", {
+  const res = await fetch("http://localhost:3000/api/category", {
     cache: "no-store",
   });
 
@@ -25,7 +24,11 @@ const MenuPage = () => {
     const fetchData = async () => {
       try {
         const data = await getData();
-        setCategories(data);
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.error("Data is not an array:", data);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
