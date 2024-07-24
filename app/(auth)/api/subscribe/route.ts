@@ -1,46 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer, { Transporter, SendMailOptions } from "nodemailer";
-import nodemailerExpressHandlebars from "nodemailer-express-handlebars";
+import nodemailer from "nodemailer";
+import ejs from "ejs";
 import path from "path";
-import fs from "fs";
-import handlebars from "handlebars";
-
-// Define the transporter
-const transporter: Transporter = nodemailer.createTransport({
-  service: "gmail", // or any email service you prefer
-  auth: {
-    user: process.env.EMAIL_USER, // your email
-    pass: process.env.EMAIL_PASS, // your email password
-  },
-});
-
-// Define the Handlebars options
-const handlebarOptions = {
-  viewEngine: {
-    extName: ".hbs",
-    partialsDir: path.resolve("./emailTemplates/"),
-    layoutsDir: path.resolve("./emailTemplates/"),
-    defaultLayout: "", // Set to empty string instead of false
-  },
-  viewPath: path.resolve("./emailTemplates/"),
-  extName: ".hbs",
-};
-
-// Use the Handlebars plugin with the created instance
-(transporter as any).use(
-  "compile",
-  nodemailerExpressHandlebars(handlebarOptions)
-);
-
-const compileTemplate = async (templateName: string, context: any) => {
-  const filePath = path.resolve(
-    handlebarOptions.viewPath,
-    `${templateName}.hbs`
-  );
-  const source = fs.readFileSync(filePath, "utf8");
-  const template = handlebars.compile(source);
-  return template(context);
-};
 
 const validateEmail = (email: string) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -59,21 +20,32 @@ export const POST = async (req: NextRequest) => {
   }
 
   try {
-    const html = await compileTemplate("confirmation", {
+    // Load the email template
+    const templatePath = path.resolve("emailTemplates", "confirmation.ejs");
+    const html = await ejs.renderFile(templatePath, {
       email,
       logoUrl:
         "https://res.cloudinary.com/dtujpq8po/image/upload/v1720111312/serwo4nb3uieilurt2eh.png",
     });
 
-    // Send confirmation email
-    const mailOptions: SendMailOptions = {
-      from: process.env.EMAIL_USER,
+    // Configure the email transporter for Gmail
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT as string, 10),
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    // Send the email
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM as string,
       to: email,
       subject: "Subscription Confirmation",
       html,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 
     return NextResponse.json({ message: "Subscription successful" });
   } catch (error) {

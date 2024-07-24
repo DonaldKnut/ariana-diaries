@@ -50,7 +50,7 @@ async function authorize(
   }
 }
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       type: "credentials",

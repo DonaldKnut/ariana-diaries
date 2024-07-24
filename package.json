@@ -31,6 +31,7 @@
     "cloudinary": "^2.2.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "encoding": "^0.1.13",
     "firebase-admin": "^12.1.1",
     "flutterwave-react-v3": "^1.0.7",
@@ -66,6 +67,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/ejs": "^3.1.5",
     "@types/handlebars": "^4.1.0",
     "@types/nodemailer": "^6.4.15",
     "@types/nodemailer-express-handlebars": "^4.0.5",
