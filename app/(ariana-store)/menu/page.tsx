@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import React from "react";
 import { RiArrowRightUpLine } from "react-icons/ri";
 import { ProductType } from "../../../types/types";
 import "./page.css";
@@ -24,11 +25,7 @@ const MenuPage = () => {
     const fetchData = async () => {
       try {
         const data = await getData();
-        if (Array.isArray(data)) {
-          setCategories(data);
-        } else {
-          console.error("Data is not an array:", data);
-        }
+        setCategories(data.data); // Access the 'data' property here
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -41,7 +38,7 @@ const MenuPage = () => {
       {categories.map((category: ProductType) => (
         <Link
           href={`/menu/${category.slug}`}
-          key={category.id}
+          key={category.id} // Use _id instead of id
           className="relative rounded-[13px] w-full h-60 md:h-80 bg-[#a4900f] p-8 pt-24 flex items-end justify-center"
           style={{
             backgroundImage: `url(${category.img})`,
