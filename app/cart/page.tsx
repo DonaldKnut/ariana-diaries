@@ -8,6 +8,7 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { Reveal } from "../reveal";
 import { useFlutterwave } from "flutterwave-react-v3";
+import Link from "next/link";
 
 const CartPage = () => {
   const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
@@ -17,7 +18,6 @@ const CartPage = () => {
   const [usdTotalPrice, setUsdTotalPrice] = useState(0);
 
   useEffect(() => {
-    useCartStore.persist.rehydrate();
     setLoading(false);
   }, []);
 
@@ -109,19 +109,17 @@ const CartPage = () => {
                 width={200}
                 height={200}
               />
-
               <p className="text-xl mt-4">No items in cart</p>
-
-              <a href="/shop" className="text-blue-500 hover:underline">
+              <Link href="/shop" className="text-blue-500 hover:underline">
                 Start shopping
-              </a>
+              </Link>
             </div>
           </div>
         ) : (
           products.map((item) => (
             <div
               className="flex items-center justify-between mb-4"
-              key={item.id}
+              key={`${item.id}-${item.title}`}
             >
               {item.img && (
                 <Reveal>
@@ -137,14 +135,11 @@ const CartPage = () => {
                 <h1 className="uppercase text-xl font-bold">
                   {item.title} x{item.quantity}
                 </h1>
-
                 <span>{item.optionTitle}</span>
               </div>
-
               <h2 className="font-bold">
                 ${(item.price * item.quantity).toFixed(2)}
               </h2>
-
               <span
                 className="cursor-pointer"
                 onClick={() => removeFromCart(item)}
@@ -159,23 +154,19 @@ const CartPage = () => {
       <div className="h-full p-4 rounded-[33px] bg-[#ffffff] text-[#4a3b0e] flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6">
         <div className="flex justify-between">
           <span>Subtotal ({totalItems} items)</span>
-
           <span>${usdTotalPrice.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
           <span>Service Cost</span>
-
           <span>$0.00</span>
         </div>
         <div className="flex justify-between">
           <span>Delivery Cost</span>
-
           <span className="text-[#2c6e14]">FREE!</span>
         </div>
         <hr className="my-2" />
         <div className="flex justify-between">
           <span>TOTAL (INCL. VAT)</span>
-
           <span className="font-bold">${usdTotalPrice.toFixed(2)}</span>
         </div>
         <button
