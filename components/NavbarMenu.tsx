@@ -2,9 +2,10 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MenuItem, SubMenuItem } from "../utils/types";
-import { CgChevronDownO, CgProfile } from "react-icons/cg";
-import { TbSquareRoundedPlusFilled } from "react-icons/tb";
-import { useSession } from "next-auth/react";
+import { CgChevronDownO } from "react-icons/cg";
+import { signOut, useSession } from "next-auth/react";
+import { FaCirclePlus } from "react-icons/fa6";
+import { PiSignOutDuotone } from "react-icons/pi";
 
 interface NavbarMenuProps {
   menuItems: MenuItem[];
@@ -23,6 +24,7 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
 }) => {
   const router = useRouter();
   const { data: session } = useSession();
+
   return (
     <nav
       id="navbarCollapse"
@@ -86,6 +88,31 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
             )}
           </li>
         ))}
+        {session && (
+          <>
+            {isAdmin && (
+              <li className="mt-5 mb-5 font-bold text-xl lg:hidden">
+                <Link
+                  href="/create"
+                  className="flex items-center gap-2 w-full px-4 py-2 text-xl rounded-[9px] z-[1000] text-white hover:bg-[#b3aa6d] transition-transform duration-300"
+                >
+                  Create <FaCirclePlus />
+                </Link>
+              </li>
+            )}
+            <li className="mt-5 mb-5 font-bold text-xl lg:hidden">
+              <button
+                onClick={() => {
+                  signOut();
+                  router.push("/");
+                }}
+                className="flex items-center gap-2 w-full px-4 py-2 text-sm rounded-[9px] z-[1000] text-white hover:bg-[#b3aa6d] transition-transform duration-300"
+              >
+                Logout <PiSignOutDuotone />
+              </button>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );

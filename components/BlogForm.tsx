@@ -125,7 +125,7 @@ const BlogForm = () => {
                   width={90}
                   height={90}
                 />
-                Create Your Own Blog Post
+                Create a Blog Post
               </h2>
               <div>
                 <ImageUpload

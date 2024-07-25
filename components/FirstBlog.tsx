@@ -36,10 +36,10 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
   const formattedTime = time.format("MMMM Do YYYY");
 
   return (
-    <section>
+    <section className="p-4">
       <Link href={`/blog/${firstBlog?._id}`}>
-        <div className="flex p-11 flex-col mb-12 bg-[#d4cf9f] text-[#615f0a] text-[28px] md:flex-row items-center gap-8 ml-9 mr-9 rounded-[13px] hover:border-gray-500 hover:bg-[#9a9053] hover:text-white transition ease-in-out">
-          <div className="w-full lg:w-2/5">
+        <div className="flex flex-col md:flex-row items-center gap-8 p-6 mb-12 bg-[#d4cf9f] text-[#615f0a] text-[20px] md:text-[28px] rounded-[13px] transition ease-in-out hover:border-gray-500 hover:bg-[#9a9053] hover:text-white">
+          <div className="w-full md:w-2/5">
             <Image
               src={
                 firstBlog?.image?.url
@@ -47,28 +47,30 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
                   : "/ariana-login-image.png"
               }
               alt="first blog image"
-              width={180}
-              height={180}
+              width={500}
+              height={300}
               sizes="100vw"
-              className="w-full h-full rounded-lg"
+              className="w-full h-auto rounded-lg"
             />
           </div>
 
-          <div className="w-full lg:w-3/5 space-y-5">
-            <div className="flex items-center gap-3 text-xs">
-              <p className="text-[#f4f42c] bg-[#967929] p-3 rounded-[12px] font-bold text-[19px]">
+          <div className="w-full md:w-3/5 space-y-5">
+            <div className="flex flex-col md:flex-row items-center gap-3 text-xs">
+              <p className="text-[#f4f42c] bg-[#967929] p-2 md:p-3 rounded-[12px] font-bold text-[16px] md:text-[19px]">
                 {firstBlog?.category}
               </p>
 
-              <p className="flex items-center gap-1 text-paragraphColor text-[15px]">
+              <p className="flex items-center gap-1 text-paragraphColor text-[13px] md:text-[15px]">
                 <IoCalendarClearSharp />
                 {formattedTime}
               </p>
             </div>
 
             <div className="space-y-2">
-              <h2>{firstBlog?.title}</h2>
-              <p className="text-sm text-paragraphColor">
+              <h2 className="text-xl md:text-2xl font-semibold">
+                {firstBlog?.title}
+              </h2>
+              <p className="text-sm md:text-base text-paragraphColor">
                 {firstBlog?.excerpt}
               </p>
             </div>
@@ -82,26 +84,8 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
                 sizes="100vw"
                 className="w-10 h-10 rounded-full"
               />
-              {/* <Image
-                src={
-                  firstBlog?.authorId?.avatar?.url
-                    ? firstBlog.authorId.avatar.url
-                    : "/ariana-login-image.png"
-                }
-                alt="picture of the author"
-                width={40}
-                height={40}
-                sizes="100vw"
-                className="w-10 h-10 rounded-full"
-              /> */}
 
-              {/* <div className="text-xs">
-                <h6>{firstBlog?.authorId?.name}</h6>
-                <p className="text-paragraphColor">
-                  {firstBlog?.authorId?.designation}
-                </p>
-              </div> */}
-              <div className="text-xs">
+              <div className="text-xs md:text-sm">
                 <h4>Ariana Oluwole</h4>
                 <p className="text-paragraphColor">CEO of Ariana Diaries</p>
               </div>
