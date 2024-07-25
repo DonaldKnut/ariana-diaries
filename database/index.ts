@@ -14,7 +14,7 @@ export async function connect() {
   }
 
   try {
-    const db = await mongoose.connect(mongodbUrl);
+    await mongoose.connect(mongodbUrl);
     isConnected = mongoose.connection.readyState === 1; // Ensure this is boolean
     console.log("MongoDB connected successfully");
 
@@ -22,7 +22,7 @@ export async function connect() {
       console.error("MongoDB connection error:", err);
     });
 
-    return db;
+    return mongoose.connection;
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
     throw new Error("Failed to connect to MongoDB");

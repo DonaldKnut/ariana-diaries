@@ -32,48 +32,36 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
-  await connect();
-  const url = new URL(request.url);
-  const id = url.pathname.split("/").pop();
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  const { status } = await request.json();
+
+  if (!status) {
+    return NextResponse.json(
+      { message: "Status is required" },
+      { status: 400 }
+    );
+  }
 
   try {
-    const body = await request.json();
-
-    // Validate the request body to ensure it contains the status field
-    if (!body || !body.status) {
-      return NextResponse.json(
-        { message: "Status is required" },
-        { status: 400 }
-      );
-    }
-
-    // Validate if ID is a valid ObjectId
-    if (!mongoose.isValidObjectId(id as string)) {
-      return NextResponse.json(
-        { message: "Invalid order ID format" },
-        { status: 400 }
-      );
-    }
-
-    const updatedOrder = await Order.findByIdAndUpdate(
-      id,
-      { status: body.status },
-      { new: true }
+    const dbConnection = await connect(); // Use the persistent connection
+    const result = await Order.updateOne(
+      { _id: new mongoose.Types.ObjectId(id) },
+      { $set: { status } }
     );
 
-    if (!updatedOrder) {
+    if (result.matchedCount === 0) {
       return NextResponse.json({ message: "Order not found" }, { status: 404 });
     }
 
-    return NextResponse.json(
-      { message: "Order has been updated!" },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Order updated successfully" });
   } catch (error) {
     console.error("Error updating order:", error);
     return NextResponse.json(
-      { message: "Something went wrong!" },
+      { message: "Internal Server Error" },
       { status: 500 }
     );
   }

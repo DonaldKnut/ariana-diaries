@@ -5,15 +5,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
 import { PiPackageBold } from "react-icons/pi";
 import { SlCalender } from "react-icons/sl";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { LiaGiftSolid } from "react-icons/lia";
 import { TbTruckDelivery } from "react-icons/tb";
-import { FaClipboardCheck } from "react-icons/fa";
 import Spinner from "../../../components/Spinner";
 import { RiFileEditFill } from "react-icons/ri";
+import Notification from "../../../components/Popup";
 
 const OrdersPage = () => {
   const { data: session, status } = useSession();
@@ -21,7 +20,7 @@ const OrdersPage = () => {
 
   if (status === "unauthenticated") {
     router.push("/");
-    return null; // Add this to avoid rendering anything before redirect
+    return null;
   }
 
   const { isLoading, error, data } = useQuery({
@@ -44,25 +43,24 @@ const OrdersPage = () => {
     },
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      setNotificationMessage("The order status has been changed to Paid!");
+    },
+    onError() {
+      setNotificationMessage("Error updating order status.");
     },
   });
 
-  const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>(
-    {}
+  const [editableOrderId, setEditableOrderId] = useState<string | null>(null);
+  const [statusInput, setStatusInput] = useState<string>("");
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(
+    null
   );
 
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>, id: string) => {
     e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const input = form.elements[0] as HTMLInputElement;
-    const status = input.value;
-
-    mutation.mutate({ id, status });
-    setCheckedState((prevState) => ({
-      ...prevState,
-      [id]: true,
-    }));
-    toast.success("The order status has been changed!");
+    mutation.mutate({ id, status: statusInput });
+    setEditableOrderId(null);
+    setStatusInput("");
   };
 
   if (isLoading || status === "loading") return <Spinner />;
@@ -71,6 +69,12 @@ const OrdersPage = () => {
 
   return (
     <div className="p-4 lg:px-20 xl:px-40 mt-40">
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          onClose={() => setNotificationMessage(null)}
+        />
+      )}
       <table className="w-full border-separate border-spacing-3">
         <thead>
           <tr className="text-left">
@@ -94,11 +98,13 @@ const OrdersPage = () => {
         <tbody>
           {data &&
             data.map((item: OrderType) => {
-              const isChecked = checkedState[item.id] || false;
+              const isEditable = editableOrderId === item.id;
 
               return (
                 <tr className="text-sm md:text-base bg-[#b5a466]" key={item.id}>
-                  <td className="hidden md:block py-6 px-1">{item.id}</td>
+                  <td className="hidden md:block py-6 px-1">
+                    {item.userEmail}
+                  </td>
                   <td className="py-6 px-1">
                     {new Date(item.createdAt).toLocaleDateString()}
                   </td>
@@ -108,22 +114,38 @@ const OrdersPage = () => {
                   </td>
                   {session?.user?.isAdmin ? (
                     <td>
-                      <form
-                        className="flex items-center justify-center gap-4"
-                        onSubmit={(e) => handleUpdate(e, item.id)}
-                      >
-                        <input
-                          placeholder={item.status}
-                          className="p-2 ring-1 ring-red-100 rounded-md"
-                        />
-                        <button className="bg-[#77770b] p-2 rounded-full">
-                          {isChecked ? (
-                            <FaClipboardCheck />
-                          ) : (
+                      {isEditable ? (
+                        <form
+                          className="flex items-center justify-center gap-4"
+                          onSubmit={(e) => handleUpdate(e, item.id)}
+                        >
+                          <input
+                            value={statusInput}
+                            onChange={(e) => setStatusInput(e.target.value)}
+                            placeholder={item.status}
+                            className="p-2 ring-1 ring-red-100 rounded-md"
+                          />
+                          <button
+                            type="submit"
+                            className="bg-[#77770b] p-2 rounded-full"
+                          >
+                            Update
+                          </button>
+                        </form>
+                      ) : (
+                        <div className="flex items-center gap-4">
+                          <span>{item.status}</span>
+                          <button
+                            onClick={() => {
+                              setEditableOrderId(item.id);
+                              setStatusInput(item.status);
+                            }}
+                            className="bg-[#77770b] p-2 rounded-full"
+                          >
                             <RiFileEditFill />
-                          )}
-                        </button>
-                      </form>
+                          </button>
+                        </div>
+                      )}
                     </td>
                   ) : (
                     <td className="py-6 px-1">{item.status}</td>

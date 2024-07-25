@@ -4,9 +4,7 @@ import { connect } from "../../../../database/index";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import nodemailer from "nodemailer";
-import hbs, {
-  NodemailerExpressHandlebarsOptions,
-} from "nodemailer-express-handlebars";
+import ejs from "ejs";
 import path from "path";
 
 interface SignUpData {
@@ -33,7 +31,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       password: hashedPassword,
     });
 
-    // Configure Nodemailer to use Handlebars
+    // Configure Nodemailer
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
@@ -42,29 +40,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
     });
 
-    const handlebarOptions: NodemailerExpressHandlebarsOptions = {
-      viewEngine: {
-        extname: ".hbs",
-        partialsDir: path.resolve("./emailTemplates/"),
-        layoutsDir: path.resolve("./emailTemplates/"),
-        defaultLayout: "",
-      },
-      viewPath: path.resolve("./emailTemplates/"),
-      extName: ".hbs",
-    };
-
-    transporter.use("compile", hbs(handlebarOptions));
+    const templatePath = path.resolve("./emailTemplates/welcome.ejs");
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: newUser.email,
       subject: "Welcome to Ariana Diaries!",
-      template: "welcome", // Name of the template file without extension
-      context: {
+      html: await ejs.renderFile(templatePath, {
         name: newUser.name,
         logoUrl:
           "https://res.cloudinary.com/dtujpq8po/image/upload/v1720111312/serwo4nb3uieilurt2eh.png",
-      },
+      }),
     };
 
     try {
