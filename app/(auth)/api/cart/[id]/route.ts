@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../../../../authOptions/authOptions";
 import { connect } from "../../../../../database";
 import Cart from "../../../../../models/Cart";
 import ProductModel, { IProduct } from "../../../../../models/Product";

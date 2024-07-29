@@ -1,20 +1,23 @@
 import { cloudinary } from "../../../utils/cloudinaryConfig";
+import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(req: any, res: any) {
-  if (req.method === "POST") {
-    const { file } = req.body;
+export async function POST(request: NextRequest) {
+  const { file } = await request.json(); // Use request.json() to parse the incoming JSON
 
-    try {
-      const uploadResponse = await cloudinary.uploader.upload(file, {
-        upload_preset: "blog_images",
-      });
+  try {
+    const uploadResponse = await cloudinary.uploader.upload(file, {
+      upload_preset: "blog_images",
+    });
 
-      res.status(200).json({ url: uploadResponse.secure_url });
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      res.status(500).json({ error: "Error uploading image" });
-    }
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
+    return NextResponse.json(
+      { url: uploadResponse.secure_url },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    return NextResponse.json(
+      { error: "Error uploading image" },
+      { status: 500 }
+    );
   }
 }

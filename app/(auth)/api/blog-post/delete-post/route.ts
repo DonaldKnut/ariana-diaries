@@ -1,3 +1,4 @@
+// app/(auth)/api/auth/session/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import Post from "../../../../../models/Post";
@@ -8,13 +9,13 @@ export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const userid = searchParams.get("userid");
+    const userId = searchParams.get("userid");
 
     if (
       !id ||
       typeof id !== "string" ||
-      !userid ||
-      typeof userid !== "string"
+      !userId ||
+      typeof userId !== "string"
     ) {
       return NextResponse.json(
         { success: false, message: "Invalid blog ID or user ID" },
@@ -40,7 +41,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    if (post.userid !== userid) {
+    if (post.userId.toString() !== userId) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }

@@ -82,7 +82,7 @@ const FeaturedBags = () => {
       <div className="w-max flex">
         {bags.map((item) => (
           <div
-            key={item._id} // Use _id instead of id if using MongoDB ObjectIds
+            key={item._id.toString()} // Convert ObjectId to string
             className={`w-screen h-[60vh] flex flex-col items-center justify-around p-4 hover:bg-[#6f6a45] hover:text-white transition-all duration-300 md:w-[50vw] xl:w-[33vw] xl:h-[90vh] ${getTextColor()}`}
           >
             {item.img && (

@@ -22,7 +22,7 @@ export type BlogFormData = {
 };
 
 export type ProductType = {
-  price: string;
+  price: number;
   id: string;
   slug: string;
   title: string;

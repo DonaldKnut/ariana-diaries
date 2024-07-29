@@ -33,8 +33,8 @@ export default function Search() {
     helperFuncToFetchSearchResults(searchQuery);
   }
 
-  async function handleDelete(id: number) {
-    console.log(id);
+  async function handleDelete(id: string, userid: string) {
+    console.log(id, userid);
 
     const res = await fetch(`/api/blog-post/delete-post?id=${id}`, {
       method: "DELETE",

@@ -1,11 +1,9 @@
-// app/(auth)/api/auth/[...nextauth]/route.ts
-import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import UserModel, { UserDocument } from "../../../../../models/User";
-import { connect } from "../../../../../database";
-import { signJwtToken } from "../../../../../utils/jwt";
+import UserModel, { UserDocument } from "../models/User";
+import { connect } from "../database";
+import { signJwtToken } from "../lib/jwt";
 import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
 
@@ -66,7 +64,7 @@ async function authorize(
   }
 }
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       type: "credentials",
@@ -109,13 +107,3 @@ const authOptions = {
     },
   },
 };
-
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  return NextAuth(req, res, authOptions);
-}
-
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  return NextAuth(req, res, authOptions);
-}
-
-export { authOptions };

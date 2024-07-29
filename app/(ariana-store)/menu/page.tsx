@@ -5,6 +5,7 @@ import React from "react";
 import { RiArrowRightUpLine } from "react-icons/ri";
 import { ProductType } from "../../../types/types";
 import "./page.css";
+import { Reveal } from "../../reveal";
 
 const getData = async () => {
   const res = await fetch("http://localhost:3000/api/category", {
@@ -49,17 +50,23 @@ const MenuPage = () => {
           <div
             className={`text-${category.color} bg-black bg-opacity-50 p-4 rounded-lg`}
           >
-            <h1 className="uppercase font-bold text-3xl">{category.title}</h1>
-            <p className="text-sm my-8 menu_desc-description">
-              {category.desc}
-            </p>
-            <button
-              className={`flex items-center mb-5 bg-[#828238] hover:bg-[#6e6a41] hover:text-[#ffea64] text-${
-                category.color === "black" ? "white" : "#b2b20a"
-              } py-2 px-4 rounded-md`}
-            >
-              Explore <RiArrowRightUpLine className="ml-2" />
-            </button>
+            <Reveal>
+              <h1 className="uppercase font-bold text-3xl">{category.title}</h1>
+            </Reveal>
+            <Reveal>
+              <p className="text-sm my-8 menu_desc-description">
+                {category.desc}
+              </p>
+            </Reveal>
+            <Reveal>
+              <button
+                className={`flex items-center mb-5 bg-[#828238] hover:bg-[#6e6a41] hover:text-[#ffea64] text-${
+                  category.color === "black" ? "white" : "#b2b20a"
+                } py-2 px-4 rounded-md`}
+              >
+                Explore <RiArrowRightUpLine className="ml-2" />
+              </button>
+            </Reveal>
           </div>
         </Link>
       ))}

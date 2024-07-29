@@ -12,7 +12,7 @@ export default function SingleBlog({
   blogItem: Blog;
   handleDelete: (id: string, userid: string) => void;
 }) {
-  const { image, category, title, content, userimage, userid, id, author } =
+  const { image, category, title, content, userImage, userid, id, author } =
     blogItem;
   const { data: session } = useSession();
 
@@ -62,9 +62,9 @@ export default function SingleBlog({
       </div>
       <div className="flex items-center p-4">
         <div className="flex items-center">
-          {userimage ? (
+          {userImage ? (
             <Image
-              src={userimage}
+              src={userImage}
               alt="Author"
               className="w-10 h-10 rounded-full"
               width={40}

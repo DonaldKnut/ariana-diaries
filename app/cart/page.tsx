@@ -7,8 +7,12 @@ import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { Reveal } from "../reveal";
-import { useFlutterwave } from "flutterwave-react-v3";
 import Link from "next/link";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 const CartPage = () => {
   const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
@@ -38,52 +42,44 @@ const CartPage = () => {
     convertCurrency();
   }, [totalPrice]);
 
-  const config = {
-    public_key: process.env.FLUTTERWAVE_PUBLIC_KEY || "",
-    tx_ref: Date.now().toString(),
-    amount: usdTotalPrice,
-    currency: "USD",
-    payment_options: "card,mobilemoney,ussd",
-    customer: {
-      email: session?.user?.email || "openiyiibrahim@gmail.com",
-      phonenumber: "+2348157062795",
-      name: session?.user?.name || "Customer",
-    },
-    customizations: {
-      title: "Ariana Store",
-      description: "Payment for items in cart",
-      logo: "/ARIANA.png",
-    },
-  };
-
-  const handleFlutterPayment = useFlutterwave(config);
-
   const handleCheckout = async () => {
     if (!session) {
       router.push("/login");
       return;
     }
 
-    const res = await fetch("http://localhost:3000/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        price: totalPrice,
-        products,
-        status: "Not Paid!",
-        userEmail: session.user.email,
-      }),
-    });
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          price: totalPrice,
+          products,
+          status: "Not Paid!",
+          userEmail: session.user.email,
+        }),
+      });
 
-    const data = await res.json();
+      const { order, clientSecret } = await res.json();
 
-    handleFlutterPayment({
-      callback: (response) => {
-        console.log(response);
-        // Close payment modal manually if needed
-      },
-      onClose: () => {},
-    });
+      router.push(`${process.env.NEXTAUTH_URL}/pay/${order._id}`);
+
+      const stripe = await stripePromise;
+
+      if (!stripe) {
+        throw new Error("Stripe.js has not loaded properly.");
+      }
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: clientSecret,
+      });
+
+      if (result.error) {
+        console.error("Stripe checkout error:", result.error);
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+    }
   };
 
   if (loading) {
@@ -110,7 +106,7 @@ const CartPage = () => {
                 height={200}
               />
               <p className="text-xl mt-4">No items in cart</p>
-              <Link href="/shop" className="text-blue-500 hover:underline">
+              <Link href="/shop" className="text-[#c0a928] hover:underline">
                 Start shopping
               </Link>
             </div>

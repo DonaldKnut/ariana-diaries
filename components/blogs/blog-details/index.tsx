@@ -80,8 +80,8 @@ export default function BlogDetailsHome({ blogData }: { blogData: Blog }) {
                     <div className="mr-10 mb-5 flex items-center">
                       <div className="mr-4">
                         <div className="relative h-10 w-10 overflow-hidden rounded-full">
-                          {session && blogData?.userimage ? (
-                            <Image src={blogData.userimage} alt="User" fill />
+                          {session && blogData?.userImage ? (
+                            <Image src={blogData.userImage} alt="User" fill />
                           ) : (
                             <div className="flex items-center justify-center h-10 w-10 rounded-full bg-[#ab9b6a] text-white text-lg">
                               {session?.user?.email

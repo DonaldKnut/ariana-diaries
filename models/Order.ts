@@ -8,6 +8,7 @@ export interface IOrder extends Document {
   status: string;
   createdAt: Date;
   updatedAt: Date;
+  intent_id: string;
 }
 
 const OrderSchema: Schema = new Schema(
@@ -21,6 +22,7 @@ const OrderSchema: Schema = new Schema(
       },
     ],
     status: { type: String, required: true },
+    intent_id: { type: String, required: true },
   },
   { timestamps: true }
 );

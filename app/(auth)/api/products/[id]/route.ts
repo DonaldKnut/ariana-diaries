@@ -1,97 +1,84 @@
-// app/api/cart/route.ts
-import { NextRequest, NextResponse } from "next";
-import { getSession } from "next-auth/react";
+import { NextRequest, NextResponse } from "next/server";
 import { connect } from "../../../../../database";
-import Cart from "../../../../../models/Cart";
-import ProductModel, { IProduct } from "../../../../../models/Product";
+import ProductModel from "../../../../../models/Product";
+import mongoose from "mongoose";
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   await connect();
-  const session = await getSession({ req });
+  const url = new URL(req.url);
+  const id = url.pathname.split("/").pop();
 
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
+  if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
   }
-
-  const userId = session.user?.id;
 
   try {
-    const cart = await Cart.findOne({ userId }).populate("items.product");
-    if (!cart) {
-      return res.status(200).json([]);
-    }
-    return res.status(200).json(cart.items);
-  } catch (error) {
-    return res.status(500).json({ error: "Error fetching cart" });
-  }
-}
-
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  await connect();
-  const session = await getSession({ req });
-
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const userId = session.user?.id;
-
-  try {
-    const { productId, quantity } = req.body;
-    const product = await ProductModel.findById(productId);
+    const product = await ProductModel.findById(id);
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
-
-    let cart = await Cart.findOne({ userId });
-    if (!cart) {
-      cart = new Cart({ userId, items: [] });
-    }
-
-    const existingItem = cart.items.find(
-      (item: { product: IProduct; quantity: number }) =>
-        item.product.toString() === productId
-    );
-
-    if (existingItem) {
-      existingItem.quantity += quantity;
-    } else {
-      cart.items.push({ product, quantity });
-    }
-
-    await cart.save();
-    return res.status(200).json(cart.items);
+    return NextResponse.json(product, { status: 200 });
   } catch (error) {
-    return res.status(500).json({ error: "Error adding to cart" });
+    console.error("Error fetching product:", error);
+    return NextResponse.json(
+      { error: "Error fetching product" },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
+export async function PUT(req: NextRequest) {
   await connect();
-  const session = await getSession({ req });
+  const url = new URL(req.url);
+  const id = url.pathname.split("/").pop();
+  const { title, description, price, stock } = await req.json();
 
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
+  if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
   }
 
-  const userId = session.user?.id;
+  try {
+    const product = await ProductModel.findByIdAndUpdate(
+      id,
+      { title, description, price, stock },
+      { new: true, runValidators: true }
+    );
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+    return NextResponse.json(product, { status: 200 });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return NextResponse.json(
+      { error: "Error updating product" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  await connect();
+  const url = new URL(req.url);
+  const id = url.pathname.split("/").pop();
+
+  if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
+  }
 
   try {
-    const { productId } = req.body;
-
-    const cart = await Cart.findOne({ userId });
-    if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
+    const product = await ProductModel.findByIdAndDelete(id);
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
-
-    cart.items = cart.items.filter(
-      (item: { product: IProduct; quantity: number }) =>
-        item.product.toString() !== productId
+    return NextResponse.json(
+      { message: "Product deleted successfully" },
+      { status: 200 }
     );
-
-    await cart.save();
-    return res.status(200).json(cart.items);
   } catch (error) {
-    return res.status(500).json({ error: "Error removing from cart" });
+    console.error("Error deleting product:", error);
+    return NextResponse.json(
+      { error: "Error deleting product" },
+      { status: 500 }
+    );
   }
 }

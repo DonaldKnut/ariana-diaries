@@ -26,13 +26,7 @@ type ContextType = {
 const initialState: ContextType = {
   loading: false,
   setLoading: () => {},
-  formData: {
-    title: "",
-    description: "",
-    image: "",
-    category: "",
-    content: "", // Make sure to include 'content' here
-  },
+  formData: initialBlogFormData, // Use initialBlogFormData for initial values
   setFormData: () => {},
   searchQuery: "",
   setSearchQuery: () => {},

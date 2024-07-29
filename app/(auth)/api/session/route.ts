@@ -1,23 +1,61 @@
-// pages/api/auth/session.ts (adjust path as per your structure)
-
+// app/(auth)/api/auth/session/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../../../authOptions/authOptions";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react"; // Example, adjust based on your setup
+import { Readable } from "stream";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+async function readableStreamToArray(
+  stream: ReadableStream<Uint8Array>
+): Promise<Uint8Array[]> {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (value) chunks.push(value);
+  }
+
+  return chunks;
+}
+
+export async function GET(req: NextRequest) {
   try {
-    const session = await getSession({ req });
+    const { headers, body, method, url } = req;
+
+    let readableBody: Readable | null = null;
+    if (body) {
+      const chunks = await readableStreamToArray(body);
+      readableBody = Readable.from(chunks);
+    }
+
+    const request = {
+      headers: Object.fromEntries(headers),
+      body: readableBody,
+      method,
+      url,
+      query: {},
+      cookies: {},
+    } as unknown as NextApiRequest;
+
+    const response = {} as NextApiResponse;
+
+    const session = await getServerSession(request, response, authOptions);
 
     if (session) {
-      // Optionally fetch user data from MongoDB based on session info
-      // Example: const user = await UserModel.findOne({ email: session.user.email });
-      // Adjust logic as per your needs
-
-      res.status(200).json(session);
+      return NextResponse.json(session);
     } else {
-      res.status(401).json({ message: "No session found" });
+      return NextResponse.json(
+        { message: "No session found" },
+        { status: 401 }
+      );
     }
   } catch (error) {
     console.error("Error fetching session:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
   }
-};
+}

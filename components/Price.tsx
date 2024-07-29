@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
+import { useCartStore } from "../utils/store";
 
 type Props = {
   price: number;
-  id: number;
+  id: string;
   options?: { title: string; additionalPrice: number }[];
 };
 
@@ -13,12 +14,23 @@ const Price = ({ price, id, options }: Props) => {
   const [total, setTotal] = useState(price);
   const [quantity, setQuantity] = useState(1);
   const [selected, setSelected] = useState(0);
+  const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {
     setTotal(
       quantity * (options ? price + options[selected].additionalPrice : price)
     );
   }, [quantity, selected, options, price]);
+
+  const handleAddToCart = () => {
+    const selectedItem = {
+      id: id.toString(),
+      title: options ? options[selected].title : "",
+      quantity,
+      price: options ? price + options[selected].additionalPrice : price,
+    };
+    addToCart(selectedItem);
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -59,7 +71,10 @@ const Price = ({ price, id, options }: Props) => {
           </div>
         </div>
         {/* CART BUTTON */}
-        <button className="uppercase w-56 flex gap-3 justify-center items-center bg-[#b09b40] text-white p-3 ring-1 ring-[#f6d687]">
+        <button
+          onClick={handleAddToCart}
+          className="uppercase w-56 flex gap-3 justify-center items-center bg-[#b09b40] text-white p-3 ring-1 ring-[#f6d687]"
+        >
           Add to Cart <FaCirclePlus />
         </button>
       </div>
