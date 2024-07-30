@@ -10,8 +10,6 @@ import { FaPlusCircle } from "react-icons/fa";
 import { MdAddCircle } from "react-icons/md";
 
 export default function CategoryList({ list }: { list: Blog[] | null }) {
-  console.log(list, "list");
-
   const router = useRouter();
 
   if (!list || list.length === 0) {
@@ -44,19 +42,17 @@ export default function CategoryList({ list }: { list: Blog[] | null }) {
     );
   }
 
-  const getMaxId = Math.max(...list.map((item) => parseInt(item.id, 10))); // Convert id to number
-
-  console.log(getMaxId);
+  const getMaxId = Math.max(...list.map((item) => parseInt(item.id, 10)));
 
   const getLatestBlogForCurrentCategory =
     list && list.length
       ? list.find((item) => parseInt(item.id, 10) === getMaxId)
-      : null; // Convert id to number
+      : null;
 
   const relatedBlogs =
     list && list.length
       ? list.filter((item) => parseInt(item.id, 10) !== getMaxId)
-      : []; // Convert id to number
+      : [];
 
   return (
     <section className="overflow-hidden pt-[180px] pb-[120px]">

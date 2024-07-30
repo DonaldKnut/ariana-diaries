@@ -57,9 +57,11 @@ const OtherBlogs: React.FC<OtherBlogsProps> = ({ otherBlogs }) => {
                   />
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 text-xs">
-                      <p className="text-white bg-[#49410c] p-2 rounded-[5px]">
-                        {item.category}
-                      </p>
+                      <Link href={`/category/${item?.category}`}>
+                        <p className="text-white bg-[#49410c] p-2 rounded-[5px]">
+                          {item.category}
+                        </p>
+                      </Link>
                       <p className="flex items-center gap-1 text-paragraphColor">
                         <AiTwotoneCalendar />
                         {formattedTime}

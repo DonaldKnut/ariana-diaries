@@ -10,7 +10,7 @@ import { SlCalender } from "react-icons/sl";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { LiaGiftSolid } from "react-icons/lia";
 import { TbTruckDelivery } from "react-icons/tb";
-import Spinner from "../../../components/Spinner";
+import Spinner from "../../../spinner";
 import { RiFileEditFill } from "react-icons/ri";
 import Notification from "../../../components/Popup";
 

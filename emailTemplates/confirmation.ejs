@@ -6,11 +6,11 @@
     <title>Subscription Confirmation</title>
     <style>
       body {
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        background-color: #f4f4f4;
-        color: #333;
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
         margin: 0;
         padding: 0;
+        color: #3f3210;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -18,45 +18,53 @@
       }
       .container {
         width: 100%;
-        max-width: 400px;
+        max-width: 600px;
+        margin: 0 auto;
         background-color: #fff;
         padding: 20px;
-        border-radius: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         text-align: center;
-        overflow: hidden;
       }
       .header {
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eaeaea;
         background-color: #695f40; /* Dark Gold */
-        color: #fff;
-        padding: 20px;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
+        color: #ffd700; /* Light Gold */
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
       }
       .header img {
         max-width: 100px;
-        /* border-radius: 50%; */
       }
       .header h2 {
         margin: 10px 0 0;
         font-size: 24px;
-        color: #ffd700; /* Light Gold */
       }
       .content {
         padding: 20px;
+        color: #3f3210; /* Gold color */
       }
       .content p {
-        margin: 0 0 10px;
-        line-height: 1.6;
-        color: #756e04; /* Darker Gold */
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
       }
       .footer {
+        text-align: center;
+        padding: 10px 0;
+        color: #6d602f;
+        font-size: 14px;
+        border-top: 1px solid #eaeaea;
+        margin-top: 20px;
         background-color: #846b31; /* Medium Gold */
         color: #fff;
-        padding: 10px;
-        font-size: 12px;
-        border-bottom-left-radius: 20px;
-        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+      .footer p {
+        margin: 0;
       }
       @media (max-width: 480px) {
         .container {

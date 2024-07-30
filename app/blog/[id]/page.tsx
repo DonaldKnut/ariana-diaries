@@ -12,6 +12,7 @@ import BlogContent from "../../../components/BlogContent";
 import BlogActions from "../../../components/BlogActions";
 import { splitParagraph } from "../../../components/splitParagraph";
 import AuthorDetails from "../../../components/AuthorDetails";
+import Spinner from "../../../spinner"; // Import Spinner component
 
 interface BlogDetailsProps {
   params: {
@@ -76,6 +77,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
     comments: [],
   });
 
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [blogLikes, setBlogLikes] = useState(0);
@@ -111,6 +113,8 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
       }
     } catch (error) {
       console.error("Error fetching blog:", error);
+    } finally {
+      setIsLoading(false); // Set loading state to false once data is fetched
     }
   };
 
@@ -252,70 +256,76 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
 
   return (
     <section className="container max-w-3xl pt-28">
-      {session?.user.isAdmin && (
-        <div className="flex items-center justify-end gap-5">
-          <Link
-            href={`/blog/edit/${params.id}`}
-            className="flex items-center gap-1 text-primaryColor"
-          >
-            <BsFillPencilFill />
-            Edit
-          </Link>
+      {isLoading ? ( // Display spinner while loading
+        <Spinner />
+      ) : (
+        <>
+          {session?.user.isAdmin && (
+            <div className="flex items-center justify-end gap-5">
+              <Link
+                href={`/blog/edit/${params.id}`}
+                className="flex items-center gap-1 text-primaryColor"
+              >
+                <BsFillPencilFill />
+                Edit
+              </Link>
 
-          <button
-            onClick={() => handleBlogDelete(blogDetails?.image || "")}
-            className="flex items-center gap-1 text-red-500"
-          >
-            <BsTrash />
-            {isDeleting ? "Deleting..." : "Delete"}
-          </button>
-        </div>
-      )}
+              <button
+                onClick={() => handleBlogDelete(blogDetails?.image || "")}
+                className="flex items-center gap-1 text-red-500"
+              >
+                <BsTrash />
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          )}
 
-      <AuthorDetails author={blogDetails.authorId} />
+          <AuthorDetails author={blogDetails.authorId} />
 
-      <BlogContent
-        blogDetails={blogDetails}
-        formattedTime={formattedTime}
-        splitParagraph={splitParagraph}
-      />
-
-      <BlogActions
-        blogLikes={blogLikes}
-        isLiked={isLiked}
-        handleLike={handleLike}
-        blogComments={blogComments}
-        error={error}
-      />
-
-      <div>
-        {!session?.user && (
-          <h3 className="text-red-500">Kindly login to leave a comment.</h3>
-        )}
-        {session?.user && (
-          <CommentForm
-            commentText={commentText}
-            setCommentText={setCommentText}
-            handleCommentSubmit={handleCommentSubmit}
-            isCommenting={isCommenting}
+          <BlogContent
+            blogDetails={blogDetails}
+            formattedTime={formattedTime}
+            splitParagraph={splitParagraph}
           />
-        )}
-        {blogDetails?.comments && blogDetails?.comments.length === 0 && (
-          <p>No comments</p>
-        )}
-        {blogDetails?.comments && blogDetails?.comments.length > 0 && (
-          <>
-            {blogDetails.comments.map((comment) => (
-              <Comment
-                key={comment._id}
-                comment={comment}
-                sessionUserId={session?.user?._id ?? ""}
-                handleDeleteComment={handleDeleteComment}
+
+          <BlogActions
+            blogLikes={blogLikes}
+            isLiked={isLiked}
+            handleLike={handleLike}
+            blogComments={blogComments}
+            error={error}
+          />
+
+          <div>
+            {!session?.user && (
+              <h3 className="text-red-500">Kindly login to leave a comment.</h3>
+            )}
+            {session?.user && (
+              <CommentForm
+                commentText={commentText}
+                setCommentText={setCommentText}
+                handleCommentSubmit={handleCommentSubmit}
+                isCommenting={isCommenting}
               />
-            ))}
-          </>
-        )}
-      </div>
+            )}
+            {blogDetails?.comments && blogDetails?.comments.length === 0 && (
+              <p>No comments</p>
+            )}
+            {blogDetails?.comments && blogDetails?.comments.length > 0 && (
+              <>
+                {blogDetails.comments.map((comment) => (
+                  <Comment
+                    key={comment._id}
+                    comment={comment}
+                    sessionUserId={session?.user?._id ?? ""}
+                    handleDeleteComment={handleDeleteComment}
+                  />
+                ))}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </section>
   );
 };

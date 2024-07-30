@@ -1,12 +1,13 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import "./page.css";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { BsFillArrowUpRightSquareFill } from "react-icons/bs";
 import { FaSpinner } from "react-icons/fa";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
-import { IoCheckmarkCircleSharp, IoCloseCircleSharp } from "react-icons/io5";
 import { Reveal } from "./reveal";
+import { z } from "zod";
+import Popup from "../components/Popup";
 
 export default function Home() {
   const [displayText, setDisplayText] = useState("");
@@ -20,6 +21,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,17 +50,19 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
+  const emailSchema = z
+    .string()
+    .min(1, "Email is required")
+    .email("Invalid email address");
 
   const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage("");
 
-    if (!validateEmail(email)) {
-      setMessage("Invalid email address.");
+    const emailValidation = emailSchema.safeParse(email);
+
+    if (!emailValidation.success) {
+      setMessage(emailValidation.error.errors[0].message);
       setIsSuccess(false);
       setTimeout(() => setMessage(""), 3000); // Hide message after 3 seconds
       return;
@@ -82,6 +86,7 @@ export default function Home() {
         setIsSuccess(true);
         setMessage("Subscribed!");
         setEmail("");
+        setShowPopup(true);
       } else {
         setIsSuccess(false);
         setMessage(result.message || "Subscription failed.");
@@ -109,12 +114,6 @@ export default function Home() {
                       {displayText}
                     </h1>
                   </Reveal>
-                  {/* <Reveal>
-                    <p className="mb-3 text-base font-medium leading-relaxed">
-                      Embarking on a journey of inspiration, empowerment, and
-                      discovery in the vast waves of possibilities and horizons.
-                    </p>
-                  </Reveal> */}
                   <div className="flex flex-col gap-3 items-center justify-center">
                     <div className="mt-12 w-[230px] lg:w-[450px]">
                       <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100">
@@ -122,18 +121,22 @@ export default function Home() {
                       </h2>
                       <form
                         onSubmit={handleSubscribe}
-                        className="mt-6 flex flex-col sm:flex-row sm:items-center"
+                        className="mt-6 form-container"
                       >
                         <input
                           type="email"
                           placeholder="Enter your email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full px-4 py-2 mb-4 text-zinc-800 bg-zinc-100 border border-zinc-300 rounded-md dark:bg-zinc-700 dark:text-zinc-100 dark:border-zinc-600 sm:mr-4 sm:mb-0"
+                          className={`email-input px-4 py-2 text-zinc-800 bg-zinc-100 border rounded-md dark:bg-[#908b76] dark:text-zinc-100 ${
+                            message && !isSuccess
+                              ? "border-red-500"
+                              : "border-zinc-300"
+                          }`}
                         />
                         <button
                           type="submit"
-                          className="flex items-center justify-center gap-2 px-6 py-2 text-white bg-[#846b31] rounded-md hover:bg-[#8e801ad0] transition-all ease-out"
+                          className="subscribe-button flex items-center justify-center gap-2 px-6 py-2 text-white bg-[#846b31] rounded-md hover:bg-[#8e801ad0] transition-all ease-out"
                           disabled={loading} // Disable button when loading
                         >
                           {loading ? (
@@ -146,20 +149,13 @@ export default function Home() {
                         </button>
                       </form>
                       {message && (
-                        <div
-                          className={`mt-4 flex items-center justify-center gap-2 border rounded-md ${
-                            isSuccess
-                              ? "border-green-500 bg-green-100 text-green-700"
-                              : "text-red-700"
+                        <p
+                          className={`mt-2 ${
+                            isSuccess ? "text-green-500" : "text-red-500"
                           }`}
                         >
-                          {isSuccess ? (
-                            <IoCheckmarkCircleSharp size={24} />
-                          ) : (
-                            <IoCloseCircleSharp size={24} />
-                          )}
-                          <p>{message}</p>
-                        </div>
+                          {message}
+                        </p>
                       )}
                     </div>
                     <Link href="/menu" passHref className="z-15">
@@ -176,16 +172,16 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <video
-              src={cloudinaryUrl}
-              autoPlay
-              loop
-              // muted
-              className="video"
-            />
+            <video src={cloudinaryUrl} autoPlay loop className="video" />
           </div>
         </div>
       </section>
+      {showPopup && (
+        <Popup
+          message="Successfully subscribed!"
+          onClose={() => setShowPopup(false)}
+        />
+      )}
     </>
   );
 }

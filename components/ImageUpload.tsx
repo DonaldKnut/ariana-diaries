@@ -6,11 +6,17 @@ import Spinner from "./Spinner";
 const CLOUD_NAME = "dtujpq8po";
 const UPLOAD_PRESET = "ariana_diaries";
 
-const ImageUpload = ({ setFormData, state, setState }: any) => {
+const ImageUpload = ({
+  setFormData,
+  state,
+  setState,
+  label = "Upload Image",
+  placeholder = "Upload Blog Image",
+}: any) => {
   const [imageLoading, setImageLoading] = useState<boolean>(false);
   const [error, setError] = useState("");
 
-  const handleBlogImageChange = async (
+  const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (!event.target.files) return;
@@ -71,14 +77,17 @@ const ImageUpload = ({ setFormData, state, setState }: any) => {
   return (
     <div className="flex gap-3">
       <div className={imageLoading ? "w-1/2" : "w-full"}>
-        <label className="mb-3 block text-sm font-medium text-dark text-[#8c7b25] ">
-          Upload Blog Image
+        <label
+          htmlFor="fileinput"
+          className="mb-3 block text-sm font-medium text-dark text-[#8c7b25]"
+        >
+          {placeholder}
         </label>
         <input
           id="fileinput"
           accept="image/*"
           max={1000000}
-          onChange={handleBlogImageChange}
+          onChange={handleImageChange}
           type="file"
           className="w-full bg-[#6f5e28] mb-8 rounded-md border border-transparent py-3 px-6 text-base text-white placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:shadow-signUp"
         />

@@ -1,43 +1,34 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { IPost } from "../../../models/Post";
 import CategoryList from "../../../components/category/index"; // Adjust the path as necessary
 import { Blog } from "../../../utils/types"; // Ensure this import path is correct
 
 const Page: React.FC = () => {
   const searchParams = useSearchParams();
-  const categoryID = searchParams.get("id");
+  const category = searchParams.get("category"); // Extract the category from the URL
   const [posts, setPosts] = useState<Blog[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log("Search Params:", searchParams.toString()); // Debugging log
+    console.log("Category:", category); // Debugging log
+
     const fetchPosts = async () => {
-      if (!categoryID) {
-        setError("Category ID is required");
+      if (!category) {
+        setError("Category is required");
         setLoading(false);
         return;
       }
 
       try {
-        const response = await axios.get(`/api/category/${categoryID}`);
-        const data: IPost[] = response.data.data;
-        const blogs: Blog[] = data.map((post) => ({
-          id: post._id.toString(), // Ensure this is a string
-          title: post.title,
-          description: post.description,
-          category: post.category,
-          userid: post.userId.toString(), // Ensure this is a string
-          userImage: post.userImage,
-          comments: post.comments.map((comment) => comment.toString()),
-          image: post.image,
-          content: post.content,
-          author: post.author.toString(), // Ensure this is a string
-        }));
-        setPosts(blogs);
+        const response = await axios.get(`/api/category/${category}`);
+        console.log("Response data:", response.data); // Debugging log
+        const data: Blog[] = response.data.data;
+        setPosts(data);
       } catch (err) {
         console.error("Error fetching blog posts:", err);
         setError("Error fetching blog posts");
@@ -47,7 +38,7 @@ const Page: React.FC = () => {
     };
 
     fetchPosts();
-  }, [categoryID]);
+  }, [category]);
 
   if (loading) {
     return (

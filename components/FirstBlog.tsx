@@ -1,4 +1,7 @@
+// /components/FirstBlog.tsx
+
 "use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,7 +33,6 @@ interface FirstBlogProps {
 }
 
 const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
-  console.log("First Blog Image URL:", firstBlog?.image?.url);
   const timeStr = firstBlog?.createdAt;
   const time = moment(timeStr);
   const formattedTime = time.format("MMMM Do YYYY");
@@ -56,9 +58,11 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
 
           <div className="w-full md:w-3/5 space-y-5">
             <div className="flex flex-col md:flex-row items-center gap-3 text-xs">
-              <p className="text-[#f4f42c] bg-[#967929] p-2 md:p-3 rounded-[12px] font-bold text-[16px] md:text-[19px]">
-                {firstBlog?.category}
-              </p>
+              <Link href={`/category/${firstBlog?.category}`}>
+                <p className="text-[#f4f42c] bg-[#967929] p-2 md:p-3 rounded-[12px] font-bold text-[16px] md:text-[19px]">
+                  {firstBlog?.category}
+                </p>
+              </Link>
 
               <p className="flex items-center gap-1 text-paragraphColor text-[13px] md:text-[15px]">
                 <IoCalendarClearSharp />
