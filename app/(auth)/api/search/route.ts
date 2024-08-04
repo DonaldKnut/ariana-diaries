@@ -1,10 +1,8 @@
-// app/api/posts/search/route.js
-
 import { connect } from "../../../../database/index";
 import Post from "../../../../models/Post";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     await connect();
 

@@ -1,9 +1,8 @@
-// app/(auth)/api/auth/session/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../../authOptions/authOptions";
-import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
+import type { IncomingMessage, ServerResponse } from "http";
 
 async function readableStreamToArray(
   stream: ReadableStream<Uint8Array>
@@ -31,15 +30,15 @@ export async function GET(req: NextRequest) {
     }
 
     const request = {
-      headers: Object.fromEntries(headers),
+      headers: Object.fromEntries(headers.entries()),
       body: readableBody,
       method,
       url,
       query: {},
       cookies: {},
-    } as unknown as NextApiRequest;
+    } as unknown as IncomingMessage & { cookies: Record<string, string> };
 
-    const response = {} as NextApiResponse;
+    const response = {} as ServerResponse<IncomingMessage>;
 
     const session = await getServerSession(request, response, authOptions);
 
