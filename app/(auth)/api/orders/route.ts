@@ -5,6 +5,7 @@ import Order from "../../../../models/Order";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../../authOptions/authOptions";
 const stripe = require("stripe")(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY);
+import { ProductType } from "../../../../types/types";
 
 export async function GET(request: NextRequest) {
   await connect();
@@ -46,9 +47,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Create a Stripe Checkout session
-    const session = await stripe.checkout.sessions.create({
+    const stripeSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: body.products.map((product) => ({
+      line_items: body.products.map((product: ProductType) => ({
         price_data: {
           currency: "usd",
           product_data: {
@@ -64,11 +65,11 @@ export async function POST(request: NextRequest) {
       customer_email: body.userEmail,
     });
 
-    body.sessionId = session.id;
+    body.sessionId = stripeSession.id;
 
     const newOrder = await Order.create(body);
     return NextResponse.json(
-      { order: newOrder, sessionId: session.id },
+      { order: newOrder, sessionId: stripeSession.id },
       { status: 201 }
     );
   } catch (error) {

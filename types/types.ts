@@ -29,16 +29,9 @@ export type ProductType = {
   desc?: string;
   img?: string;
   color: string;
+  quantity: number;
   options?: { title: string; additionalPrice: number }[];
 };
-
-// export interface IProduct {
-//   _id: string;
-//   title: string;
-//   price: number;
-//   size?: string;
-//   img?: string;
-// }
 
 export interface ICartItem {
   product: IProduct;
