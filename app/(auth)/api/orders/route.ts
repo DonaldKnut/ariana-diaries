@@ -45,20 +45,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create a Stripe payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: body.price * 100, // Stripe expects the amount in cents
-      currency: "usd",
-      automatic_payment_methods: {
-        enabled: true,
-      },
+    // Create a Stripe Checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: body.products.map((product) => ({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: product.title,
+          },
+          unit_amount: product.price * 100, // Amount in cents
+        },
+        quantity: product.quantity,
+      })),
+      mode: "payment",
+      success_url: `${process.env.NEXTAUTH_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXTAUTH_URL}/cancel`,
+      customer_email: body.userEmail,
     });
 
-    body.intent_id = paymentIntent.id;
+    body.sessionId = session.id;
 
     const newOrder = await Order.create(body);
     return NextResponse.json(
-      { order: newOrder, clientSecret: paymentIntent.client_secret },
+      { order: newOrder, sessionId: session.id },
       { status: 201 }
     );
   } catch (error) {

@@ -3,13 +3,10 @@ import { connect } from "../../../../../../database/index";
 import OrderModel from "../../../../../../models/Order";
 import mongoose from "mongoose";
 
-interface Params {
-  params: {
-    intentId: string;
-  };
-}
-
-export const PUT = async ({ params }: Params) => {
+export const PUT = async (
+  request: Request,
+  { params }: { params: { intentId: string } }
+) => {
   await connect();
   const { intentId } = params;
 
@@ -25,19 +22,20 @@ export const PUT = async ({ params }: Params) => {
     );
 
     if (order) {
-      return new NextResponse(
-        JSON.stringify({ message: "Order has been updated" }),
+      return NextResponse.json(
+        { message: "Order has been updated" },
         { status: 200 }
       );
     } else {
-      return new NextResponse(JSON.stringify({ message: "Order not found!" }), {
-        status: 404,
-      });
+      return NextResponse.json(
+        { message: "Order not found!" },
+        { status: 404 }
+      );
     }
   } catch (err) {
-    console.log(err);
-    return new NextResponse(
-      JSON.stringify({ message: "Something went wrong!" }),
+    console.error(err);
+    return NextResponse.json(
+      { message: "Something went wrong!" },
       { status: 500 }
     );
   }

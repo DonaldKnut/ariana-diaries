@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "../../../../../database"; // Adjust the path as necessary
 import { getSession } from "../../../../../lib/session"; // Adjust the path as necessary
+import { Session } from "next-auth"; // Ensure you import the correct types
 
 export async function POST(req: NextRequest) {
   await connect(); // Ensure database connection
 
   // Retrieve the session using the request
-  const session = await getSession(req);
+  const session = (await getSession(req)) as Session | null;
   console.log("Session retrieved:", session);
 
   if (session) {

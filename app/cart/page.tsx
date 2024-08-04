@@ -60,9 +60,14 @@ const CartPage = () => {
         }),
       });
 
-      const { order, clientSecret } = await res.json();
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || "An error occurred during checkout"
+        );
+      }
 
-      router.push(`${process.env.NEXTAUTH_URL}/pay/${order._id}`);
+      const { order, sessionId } = await res.json();
 
       const stripe = await stripePromise;
 
@@ -71,14 +76,20 @@ const CartPage = () => {
       }
 
       const result = await stripe.redirectToCheckout({
-        sessionId: clientSecret,
+        sessionId: sessionId,
       });
 
       if (result.error) {
-        console.error("Stripe checkout error:", result.error);
+        console.error("Stripe checkout error:", result.error.message);
       }
-    } catch (error) {
-      console.error("Checkout error:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Checkout error:", error.message);
+        alert(`Checkout error: ${error.message}`);
+      } else {
+        console.error("Checkout error:", error);
+        alert("An unknown error occurred during checkout.");
+      }
     }
   };
 

@@ -1,3 +1,5 @@
+// UserAvatar.tsx
+
 import React from "react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
@@ -5,22 +7,23 @@ import { SlClose } from "react-icons/sl";
 import { RiLogoutCircleFill } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 import "./UserAvatar.css";
 
 interface UserAvatarProps {
+  session: Session; // Added session here
   showDropdown: boolean;
   handleShowDropdown: () => void;
   handleHideDropdown: () => void;
 }
 
 const UserAvatar: React.FC<UserAvatarProps> = ({
+  session,
   showDropdown,
   handleShowDropdown,
   handleHideDropdown,
 }) => {
-  const { data: sessionData } = useSession();
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -40,8 +43,8 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
       <Image
         onClick={handleShowDropdown}
         src={
-          sessionData?.user?.avatar?.url
-            ? sessionData.user.avatar.url
+          session?.user?.avatar?.url
+            ? session.user.avatar.url
             : "/ariana-login-image.png"
         }
         alt="avatar"
@@ -63,7 +66,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
           </button>
           <Link
             onClick={handleHideDropdown}
-            href={`/user/${sessionData?.user?._id}`}
+            href={`/user/${session?.user?._id}`}
             className="flex items-center justify-center gap-2 rounded-[8px] mt-2 px-4 py-2 text-left text-white profile-link"
           >
             <CgProfile /> Profile

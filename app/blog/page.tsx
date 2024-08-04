@@ -40,7 +40,7 @@ async function fetchBlogs(): Promise<Blog[]> {
   if (result.success) {
     return result.data;
   } else {
-    throw new Error("Failed to fetch blogs");
+    throw new Error("Check Internet Connection");
   }
 }
 
