@@ -11,13 +11,10 @@ type Props = {
 
 const getData = async (category: string) => {
   console.log(`Fetching products for category: ${category}`);
-  const res = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/products?cat=${category}`,
-    {
-      cache: "no-store",
-      method: "GET",
-    }
-  );
+  const res = await fetch(`/api/products?cat=${category}`, {
+    cache: "no-store",
+    method: "GET",
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
