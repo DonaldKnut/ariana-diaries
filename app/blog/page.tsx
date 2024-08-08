@@ -26,8 +26,8 @@ interface Blog {
 }
 
 async function fetchBlogs(): Promise<Blog[]> {
-  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/blog`, {
+  // const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const res = await fetch(`/api/blog`, {
     cache: "no-store",
   });
 
