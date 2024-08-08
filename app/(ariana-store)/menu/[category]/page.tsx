@@ -1,7 +1,10 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { ProductType } from "../../../../types/types";
 import { useCartStore } from "../../../../utils/store";
 import Spinner from "../../../../spinner";
@@ -11,7 +14,6 @@ type Props = {
 };
 
 const getData = async (category: string) => {
-  console.log(`Fetching products for category: ${category}`);
   const res = await fetch(`/api/products?cat=${category}`, {
     cache: "no-store",
     method: "GET",
@@ -29,67 +31,11 @@ const getData = async (category: string) => {
   }));
 };
 
-// Spinner component
-// const Spinner = () => (
-//   <div className="flex justify-center items-center w-full h-screen">
-//     <div className="loader">Loading...</div>
-//     <style jsx>{`
-//       .loader,
-//       .loader:before,
-//       .loader:after {
-//         border-radius: 50%;
-//       }
-//       .loader {
-//         color: #79722e;
-//         font-size: 11px;
-//         text-indent: -99999em;
-//         margin: 0 auto;
-//         position: relative;
-//         width: 10em;
-//         height: 10em;
-//         box-shadow: inset 0 0 0 1em;
-//         transform: translateZ(0);
-//       }
-//       .loader:before,
-//       .loader:after {
-//         position: absolute;
-//         content: "";
-//       }
-//       .loader:before {
-//         width: 5.2em;
-//         height: 10.2em;
-//         background: #e6e0b4;
-//         border-radius: 10.2em 0 0 10.2em;
-//         top: -0.1em;
-//         left: -0.1em;
-//         transform-origin: 5.1em 5.1em;
-//         animation: load2 2s infinite ease 1.5s;
-//       }
-//       .loader:after {
-//         width: 5.2em;
-//         height: 10.2em;
-//         background: #e6e0b4;
-//         border-radius: 0 10.2em 10.2em 0;
-//         top: -0.1em;
-//         left: 5.1em;
-//         transform-origin: 0.1em 5.1em;
-//         animation: load2 2s infinite ease;
-//       }
-//       @keyframes load2 {
-//         0% {
-//           transform: rotate(0deg);
-//         }
-//         100% {
-//           transform: rotate(360deg);
-//         }
-//       }
-//     `}</style>
-//   </div>
-// );
-
 const CategoryPage = ({ params }: Props) => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession(); // Get session
+  const router = useRouter(); // Get router instance
   const { category } = params;
   const addToCart = useCartStore((state) => state.addToCart);
 
@@ -97,7 +43,6 @@ const CategoryPage = ({ params }: Props) => {
     const fetchData = async () => {
       try {
         const data = await getData(category);
-        console.log("Fetched products:", data); // Add this line to log fetched data
         setProducts(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -109,7 +54,10 @@ const CategoryPage = ({ params }: Props) => {
   }, [category]);
 
   const handleAddToCart = (product: ProductType) => {
-    console.log("Product to be added:", product); // Log the entire product object
+    if (!session) {
+      router.push("/auth/login"); 
+      return;
+    }
 
     if (product.id) {
       addToCart({
@@ -126,6 +74,29 @@ const CategoryPage = ({ params }: Props) => {
 
   if (loading) {
     return <Spinner />;
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen text-center">
+        <Image
+          src="/desc-images/no-cat.png"
+          alt="No Products"
+          width={300}
+          height={300}
+          className="mb-4"
+        />
+        <h1 className="text-2xl font-bold text-[#79722e]">No Products?</h1>
+        <p className="text-lg text-[#79722e]">
+          Contact admin{" "}
+          <span>
+            <a href="#" className="text-[#454016] hover:underline">
+              Contact Admin
+            </a>
+          </span>
+        </p>
+      </div>
+    );
   }
 
   return (

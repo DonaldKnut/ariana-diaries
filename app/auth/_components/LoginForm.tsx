@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface LoginFormState {
@@ -20,11 +20,10 @@ const LoginForm = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
+  const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    // Enable button if all fields have values
     setIsButtonDisabled(!(state.email && state.password));
   }, [state]);
 
@@ -67,7 +66,16 @@ const LoginForm = () => {
       if (result?.error) {
         setError(result.error);
       } else {
-        router.push("/create");
+        // Fetch user data after successful login
+        const res = await fetch("/api/user");
+        const user = await res.json();
+
+        // Check if the user is an admin based on the `isAdmin` field
+        if (user.isAdmin === "true") {
+          router.push("/create");
+        } else {
+          router.push("/blog");
+        }
       }
     } catch (error) {
       setError("Failed to login. Please try again.");

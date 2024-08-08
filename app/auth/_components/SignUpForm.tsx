@@ -29,7 +29,7 @@ const SignUpForm = () => {
   useEffect(() => {
     // Fetch CSRF token
     const fetchCsrfToken = async () => {
-      const response = await fetch("http://localhost:3000/api/csrf-token", {
+      const response = await fetch("/api/csrf-token", {
         method: "GET",
         credentials: "include", // Include credentials (cookies)
       });

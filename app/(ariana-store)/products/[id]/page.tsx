@@ -8,8 +8,8 @@ const SingleProductPage = async ({ params }: { params: { id: string } }) => {
   const productId = params.id;
 
   // Log values for debugging
-  console.log("Base URL:", baseUrl);
-  console.log("Product ID:", productId);
+  // console.log("Base URL:", baseUrl);
+  // console.log("Product ID:", productId);
 
   // Check for undefined values
   if (!baseUrl || !productId) {

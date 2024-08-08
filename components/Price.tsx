@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useCartStore } from "../utils/store";
 
@@ -14,6 +16,8 @@ const Price = ({ price, id, options }: Props) => {
   const [total, setTotal] = useState(price);
   const [quantity, setQuantity] = useState(1);
   const [selected, setSelected] = useState(0);
+  const { data: session } = useSession(); // Get session
+  const router = useRouter(); // Get router instance
   const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {
@@ -23,6 +27,11 @@ const Price = ({ price, id, options }: Props) => {
   }, [quantity, selected, options, price]);
 
   const handleAddToCart = () => {
+    if (!session) {
+      router.push("/auth/login"); // Redirect to login if not signed in
+      return;
+    }
+
     const selectedItem = {
       id: id.toString(),
       title: options ? options[selected].title : "",
@@ -35,7 +44,6 @@ const Price = ({ price, id, options }: Props) => {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">${total.toFixed(2)}</h2>
-      {/* OPTIONS CONTAINER */}
       <div className="flex gap-4">
         {options?.map((option, index) => (
           <button
@@ -51,9 +59,7 @@ const Price = ({ price, id, options }: Props) => {
           </button>
         ))}
       </div>
-      {/* QUANTITY AND ADD BUTTON CONTAINER */}
       <div className="flex justify-between items-center">
-        {/* QUANTITY */}
         <div className="flex justify-between w-full p-3 ring-1 ring-[#f6d687]">
           <span>Quantity</span>
           <div className="flex gap-4 items-center">
@@ -70,7 +76,6 @@ const Price = ({ price, id, options }: Props) => {
             </button>
           </div>
         </div>
-        {/* CART BUTTON */}
         <button
           onClick={handleAddToCart}
           className="uppercase w-56 flex gap-3 justify-center items-center bg-[#b09b40] text-white p-3 ring-1 ring-[#f6d687]"

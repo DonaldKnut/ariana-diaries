@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "../../../../database";
 import ProductModel, { IProduct } from "../../../../models/Product";
+import ProductCategoryModel from "../../../../models/ProductCategory";
 
 // Connect to MongoDB
 
@@ -11,9 +12,21 @@ export const GET = async (req: NextRequest) => {
   const cat = searchParams.get("cat");
 
   try {
-    // If 'cat' is provided, use it directly without converting to ObjectId
-    const query = cat ? { catSlug: cat } : { isFeatured: true };
-    const products: IProduct[] = await ProductModel.find(query);
+    let products = [];
+
+    if (cat) {
+      // Find the category by slug
+      const category = await ProductCategoryModel.findOne({ slug: cat });
+
+      if (category) {
+        // Use the category's ObjectId to find products
+        products = await ProductModel.find({ category: category._id });
+      }
+    } else {
+      // If no category is provided, fetch featured products
+      products = await ProductModel.find({ isFeatured: true });
+    }
+
     return new NextResponse(JSON.stringify(products), { status: 200 });
   } catch (err) {
     console.error("Error fetching products:", err);
