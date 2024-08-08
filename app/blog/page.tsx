@@ -26,21 +26,27 @@ interface Blog {
 }
 
 async function fetchBlogs(): Promise<Blog[]> {
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/blog`, {
+  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/blog`, {
     cache: "no-store",
   });
 
+  const contentType = res.headers.get("content-type");
   if (!res.ok) {
+    const errorText = await res.text(); // Read the response body as text
+    console.error("Error response:", errorText);
     throw new Error("Failed to fetch data");
   }
 
-  const result = await res.json();
-  console.log("API Response:", result);
-
-  if (result.success) {
-    return result.data;
+  if (contentType && contentType.includes("application/json")) {
+    const result = await res.json();
+    if (result.success) {
+      return result.data;
+    } else {
+      throw new Error("Check Internet Connection");
+    }
   } else {
-    throw new Error("Check Internet Connection");
+    throw new Error("Unexpected response format");
   }
 }
 
