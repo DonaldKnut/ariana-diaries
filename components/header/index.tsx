@@ -149,12 +149,14 @@ export default function Header() {
               <div className="hidden lg:flex items-center gap-3 mr-8">
                 {session ? (
                   <div className="flex items-center gap-3">
-                    <Button
-                      onClick={() => router.push("/create")}
-                      text="Create"
-                      className="navbar-button mr-3 hidden lg:flex"
-                      icon={<FaPlusCircle />}
-                    />
+                    {isAdmin && (
+                      <Button
+                        onClick={() => router.push("/create")}
+                        text="Create"
+                        className="navbar-button mr-3 hidden lg:flex"
+                        icon={<FaPlusCircle />}
+                      />
+                    )}
                     <UserAvatar
                       session={session}
                       showDropdown={showDropdown}

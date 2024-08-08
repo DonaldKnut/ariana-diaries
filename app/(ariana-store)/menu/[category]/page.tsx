@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ProductType } from "../../../../types/types";
 import { useCartStore } from "../../../../utils/store";
+import Spinner from "../../../../spinner";
 
 type Props = {
   params: { category: string };
@@ -29,62 +30,62 @@ const getData = async (category: string) => {
 };
 
 // Spinner component
-const Spinner = () => (
-  <div className="flex justify-center items-center w-full h-screen">
-    <div className="loader">Loading...</div>
-    <style jsx>{`
-      .loader,
-      .loader:before,
-      .loader:after {
-        border-radius: 50%;
-      }
-      .loader {
-        color: #79722e;
-        font-size: 11px;
-        text-indent: -99999em;
-        margin: 0 auto;
-        position: relative;
-        width: 10em;
-        height: 10em;
-        box-shadow: inset 0 0 0 1em;
-        transform: translateZ(0);
-      }
-      .loader:before,
-      .loader:after {
-        position: absolute;
-        content: "";
-      }
-      .loader:before {
-        width: 5.2em;
-        height: 10.2em;
-        background: #e6e0b4;
-        border-radius: 10.2em 0 0 10.2em;
-        top: -0.1em;
-        left: -0.1em;
-        transform-origin: 5.1em 5.1em;
-        animation: load2 2s infinite ease 1.5s;
-      }
-      .loader:after {
-        width: 5.2em;
-        height: 10.2em;
-        background: #e6e0b4;
-        border-radius: 0 10.2em 10.2em 0;
-        top: -0.1em;
-        left: 5.1em;
-        transform-origin: 0.1em 5.1em;
-        animation: load2 2s infinite ease;
-      }
-      @keyframes load2 {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    `}</style>
-  </div>
-);
+// const Spinner = () => (
+//   <div className="flex justify-center items-center w-full h-screen">
+//     <div className="loader">Loading...</div>
+//     <style jsx>{`
+//       .loader,
+//       .loader:before,
+//       .loader:after {
+//         border-radius: 50%;
+//       }
+//       .loader {
+//         color: #79722e;
+//         font-size: 11px;
+//         text-indent: -99999em;
+//         margin: 0 auto;
+//         position: relative;
+//         width: 10em;
+//         height: 10em;
+//         box-shadow: inset 0 0 0 1em;
+//         transform: translateZ(0);
+//       }
+//       .loader:before,
+//       .loader:after {
+//         position: absolute;
+//         content: "";
+//       }
+//       .loader:before {
+//         width: 5.2em;
+//         height: 10.2em;
+//         background: #e6e0b4;
+//         border-radius: 10.2em 0 0 10.2em;
+//         top: -0.1em;
+//         left: -0.1em;
+//         transform-origin: 5.1em 5.1em;
+//         animation: load2 2s infinite ease 1.5s;
+//       }
+//       .loader:after {
+//         width: 5.2em;
+//         height: 10.2em;
+//         background: #e6e0b4;
+//         border-radius: 0 10.2em 10.2em 0;
+//         top: -0.1em;
+//         left: 5.1em;
+//         transform-origin: 0.1em 5.1em;
+//         animation: load2 2s infinite ease;
+//       }
+//       @keyframes load2 {
+//         0% {
+//           transform: rotate(0deg);
+//         }
+//         100% {
+//           transform: rotate(360deg);
+//         }
+//       }
+//     `}</style>
+//   </div>
+// );
 
 const CategoryPage = ({ params }: Props) => {
   const [products, setProducts] = useState<ProductType[]>([]);

@@ -6,6 +6,7 @@ import { CgChevronDownO } from "react-icons/cg";
 import { signOut, useSession } from "next-auth/react";
 import { FaCirclePlus } from "react-icons/fa6";
 import { PiSignOutDuotone } from "react-icons/pi";
+import { IoLogIn } from "react-icons/io5";
 
 interface NavbarMenuProps {
   menuItems: MenuItem[];
@@ -118,7 +119,7 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
               href="/auth/login"
               className="flex items-center gap-2 w-full px-4 py-2 text-sm rounded-[9px] z-[1000] text-white hover:bg-[#b3aa6d] transition-transform duration-300"
             >
-              Login
+              Login <IoLogIn />
             </Link>
           </li>
         )}
