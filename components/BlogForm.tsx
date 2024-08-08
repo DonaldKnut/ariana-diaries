@@ -84,7 +84,7 @@ const BlogForm = () => {
 
       console.log("New blog post data:", newBlog);
 
-      const res = await fetch("/api/blog", {
+      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/blog`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
