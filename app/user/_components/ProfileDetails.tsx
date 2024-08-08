@@ -106,17 +106,14 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile, params }) => {
         avatar: profileImg,
       };
 
-      const response = await fetch(
-        `http://localhost:3000/api/user/${params.id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user?.accessToken}`,
-          },
-          method: "PATCH",
-          body: JSON.stringify(updateUser),
-        }
-      );
+      const response = await fetch(`/api/user/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.accessToken}`,
+        },
+        method: "PATCH",
+        body: JSON.stringify(updateUser),
+      });
 
       if (response?.status === 200) {
         setSuccess("User updated successfully.");

@@ -51,7 +51,7 @@ const EditBlog: React.FC<EditBlogProps> = ({ params }) => {
   useEffect(() => {
     async function fetchBlog() {
       try {
-        const res = await fetch(`http://localhost:3000/api/blog/${params.id}`);
+        const res = await fetch(`/api/blog/${params.id}`);
 
         if (res.status === 200) {
           const blogData = await res.json();
@@ -167,17 +167,14 @@ const EditBlog: React.FC<EditBlogProps> = ({ params }) => {
         authorId: session?.user?._id,
       };
 
-      const response = await fetch(
-        `http://localhost:3000/api/blog/${params.id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user?.accessToken}`,
-          },
-          method: "PUT",
-          body: JSON.stringify(updateBlog),
-        }
-      );
+      const response = await fetch(`/api/blog/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.accessToken}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(updateBlog),
+      });
 
       if (response?.status === 200) {
         setSuccess("Blog updated successfully.");

@@ -26,7 +26,7 @@ async function getUserData(params: Params): Promise<Profile> {
   // console.log("getUserData called with params:", params);
 
   try {
-    const res = await fetch(`http://localhost:3000/api/user/${params.id}`, {
+    const res = await fetch(`/api/user/${params.id}`, {
       method: "GET",
       cache: "no-store",
     });

@@ -98,9 +98,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
 
   const fetchBlog = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/blog/${params.id}`
-      );
+      const response = await fetch(`/api/blog/${params.id}`);
 
       if (response.ok) {
         const blog: Blog = await response.json();
@@ -130,15 +128,12 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
 
       if (confirmModal) {
         setIsDeleting(true);
-        const response = await fetch(
-          `http://localhost:3000/api/blog/${params.id}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${session?.user?.accessToken}`,
-            },
-          }
-        );
+        const response = await fetch(`/api/blog/${params.id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${session?.user?.accessToken}`,
+          },
+        });
 
         if (response?.status === 200) {
           await deletePhoto(imageId || ""); // Ensure imageId is a string or handle the case where it's undefined
@@ -159,17 +154,14 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/blog/${params.id}/like`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${session?.user?.accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(null),
-        }
-      );
+      const response = await fetch(`/api/blog/${params.id}/like`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${session?.user?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(null),
+      });
 
       if (response.status === 200) {
         setIsLiked((prev) => !prev);
@@ -202,17 +194,14 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
         text: commentText,
       };
 
-      const response = await fetch(
-        `http://localhost:3000/api/blog/${params.id}/comment`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user?.accessToken}`,
-          },
-          method: "POST",
-          body: JSON.stringify(newComment),
-        }
-      );
+      const response = await fetch(`/api/blog/${params.id}/comment`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.accessToken}`,
+        },
+        method: "POST",
+        body: JSON.stringify(newComment),
+      });
 
       if (response?.status === 201) {
         setSuccess("Comment created successfully.");
@@ -234,7 +223,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ params }) => {
   const handleDeleteComment = async (commentId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/blog/${params.id}/comment/${commentId}`,
+        `/api/blog/${params.id}/comment/${commentId}`,
         {
           headers: {
             "Content-Type": "application/json",
