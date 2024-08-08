@@ -5,6 +5,9 @@ const { config } = require("dotenv");
 config(); // Load environment variables from .env file
 
 const nextConfig = {
+  experimental: {
+    serverActions: true, // Enable Server Actions
+  },
   images: {
     remotePatterns: [
       {
