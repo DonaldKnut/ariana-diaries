@@ -88,7 +88,7 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
             )}
           </li>
         ))}
-        {session && (
+        {session ? (
           <>
             {isAdmin && (
               <li className="mt-5 mb-5 font-bold text-xl lg:hidden">
@@ -112,6 +112,15 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
               </button>
             </li>
           </>
+        ) : (
+          <li className="mt-5 mb-5 font-bold text-xl lg:hidden">
+            <Link
+              href="/auth/login"
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm rounded-[9px] z-[1000] text-white hover:bg-[#b3aa6d] transition-transform duration-300"
+            >
+              Login
+            </Link>
+          </li>
         )}
       </ul>
     </nav>
