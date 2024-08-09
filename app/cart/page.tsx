@@ -178,7 +178,12 @@ const CartPage = () => {
         </div>
         <button
           onClick={handleCheckout}
-          className="flex items-center justify-center bg-[#c5a247] text-[#4a3b0e] p-2 mt-4 rounded-lg hover:bg-[#4a3b0e] hover:text-[#c5a247] transition-all duration-300 ease-out"
+          className={`flex items-center justify-center p-2 mt-4 rounded-lg transition-all duration-300 ease-out ${
+            isEmptyCart
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#c5a247] text-[#4a3b0e] hover:bg-[#4a3b0e] hover:text-[#c5a247] cursor-pointer"
+          }`}
+          disabled={isEmptyCart}
         >
           <span className="mr-2">Checkout</span>
           <BsBoxArrowUpRight />
