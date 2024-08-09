@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
       customer_email: body.userEmail,
     });
 
-    body.sessionId = stripeSession.id;
+    // Set the intent_id in the body
+    body.intent_id = stripeSession.id;
 
     const newOrder = await Order.create(body);
     return NextResponse.json(
