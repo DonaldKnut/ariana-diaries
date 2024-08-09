@@ -40,7 +40,12 @@ const MenuPage = () => {
         <Link
           href={`/menu/${category.slug}`}
           key={category.id}
-          className="group relative rounded-[15px] overflow-hidden shadow-lg transition-transform transform hover:scale-105 h-80 bg-gradient-to-br from-[#ecc030] to-[#725601] p-6 flex items-end justify-center"
+          className="group relative rounded-[15px] overflow-hidden shadow-lg transition-transform transform hover:scale-105 h-80 bg-gradient-to-br from-[#40302c] to-[#6c4f3d] p-6 flex items-end justify-center"
+          style={{
+            backgroundImage: `url(${category.img})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-40 transition-opacity group-hover:bg-opacity-60"></div>
           <div className="relative z-10 text-center text-white p-4 rounded-lg backdrop-blur-md bg-opacity-30 bg-black transition-transform transform group-hover:translate-y-[-10px]">
@@ -56,11 +61,9 @@ const MenuPage = () => {
             </Reveal>
             <Reveal>
               <button
-                className={`relative overflow-hidden flex items-center bg-[#d1bf47] text-[#333333] hover:text-[#ffea64] py-2 px-6 rounded-full text-sm font-semibold transition-all duration-300 ease-in-out shadow-lg transform group-hover:scale-110`}
+                className={`flex items-center bg-[#ffea64] text-[#333333] hover:bg-[#333333] hover:text-[#ffea64] py-2 px-6 rounded-full text-sm font-semibold transition-all duration-300 ease-in-out shadow-lg transform group-hover:scale-110`}
               >
-                <span className="relative z-20">Explore</span>
-                <RiArrowRightUpLine className="ml-2 relative z-20" />
-                <div className="absolute inset-0 bg-[#675815] transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out z-10"></div>
+                Explore <RiArrowRightUpLine className="ml-2" />
               </button>
             </Reveal>
           </div>

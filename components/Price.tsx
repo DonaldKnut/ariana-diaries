@@ -21,9 +21,11 @@ const Price = ({ price, id, options }: Props) => {
   const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {
-    setTotal(
-      quantity * (options ? price + options[selected].additionalPrice : price)
-    );
+    if (options && options[selected]) {
+      setTotal(quantity * (price + options[selected].additionalPrice));
+    } else {
+      setTotal(quantity * price);
+    }
   }, [quantity, selected, options, price]);
 
   const handleAddToCart = () => {
@@ -34,9 +36,12 @@ const Price = ({ price, id, options }: Props) => {
 
     const selectedItem = {
       id: id.toString(),
-      title: options ? options[selected].title : "",
+      title: options && options[selected] ? options[selected].title : "",
       quantity,
-      price: options ? price + options[selected].additionalPrice : price,
+      price:
+        options && options[selected]
+          ? price + options[selected].additionalPrice
+          : price,
     };
     addToCart(selectedItem);
   };
