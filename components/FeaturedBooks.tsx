@@ -4,12 +4,15 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import { BsFillCartPlusFill } from "react-icons/bs";
 import { IProduct } from "../models/Product";
-// import { useCart } from "../context/CartContext";
 import { useCartStore } from "../utils/store";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const FeaturedBooks = () => {
   const { addToCart } = useCartStore();
   const { resolvedTheme } = useTheme();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [books, setBooks] = useState<IProduct[]>([]);
 
   useEffect(() => {
@@ -38,6 +41,11 @@ const FeaturedBooks = () => {
   };
 
   const handleAddToCart = (item: IProduct) => {
+    if (status === "unauthenticated") {
+      router.push("/auth/login");
+      return;
+    }
+
     addToCart({
       id: item.id, // Assuming id is a unique identifier
       title: item.title,
