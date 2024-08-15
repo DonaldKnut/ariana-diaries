@@ -6,7 +6,7 @@ config(); // Load environment variables from .env file
 
 const nextConfig = {
   experimental: {
-    serverActions: true, // Enable Server Actions
+    serverActions: true,
   },
   images: {
     remotePatterns: [
@@ -16,25 +16,19 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com", // Allow Google user images
+        hostname: "lh3.googleusercontent.com",
       },
       {
         protocol: "https",
-        hostname: "res.cloudinary.com", // Allow Cloudinary images
+        hostname: "res.cloudinary.com",
       },
       {
         protocol: "https",
-        hostname: "eu.ui-avatars.com", // Allow Cloudinary images
+        hostname: "eu.ui-avatars.com",
       },
     ],
   },
   env: {
-    MONGODB_URL: process.env.MONGODB_URL,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    FLUTTERWAVE_PUBLIC_KEY: process.env.FLUTTERWAVE_PUBLIC_KEY,
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
       process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -45,7 +39,6 @@ const nextConfig = {
     NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    NEXT_PUBLIC_STRIPE_SECRET_KEY: process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY,
   },
   webpack: (config) => {
     config.module.rules.push({
