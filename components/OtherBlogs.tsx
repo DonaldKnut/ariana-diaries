@@ -87,7 +87,7 @@ const OtherBlogs: React.FC<OtherBlogsProps> = ({ otherBlogs }) => {
                         className="w-10 h-10 rounded-full"
                       /> */}
                       <Image
-                        src="/miss_oluwole.png"
+                        src="https://res.cloudinary.com/dqrbn3bif/image/upload/v1724336611/f2brifbjc8nxss1bxsok.png"
                         alt="picture of the author"
                         width={70}
                         height={70}

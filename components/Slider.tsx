@@ -9,7 +9,7 @@ const data = [
   {
     id: 1,
     title: "Capture Memories & Cherish Moments.",
-    image: "/slide1.webp",
+    image: "/shared_.png",
   },
   {
     id: 2,
@@ -24,12 +24,12 @@ const data = [
   {
     id: 4,
     title: "Engaging Speakers with Innovative Ideas",
-    image: "/slide4.png",
+    image: "/ariana_iv.jpeg",
   },
   {
     id: 5,
     title: "Unlock Your Potential & Transform Your Mindset.",
-    image: "/sapiens.png",
+    image: "/ariana_book.png",
   },
 ];
 
@@ -60,7 +60,7 @@ const Slider = () => {
           {data[currentSlide].title}
         </h1>
         <Button className="bg-[#c0ab67] hover:bg-[#544d07] text-white py-4 px-8 mb-4">
-          Order Now <MdOutlineArrowOutward className="ml-2" />
+          Explore <MdOutlineArrowOutward className="ml-2" />
         </Button>
       </div>
       {/* IMAGE CONTAINER */}

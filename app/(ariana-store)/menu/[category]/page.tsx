@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { ProductType } from "../../../../types/types";
 import { useCartStore } from "../../../../utils/store";
 import Spinner from "../../../../spinner";
+import Notification from "../../../../constants/Notification";
 
 type Props = {
   params: { category: string };
@@ -34,6 +35,13 @@ const getData = async (category: string) => {
 const CategoryPage = ({ params }: Props) => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(
+    null
+  );
+  const [notificationType, setNotificationType] = useState<"success" | "error">(
+    "success"
+  );
+
   const { data: session } = useSession(); // Get session
   const router = useRouter(); // Get router instance
   const { category } = params;
@@ -55,7 +63,7 @@ const CategoryPage = ({ params }: Props) => {
 
   const handleAddToCart = (product: ProductType) => {
     if (!session) {
-      router.push("/auth/login"); 
+      router.push("/auth/login");
       return;
     }
 
@@ -67,9 +75,17 @@ const CategoryPage = ({ params }: Props) => {
         price: product.price,
         img: product.img,
       });
+      setNotificationMessage("Product added to cart successfully!");
+      setNotificationType("success");
     } else {
+      setNotificationMessage("Failed to add product to cart.");
+      setNotificationType("error");
       console.error("Product id is undefined:", product);
     }
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationMessage(null);
   };
 
   if (loading) {
@@ -101,6 +117,13 @@ const CategoryPage = ({ params }: Props) => {
 
   return (
     <div className="flex flex-wrap text-[#79722e]">
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          type={notificationType}
+          onClose={handleNotificationClose}
+        />
+      )}
       {products.map((item) => (
         <div
           className="w-full h-[60vh] border-r-2 border-b-2 border-[#a3972e] sm:w-1/2 lg:w-1/3 p-4 flex flex-col justify-between group odd:bg-[#e6e0b4]"

@@ -1,39 +1,52 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { BsFillCartPlusFill } from "react-icons/bs";
 import { IProduct } from "../models/Product";
-import { useCartStore } from "../utils/store";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Notification from "../constants/Notification";
+import { useCartStore } from "../utils/store";
 
 const FeaturedBooks = () => {
   const { addToCart } = useCartStore();
   const { resolvedTheme } = useTheme();
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [books, setBooks] = useState<IProduct[]>([]);
+  const [bookList, setBookList] = useState<IProduct[]>([]);
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(
+    null
+  );
+  const [notificationType, setNotificationType] = useState<"success" | "error">(
+    "success"
+  );
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    const fetchBookList = async () => {
       try {
-        const res = await fetch("/api/books");
-        if (!res.ok) {
+        const response = await fetch("/api/books");
+        if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await res.json();
+        const data = await response.json();
+        console.log("Fetched books:", data); // Log to inspect the fetched data
+
         if (Array.isArray(data)) {
-          setBooks(data);
+          const validBooks = data.filter((book) => book._id); // Filter out books without an _id
+          setBookList(validBooks);
         } else {
           console.error("Expected an array but got:", data);
         }
       } catch (error) {
         console.error("Error fetching books:", error);
+        setNotificationMessage("Failed to load books.");
+        setNotificationType("error");
       }
     };
 
-    fetchBooks();
+    fetchBookList();
   }, []);
 
   const getTextColor = () => {
@@ -47,24 +60,42 @@ const FeaturedBooks = () => {
     }
 
     addToCart({
-      id: item.id, // Assuming id is a unique identifier
+      id: item._id.toString(), // Convert ObjectId to string
       title: item.title,
       price: item.price,
-      quantity: 1, // Start with quantity 1 when adding to cart
+      quantity: 1,
     });
+
+    setNotificationMessage(`"${item.title}" has been added to your cart!`);
+    setNotificationType("success");
+
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 3000);
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationMessage(null);
   };
 
   return (
     <div className="w-screen overflow-x-scroll">
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          type={notificationType}
+          onClose={handleNotificationClose}
+        />
+      )}
       <div className="w-max flex">
-        {books.length === 0 ? (
+        {bookList.length === 0 ? (
           <div className="flex items-center justify-center min-h-screen">
             No books available.
           </div>
         ) : (
-          books.map((item) => (
+          bookList.map((item) => (
             <div
-              key={item.id}
+              key={item._id.toString()} // Convert ObjectId to string for the key
               className={`w-screen h-[60vh] flex flex-col items-center justify-around p-4 hover:bg-[#6f6a45] hover:text-white transition-all duration-300 md:w-[50vw] xl:w-[33vw] xl:h-[90vh] ${getTextColor()}`}
             >
               {item.img && (

@@ -1,25 +1,30 @@
 "use client";
-import { useCartStore } from "../../utils/store";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { IoIosCloseCircle } from "react-icons/io";
-import { BsBoxArrowUpRight } from "react-icons/bs";
-import { Reveal } from "../reveal";
-import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import CartItem from "./_components/CartItem";
+import CartSummary from "./_components/CartSummary";
+import Notification from "../../constants/Notification";
 import { loadStripe } from "@stripe/stripe-js";
+import EmptyCart from "../EmptyCart";
+import { useCartStore } from "../../utils/store";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
 const CartPage = () => {
-  const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
-  const { data: session, status } = useSession();
+  const { products, totalPrice, totalItems, removeFromCart } = useCartStore();
+  const { data: session } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [usdTotalPrice, setUsdTotalPrice] = useState(0);
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(
+    null
+  );
+  const [notificationType, setNotificationType] = useState<"success" | "error">(
+    "success"
+  );
 
   useEffect(() => {
     setLoading(false);
@@ -32,7 +37,7 @@ const CartPage = () => {
           "https://v6.exchangerate-api.com/v6/c32b0e8f419dbb9f1ab38062/latest/USD"
         );
         const data = await res.json();
-        const conversionRate = data.conversion_rates.USD; // Assuming you want to convert to USD
+        const conversionRate = data.conversion_rates.USD;
         setUsdTotalPrice(totalPrice * conversionRate);
       } catch (error) {
         console.error("Error converting currency:", error);
@@ -67,30 +72,43 @@ const CartPage = () => {
         );
       }
 
-      const { order, sessionId } = await res.json();
-
+      const { sessionId } = await res.json();
       const stripe = await stripePromise;
 
       if (!stripe) {
         throw new Error("Stripe.js has not loaded properly.");
       }
 
-      const result = await stripe.redirectToCheckout({
-        sessionId: sessionId,
-      });
-
+      const result = await stripe.redirectToCheckout({ sessionId });
       if (result.error) {
         console.error("Stripe checkout error:", result.error.message);
+        setNotificationMessage(`Checkout error: ${result.error.message}`);
+        setNotificationType("error");
+      } else {
+        setNotificationMessage("Redirecting to payment...");
+        setNotificationType("success");
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error("Checkout error:", error.message);
-        alert(`Checkout error: ${error.message}`);
+        setNotificationMessage(`Checkout error: ${error.message}`);
+        setNotificationType("error");
       } else {
         console.error("Checkout error:", error);
-        alert("An unknown error occurred during checkout.");
+        setNotificationMessage("An unknown error occurred during checkout.");
+        setNotificationType("error");
       }
     }
+  };
+
+  const handleRemoveItem = (itemId: string) => {
+    removeFromCart(itemId);
+    setNotificationMessage(`Removed item from cart`);
+    setNotificationType("success");
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationMessage(null);
   };
 
   if (loading) {
@@ -105,90 +123,40 @@ const CartPage = () => {
 
   return (
     <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col text-[#c5a247] lg:flex-row mt-[130px]">
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          type={notificationType}
+          onClose={handleNotificationClose}
+        />
+      )}
       {/* PRODUCTS CONTAINER */}
       <div className="h-1/2 p-4 flex flex-col justify-center overflow-scroll lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40">
         {isEmptyCart ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <Image
-                src="/desc-images/no-cat.png"
-                alt="Empty Cart Image"
-                width={200}
-                height={200}
-              />
-              <p className="text-xl mt-4">No items in cart</p>
-              <Link href="/shop" className="text-[#c0a928] hover:underline">
-                Start shopping
-              </Link>
-            </div>
-          </div>
+          <EmptyCart />
         ) : (
           products.map((item) => (
-            <div
-              className="flex items-center justify-between mb-4"
-              key={`${item.id}-${item.title}`}
-            >
-              {item.img && (
-                <Reveal>
-                  <Image
-                    src={item.img}
-                    alt={item.title}
-                    width={100}
-                    height={100}
-                  />
-                </Reveal>
-              )}
-              <div>
-                <h1 className="uppercase text-xl font-bold">
-                  {item.title} x{item.quantity}
-                </h1>
-                <span>{item.optionTitle}</span>
-              </div>
-              <h2 className="font-bold">
-                ${(item.price * item.quantity).toFixed(2)}
-              </h2>
-              <span
-                className="cursor-pointer"
-                onClick={() => removeFromCart(item)}
-              >
-                <IoIosCloseCircle className="text-4xl hover:text-[#efd882] transition-all duration-300 ease-out" />
-              </span>
-            </div>
+            <CartItem
+              key={`${item.id}-${item.optionTitle || ""}`}
+              id={item.id}
+              title={item.title}
+              quantity={item.quantity}
+              price={item.price}
+              img={item.img}
+              optionTitle={item.optionTitle}
+              onRemove={handleRemoveItem}
+            />
           ))
         )}
       </div>
       {/* PAYMENT CONTAINER */}
-      <div className="h-full p-4 rounded-[33px] bg-[#ffffff] text-[#4a3b0e] flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6">
-        <div className="flex justify-between">
-          <span>Subtotal ({totalItems} items)</span>
-          <span>${usdTotalPrice.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Service Cost</span>
-          <span>$0.00</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Delivery Cost</span>
-          <span className="text-[#2c6e14]">FREE!</span>
-        </div>
-        <hr className="my-2" />
-        <div className="flex justify-between">
-          <span>TOTAL (INCL. VAT)</span>
-          <span className="font-bold">${usdTotalPrice.toFixed(2)}</span>
-        </div>
-        <button
-          onClick={handleCheckout}
-          className={`flex items-center justify-center p-2 mt-4 rounded-lg transition-all duration-300 ease-out ${
-            isEmptyCart
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-[#c5a247] text-[#4a3b0e] hover:bg-[#4a3b0e] hover:text-[#c5a247] cursor-pointer"
-          }`}
-          disabled={isEmptyCart}
-        >
-          <span className="mr-2">Checkout</span>
-          <BsBoxArrowUpRight />
-        </button>
-      </div>
+      <CartSummary
+        cartCount={totalItems}
+        totalPrice={totalPrice}
+        usdTotalPrice={usdTotalPrice}
+        isEmptyCart={isEmptyCart}
+        onCheckout={handleCheckout}
+      />
     </div>
   );
 };

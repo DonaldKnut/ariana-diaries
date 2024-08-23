@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Spinner from "./Spinner";
 
-const CLOUD_NAME = "dtujpq8po";
+const CLOUD_NAME = "dyib6rska";
 const UPLOAD_PRESET = "ariana_diaries";
 
 const ImageUpload = ({

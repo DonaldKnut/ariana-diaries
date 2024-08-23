@@ -8,7 +8,7 @@ import { TbSquareRoundedPlusFilled } from "react-icons/tb";
 
 // utils/menuItems.ts
 
-export const menuItems: MenuItem[] = [
+export const menuItems = (isAdmin: boolean): MenuItem[] => [
   {
     id: "products",
     label: "Products",
@@ -27,12 +27,16 @@ export const menuItems: MenuItem[] = [
         path: "/shop",
         icon: HiOutlineShoppingBag,
       },
-      {
-        id: "add",
-        label: "Add Products",
-        path: "/add",
-        icon: TbSquareRoundedPlusFilled,
-      },
+      ...(isAdmin
+        ? [
+            {
+              id: "add",
+              label: "Add Products",
+              path: "/add",
+              icon: TbSquareRoundedPlusFilled,
+            },
+          ]
+        : []),
     ],
   },
   {
@@ -46,12 +50,16 @@ export const menuItems: MenuItem[] = [
         path: "/blog",
         icon: PiArticleMediumBold,
       },
-      {
-        id: "blog2",
-        label: "Orders",
-        path: "/orders",
-        icon: FcPackage,
-      },
+      ...(isAdmin
+        ? [
+            {
+              id: "blog2",
+              label: "Orders",
+              path: "/orders",
+              icon: FcPackage,
+            },
+          ]
+        : []),
     ],
   },
   {

@@ -1,59 +1,62 @@
 "use client";
 
-import { OrderType } from "../../../types/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { OrderType } from "../../../types/types";
 import { PiPackageBold } from "react-icons/pi";
 import { SlCalender } from "react-icons/sl";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { LiaGiftSolid } from "react-icons/lia";
 import { TbTruckDelivery } from "react-icons/tb";
 import Spinner from "../../../spinner";
-import { RiFileEditFill } from "react-icons/ri";
 import Notification from "../../../components/Popup";
+import { RiFileEditFill } from "react-icons/ri";
 
 const OrdersPage = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-
-  if (status === "unauthenticated") {
-    router.push("/");
-    return null;
-  }
-
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["orders"],
-    queryFn: () => fetch("/api/orders").then((res) => res.json()),
-  });
-
   const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: string }) => {
-      return fetch(`/api/orders/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      });
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-      setNotificationMessage("The order status has been changed to Paid!");
-    },
-    onError() {
-      setNotificationMessage("Error updating order status.");
-    },
-  });
 
   const [editableOrderId, setEditableOrderId] = useState<string | null>(null);
   const [statusInput, setStatusInput] = useState<string>("");
   const [notificationMessage, setNotificationMessage] = useState<string | null>(
     null
   );
+
+  // Redirect if unauthenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
+
+  // Fetch orders data
+  const { isLoading, error, data } = useQuery<OrderType[]>({
+    queryKey: ["orders"],
+    queryFn: () => fetch("/api/orders").then((res) => res.json()),
+  });
+
+  // Update order status mutation
+  const mutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      fetch(`/api/orders/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      }),
+    onSuccess: () => {
+      // Correct query key typing for invalidation
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      setNotificationMessage("The order status has been changed to Paid!");
+    },
+    onError: () => {
+      setNotificationMessage("Error updating order status.");
+    },
+  });
 
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>, id: string) => {
     e.preventDefault();
@@ -63,7 +66,6 @@ const OrdersPage = () => {
   };
 
   if (isLoading || status === "loading") return <Spinner />;
-
   if (error) return <div>Error loading orders</div>;
 
   return (
@@ -95,64 +97,57 @@ const OrdersPage = () => {
           </tr>
         </thead>
         <tbody>
-          {data &&
-            data.map((item: OrderType) => {
-              const isEditable = editableOrderId === item.id;
-
-              return (
-                <tr className="text-sm md:text-base bg-[#b5a466]" key={item.id}>
-                  <td className="hidden md:block py-6 px-1">
-                    {item.userEmail}
-                  </td>
-                  <td className="py-6 px-1">
-                    {new Date(item.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="py-6 px-1">{item.price}</td>
-                  <td className="hidden md:block py-6 px-1">
-                    {item.products[0]?.title || "N/A"}
-                  </td>
-                  {session?.user?.isAdmin ? (
-                    <td>
-                      {isEditable ? (
-                        <form
-                          className="flex items-center justify-center gap-4"
-                          onSubmit={(e) => handleUpdate(e, item.id)}
-                        >
-                          <input
-                            value={statusInput}
-                            onChange={(e) => setStatusInput(e.target.value)}
-                            placeholder={item.status}
-                            className="p-2 ring-1 ring-red-100 rounded-md"
-                          />
-                          <button
-                            type="submit"
-                            className="bg-[#77770b] p-2 rounded-full"
-                          >
-                            Update
-                          </button>
-                        </form>
-                      ) : (
-                        <div className="flex items-center gap-4">
-                          <span>{item.status}</span>
-                          <button
-                            onClick={() => {
-                              setEditableOrderId(item.id);
-                              setStatusInput(item.status);
-                            }}
-                            className="bg-[#77770b] p-2 rounded-full"
-                          >
-                            <RiFileEditFill />
-                          </button>
-                        </div>
-                      )}
-                    </td>
+          {data?.map((item) => (
+            <tr className="text-sm md:text-base bg-[#b5a466]" key={item.id}>
+              <td className="hidden md:block py-6 px-1">{item.userEmail}</td>
+              <td className="py-6 px-1">
+                {new Date(item.createdAt).toLocaleDateString()}
+              </td>
+              <td className="py-6 px-1">{item.price}</td>
+              <td className="hidden md:block py-6 px-1">
+                {item.products[0]?.title || "N/A"}
+              </td>
+              <td>
+                {session?.user?.isAdmin ? (
+                  editableOrderId === item.id ? (
+                    <form
+                      className="flex items-center justify-center gap-4"
+                      onSubmit={(e) => handleUpdate(e, item.id)}
+                    >
+                      <input
+                        value={statusInput}
+                        onChange={(e) => setStatusInput(e.target.value)}
+                        placeholder={item.status}
+                        className="p-2 ring-1 ring-red-100 rounded-md"
+                      />
+                      <button
+                        type="submit"
+                        className="bg-[#77770b] p-2 rounded-full"
+                      >
+                        Update
+                      </button>
+                    </form>
                   ) : (
-                    <td className="py-6 px-1">{item.status}</td>
-                  )}
-                  <td className="py-6 px-1">On the way (approx. 10min)...</td>
-                </tr>
-              );
-            })}
+                    <div className="flex items-center gap-4">
+                      <span>{item.status}</span>
+                      <button
+                        onClick={() => {
+                          setEditableOrderId(item.id);
+                          setStatusInput(item.status);
+                        }}
+                        className="bg-[#77770b] p-2 rounded-full"
+                      >
+                        <RiFileEditFill />
+                      </button>
+                    </div>
+                  )
+                ) : (
+                  <span>{item.status}</span>
+                )}
+              </td>
+              <td className="py-6 px-1">On the way (approx. 10min)...</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

@@ -9,11 +9,12 @@ const Offer = () => {
       {/* TEXT CONTAINER */}
       <div className="flex-1 flex flex-col justify-center items-center text-center gap-8 p-6">
         <h1 className="text-white text-xl md:text-2xl xl:text-6xl font-bold">
-          Develop your Mindset and Orientation
+          AN INVITATION TO INTENTIONAL LIVING
         </h1>
         <p className="text-white text-sm md:text-base xl:text-xl">
-          Progressively simplify effective e-toilers and process-centric methods
-          of empowerment. Quickly pontificate parallel.
+          Research published by the American Pyschological Asscociation (APA)
+          highlights that intentional goal setting and daily planning
+          significantly improve personal productivity and well-being.
         </p>
         <CountDown />
         <button className="bg-[#b8a970] flex gap-3 items-center justify-center mb-2 hover:bg-[#97853c] text-white rounded-md py-3 px-6">
@@ -23,7 +24,7 @@ const Offer = () => {
       {/* IMAGE CONTAINER */}
       <div className="flex-1 w-full relative md:h-full h-48">
         <Image
-          src="/books/thesubtleart.png"
+          src="https://res.cloudinary.com/dqrbn3bif/image/upload/v1724393283/ne7q42x6rmbeam5cbufa.png"
           alt="Book Image"
           fill
           className="object-contain"

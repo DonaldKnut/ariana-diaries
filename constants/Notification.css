@@ -1,0 +1,48 @@
+/* Notification.css */
+
+/* Base notification style */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Success notification style */
+.notification.success {
+  background-color: #4caf50;
+}
+
+/* Error notification style */
+.notification.error {
+  background-color: #f44336;
+}
+
+/* Entering and exiting states */
+.notification-enter {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.notification-exit {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.notification-exit-active {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}

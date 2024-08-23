@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useCartStore } from "../utils/store";
+import Notification from "../constants/Notification";
 
 type Props = {
   price: number;
@@ -16,6 +17,13 @@ const Price = ({ price, id, options }: Props) => {
   const [total, setTotal] = useState(price);
   const [quantity, setQuantity] = useState(1);
   const [selected, setSelected] = useState(0);
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(
+    null
+  );
+  const [notificationType, setNotificationType] = useState<"success" | "error">(
+    "success"
+  );
+
   const { data: session } = useSession(); // Get session
   const router = useRouter(); // Get router instance
   const addToCart = useCartStore((state) => state.addToCart);
@@ -31,6 +39,14 @@ const Price = ({ price, id, options }: Props) => {
   const handleAddToCart = () => {
     if (!session) {
       router.push("/auth/login"); // Redirect to login if not signed in
+      setNotificationMessage("Redirecting to Login");
+      return;
+    }
+
+    // Ensure id is valid before adding to cart
+    if (!id) {
+      setNotificationMessage("Product ID is missing.");
+      setNotificationType("error");
       return;
     }
 
@@ -43,11 +59,31 @@ const Price = ({ price, id, options }: Props) => {
           ? price + options[selected].additionalPrice
           : price,
     };
-    addToCart(selectedItem);
+
+    try {
+      addToCart(selectedItem);
+      setNotificationMessage("Product added to cart successfully!");
+      setNotificationType("success");
+    } catch (error) {
+      setNotificationMessage("Failed to add product to cart.");
+      setNotificationType("error");
+      console.error("Add to cart error:", error);
+    }
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationMessage(null);
   };
 
   return (
     <div className="flex flex-col gap-4">
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          type={notificationType}
+          onClose={handleNotificationClose}
+        />
+      )}
       <h2 className="text-2xl font-bold">${total.toFixed(2)}</h2>
       <div className="flex gap-4">
         {options?.map((option, index) => (

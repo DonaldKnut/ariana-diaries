@@ -42,7 +42,7 @@ const MenuPage = () => {
           key={category.id}
           className="group relative rounded-[15px] overflow-hidden shadow-lg transition-transform transform hover:scale-105 h-80 bg-gradient-to-br from-[#40302c] to-[#6c4f3d] p-6 flex items-end justify-center"
           style={{
-            backgroundImage: `url(${category.img})`,
+            backgroundImage: `url(${category.img})`, // The cloudinary link to the images are manually inputed in the database.
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { GlobalContext } from "../../context";
-import { menuItems } from "../../utils/index";
+import { menuItems as getMenuItems } from "../../utils/index";
 import Button from "../button";
 import ThemeToggler from "../theme";
 import CartIconBeta from "../CartIconBeta";
@@ -89,6 +89,7 @@ export default function Header() {
   }, []);
 
   const isAdmin = session?.user?.role === "admin";
+  const menuItems = getMenuItems(isAdmin);
 
   return (
     <div className="text-[#e0c056] ">

@@ -15,7 +15,7 @@ export default function Home() {
   const typingSpeed = 100; // Adjust typing speed here
   const [cloudinaryData, setCloudinaryData] = useState(null);
   const cloudinaryUrl =
-    "https://res.cloudinary.com/dtujpq8po/video/upload/v1716467001/lhakq5gmxqxtewwxxcct.mp4";
+    "https://res.cloudinary.com/dqrbn3bif/video/upload/v1724336397/ftiooflk99dborwzsw0a.mp4";
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);

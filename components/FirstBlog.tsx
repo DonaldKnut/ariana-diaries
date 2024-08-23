@@ -81,7 +81,7 @@ const FirstBlog: React.FC<FirstBlogProps> = ({ firstBlog }) => {
 
             <div className="flex items-center gap-3">
               <Image
-                src="/miss_oluwole.png"
+                src="https://res.cloudinary.com/dqrbn3bif/image/upload/v1724336611/f2brifbjc8nxss1bxsok.png"
                 alt="picture of the author"
                 width={70}
                 height={70}
