@@ -22,30 +22,38 @@ const FeaturedBooks = () => {
   const [notificationType, setNotificationType] = useState<"success" | "error">(
     "success"
   );
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBookList = async () => {
       try {
         const response = await fetch("/api/books");
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Expected JSON response");
+        }
+
         const data = await response.json();
-        console.log("Fetched books:", data); // Log to inspect the fetched data
+        console.log("Fetched books:", data);
 
         if (Array.isArray(data)) {
-          const validBooks = data.filter((book) => book._id); // Filter out books without an _id
+          const validBooks = data.filter((book) => book._id);
           setBookList(validBooks);
         } else {
           console.error("Expected an array but got:", data);
+          throw new Error("Data format error: Expected an array.");
         }
       } catch (error) {
         console.error("Error fetching books:", error);
         setNotificationMessage("Failed to load books.");
         setNotificationType("error");
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false);
       }
     };
 
@@ -63,7 +71,7 @@ const FeaturedBooks = () => {
     }
 
     addToCart({
-      id: item._id.toString(), // Convert ObjectId to string
+      id: item._id.toString(),
       title: item.title,
       price: item.price,
       quantity: 1,
@@ -72,12 +80,10 @@ const FeaturedBooks = () => {
     setNotificationMessage(`"${item.title}" has been added to your cart!`);
     setNotificationType("success");
 
-    // Clear notification after timeout
     const timeoutId = setTimeout(() => {
       setNotificationMessage(null);
     }, 3000);
 
-    // Clear timeout on unmount
     return () => clearTimeout(timeoutId);
   };
 
@@ -106,7 +112,7 @@ const FeaturedBooks = () => {
         ) : (
           bookList.map((item) => (
             <div
-              key={item._id.toString()} // Convert ObjectId to string for the key
+              key={item._id.toString()}
               className={`w-screen h-[60vh] flex flex-col items-center justify-around p-4 hover:bg-[#6f6a45] hover:text-white transition-all duration-300 md:w-[50vw] xl:w-[33vw] xl:h-[90vh] ${getTextColor()}`}
             >
               {item.img ? (
