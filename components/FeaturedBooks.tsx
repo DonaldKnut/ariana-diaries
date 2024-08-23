@@ -22,6 +22,7 @@ const FeaturedBooks = () => {
   const [notificationType, setNotificationType] = useState<"success" | "error">(
     "success"
   );
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const fetchBookList = async () => {
@@ -43,6 +44,8 @@ const FeaturedBooks = () => {
         console.error("Error fetching books:", error);
         setNotificationMessage("Failed to load books.");
         setNotificationType("error");
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -69,9 +72,13 @@ const FeaturedBooks = () => {
     setNotificationMessage(`"${item.title}" has been added to your cart!`);
     setNotificationType("success");
 
-    setTimeout(() => {
+    // Clear notification after timeout
+    const timeoutId = setTimeout(() => {
       setNotificationMessage(null);
     }, 3000);
+
+    // Clear timeout on unmount
+    return () => clearTimeout(timeoutId);
   };
 
   const handleNotificationClose = () => {
@@ -88,7 +95,11 @@ const FeaturedBooks = () => {
         />
       )}
       <div className="w-max flex">
-        {bookList.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center min-h-screen">
+            Loading books...
+          </div>
+        ) : bookList.length === 0 ? (
           <div className="flex items-center justify-center min-h-screen">
             No books available.
           </div>
@@ -98,14 +109,21 @@ const FeaturedBooks = () => {
               key={item._id.toString()} // Convert ObjectId to string for the key
               className={`w-screen h-[60vh] flex flex-col items-center justify-around p-4 hover:bg-[#6f6a45] hover:text-white transition-all duration-300 md:w-[50vw] xl:w-[33vw] xl:h-[90vh] ${getTextColor()}`}
             >
-              {item.img && (
+              {item.img ? (
                 <div className="relative flex-1 w-full hover:rotate-[60deg] transition-all duration-500">
                   <Image
                     src={item.img}
                     alt={item.title}
                     fill
                     className="object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = "/path/to/fallback/image.jpg"; // Fallback image
+                    }}
                   />
+                </div>
+              ) : (
+                <div className="flex-1 w-full flex items-center justify-center">
+                  <span>No Image Available</span>
                 </div>
               )}
               <div className="flex-1 flex flex-col items-center justify-center text-center gap-4">
@@ -117,6 +135,7 @@ const FeaturedBooks = () => {
                 <button
                   onClick={() => handleAddToCart(item)}
                   className="flex bg-[#c0ab67] hover:bg-[#544d07] items-center justify-center pl-3 pr-3 text-white p-2 rounded-md"
+                  aria-label={`Add ${item.title} to cart`}
                 >
                   Add to Cart <BsFillCartPlusFill className="ml-2" />
                 </button>
