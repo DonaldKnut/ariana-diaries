@@ -120,7 +120,7 @@ const BlogForm = () => {
             <div className="mb-12 rounded-md bg-primary/[3%] py-10 dark:bg-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px] px-8">
               <h2 className="flex items-center gap-3 mb-3 text-2xl font-bold text-[#6d5e16] sm:text-3xl lg:text-2xl xl:text-3xl">
                 <Image
-                  src="https://res.cloudinary.com/dtujpq8po/image/upload/v1723109268/ariana/jmhtskyfah0prthj7ipo.png"
+                  src="https://res.cloudinary.com/dqrbn3bif/image/upload/v1724691801/x1nhk0tc6gdvsd1nemdx.png"
                   alt="create icon"
                   width={90}
                   height={90}

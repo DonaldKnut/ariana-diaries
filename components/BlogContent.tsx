@@ -40,11 +40,11 @@ const BlogContent: React.FC<BlogContentProps> = ({
         <h2 className="font-bold text-3xl">{blogDetails?.title}</h2>
         <p>{blogDetails?.excerpt}</p>
         <p className="flex items-center justify-center gap-3">
-          <Link href={`/category?category=${blogDetails?.category}`}>
-            <span className="text-[#ffffff] bg-[#a5930a] rounded-[5px] p-2">
-              {blogDetails?.category}
-            </span>
-          </Link>
+          {/* <Link href={`/category?category=${blogDetails?.category}`}> */}
+          <span className="text-[#ffffff] bg-[#a5930a] rounded-[5px] p-2">
+            {blogDetails?.category}
+          </span>
+          {/* </Link> */}
 
           <span className="flex items-center gap-1">
             <AiTwotoneCalendar />

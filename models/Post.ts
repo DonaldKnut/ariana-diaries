@@ -12,6 +12,8 @@ export enum Category {
   LIFESTYLE = "lifestyle",
   HEALTH = "health",
   TRAVEL = "travel",
+  CULTURE_AND_LIFESTYLES = "culture_and_lifestyles",
+  LEADERSHIP = "leadership",
 }
 
 export interface IPost extends Document {

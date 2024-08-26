@@ -90,6 +90,8 @@ export const categories = [
   { value: "lifestyle", label: "Lifestyle" },
   { value: "health", label: "Health" },
   { value: "travel", label: "Travel" },
+  { value: "culture_and_lifestyles", label: "Culture and Lifestyles" },
+  { value: "leadership", label: "leadership" },
 ];
 
 export const formControls: FormControlItem[] = [
