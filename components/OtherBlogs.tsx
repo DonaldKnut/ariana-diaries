@@ -30,11 +30,19 @@ interface OtherBlogsProps {
 }
 
 const OtherBlogs: React.FC<OtherBlogsProps> = ({ otherBlogs }) => {
+  const MAX_EXCERPT_LENGTH = 100; // Define maximum length for the excerpt
+
   return (
     <section>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {otherBlogs.map((item, index) => {
           const formattedTime = moment(item.createdAt).format("MMMM Do YYYY");
+
+          // Trim the excerpt and add ellipsis if necessary
+          const trimmedExcerpt =
+            item.excerpt.length > MAX_EXCERPT_LENGTH
+              ? item.excerpt.substring(0, MAX_EXCERPT_LENGTH) + "..."
+              : item.excerpt;
 
           return (
             <div
@@ -70,22 +78,10 @@ const OtherBlogs: React.FC<OtherBlogsProps> = ({ otherBlogs }) => {
                     <div className="space-y-2">
                       <h2>{item.title}</h2>
                       <p className="text-sm text-paragraphColor">
-                        {item.excerpt}
+                        {trimmedExcerpt}
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
-                      {/* <Image
-                        src={
-                          item.author?.avatar?.url
-                            ? item.author.avatar.url
-                            : "/ariana-login-image.png"
-                        }
-                        alt="picture of the author"
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        className="w-10 h-10 rounded-full"
-                      /> */}
                       <Image
                         src="https://res.cloudinary.com/dqrbn3bif/image/upload/v1724336611/f2brifbjc8nxss1bxsok.png"
                         alt="picture of the author"
@@ -94,12 +90,6 @@ const OtherBlogs: React.FC<OtherBlogsProps> = ({ otherBlogs }) => {
                         sizes="100vw"
                         className="w-10 h-10 rounded-full"
                       />
-                      {/* <div className="text-xs">
-                        <h6>{item.author?.name}</h6>
-                        <p className="text-paragraphColor">
-                          {item.author?.designation}
-                        </p>
-                      </div> */}
                       <div className="text-xs">
                         <h6>Ariana Oluwole</h6>
                         <p className="text-paragraphColor">
