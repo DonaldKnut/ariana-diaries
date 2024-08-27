@@ -1,6 +1,5 @@
 import { cloudinary } from "../../../utils/cloudinaryConfig";
 import { NextRequest, NextResponse } from "next/server";
-// import { getSession } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import { connect } from "../../../database";
 import { authOptions } from "../../../authOptions/authOptions";
@@ -16,6 +15,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const { db } = await connect();
+
+    if (!db) {
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 500 }
+      );
+    }
+
     const user = await db.collection("users").findOne({ email: userEmail });
 
     if (!user) {
@@ -35,7 +42,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const { file } = await request.json(); // Use request.json() to parse the incoming JSON
+  const { file } = await request.json();
 
   try {
     const uploadResponse = await cloudinary.uploader.upload(file, {
